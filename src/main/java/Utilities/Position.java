@@ -36,7 +36,7 @@ public class Position {
         return new Position(rx, ry);
     }
 
-    public void print(){
-        System.out.println(getX() + ", " + getY());
+    public String print(){
+        return getX() + ", " + getY();
     }
 }

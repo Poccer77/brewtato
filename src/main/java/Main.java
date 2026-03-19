@@ -97,6 +97,8 @@ public class Main {
 
         Game game = new Game(window, 3);
 
+        game.init();
+
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

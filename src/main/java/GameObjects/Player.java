@@ -18,7 +18,7 @@ public class Player implements Object {
     public Position pos;
 
     public Player() {
-        speed = 0.05F;
+        speed = 0.02F;
         pos = new Position(0, 0);
 
     }
