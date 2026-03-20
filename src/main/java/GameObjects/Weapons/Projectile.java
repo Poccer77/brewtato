@@ -1,9 +1,13 @@
 package GameObjects.Weapons;
 
-import Utilities.Position;
+import GameObjects.Object;
+import Utilities.*;
 
-public class Projectile {
+public abstract class Projectile implements Object {
 
-    public Position position;
+    public Position pos;
+    public float speed;
+    public int damage;
+    public float angle;
 
 }

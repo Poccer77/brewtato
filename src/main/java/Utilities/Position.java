@@ -15,6 +15,11 @@ public class Position {
         Y = y;
     }
 
+    public void changePosition(float x, float y){
+        X += x;
+        Y += y;
+    }
+
     public float getX() {
         return X;
     }

@@ -2,9 +2,13 @@ import GameObjects.*;
 import GameObjects.Enemies.Enemy;
 import GameObjects.Enemies.Grunt;
 import GameObjects.Object;
+import GameObjects.Weapons.Pistol;
+import GameObjects.Weapons.Projectile;
+import GameObjects.Weapons.Weapon;
 import Utilities.Position;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -16,25 +20,28 @@ public class Game {
     private final double fieldSize;
     private Position windowPosition;
     private Player player;
-    private Enemy[] enemies;
+    private Weapon[] weapons;
+    private List<Enemy> enemies;
 
     public Game(long window, double fieldSize){
         this.player = new Player();
         this.window = window;
         this.fieldSize = fieldSize;
         this.windowPosition = new Position((float) (fieldSize / 2), (float) (fieldSize / 2));
-        enemies = new Enemy[1];
-
+        enemies = new ArrayList<>();
     }
 
     public void init(){
 
         Random rand = new Random();
 
-        for (int i = 0; i < enemies.length; i++) {
-            enemies[i] = new Grunt(new Position(x(rand.nextFloat(3)), y(rand.nextFloat(3))));
+        for (int i = 0; i < 10; i++) {
+            enemies.add(new Grunt(new Position(x(rand.nextFloat(3)), y(rand.nextFloat(3)))));
         }
-
+        for (int i = 0; i < player.weapons.length; i++) {
+            player.weapons[i] = new Pistol(1, 1000, 0.05F, 0.02F);
+        }
+        player.draw();
     }
 
     public void frameForward() {
@@ -78,6 +85,22 @@ public class Game {
             }
         }
 
+        checkCollisions();
+
+        for (Weapon weapon : player.weapons) {
+            weapon.aim(enemies);
+            if (!enemies.isEmpty()) weapon.shoot();
+            for (int i = 0; i < weapon.projectiles.size(); i++) {
+                if (weapon.projectiles.get(i).pos.getX() + windowPosition.getX() < 0 || weapon.projectiles.get(i).pos.getX() + windowPosition.getX() > 3
+                        || weapon.projectiles.get(i).pos.getY() + windowPosition.getY() < 0 || weapon.projectiles.get(i).pos.getY() + windowPosition.getY() > 3) {
+                    weapon.projectiles.remove(i);
+                    i--;
+                } else {
+                    weapon.projectiles.get(i).draw();
+                }
+            }
+        }
+
         player.draw();
         for (Enemy enemy : enemies) {
             enemy.hunt(player.pos);
@@ -95,6 +118,35 @@ public class Game {
         windowPosition.setPosition(windowPosition.getX() + x, windowPosition.getY() + y);
         for(Enemy enemy : enemies) {
             enemy.move(-x, -y);
+        }
+        for(Weapon weapon : player.weapons) {
+            for (Projectile projectile : weapon.projectiles) {
+                projectile.move(-x, -y);
+            }
+        }
+    }
+
+    private void checkCollisions() {
+
+        Iterator<Enemy> enIt = enemies.iterator();
+        while (enIt.hasNext()) {
+            Enemy enemy = enIt.next();
+            for(Weapon weapon : player.weapons) {
+                Iterator<Projectile> proIt = weapon.projectiles.iterator();
+                while(proIt.hasNext()) {
+                    Projectile projectile = proIt.next();
+                    if (enemy.getHit(projectile.pos)) {
+                        enemy.health -= projectile.damage;
+                        proIt.remove();
+                    }
+                }
+            }
+            if (enemy.health <= 0) {
+                enIt.remove();
+            }
+            if (enemy.getHit(player.pos)) {
+                player.health -= enemy.damage;
+            }
         }
     }
 }

@@ -1,12 +1,19 @@
 package GameObjects.Weapons;
 
+import GameObjects.Enemies.Enemy;
 import GameObjects.Object;
 import Utilities.Position;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class Weapon implements Object {
 
     public final int damage;
     public final int attackSpeed;
+    int delay;
+    public float angle;
 
     public Position getPos() {
         return pos;
@@ -16,20 +23,27 @@ public abstract class Weapon implements Object {
         this.pos = pos;
     }
 
+    public List<Projectile> projectiles = new ArrayList<>();
+
     public Position pos;
 
-    private final int length;
-    private final int width;
+    final float length;
+    final float width;
 
-    protected Weapon(int damage, int attackSpeed, int length, int width) {
+    protected Weapon(int damage, int attackSpeed, float length, float width) {
         this.damage = damage;
         this.attackSpeed = attackSpeed;
         this.length = length;
         this.width = width;
+        delay = 0;
     }
 
+    public void aim(List<Enemy> enemies) {
 
+    }
 
-    public abstract void draw(Position pos);
+    public abstract void shoot();
+
+    public abstract void draw();
 
 }

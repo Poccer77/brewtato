@@ -1,6 +1,7 @@
 package GameObjects.Enemies;
 
 import Utilities.Position;
+import Utilities.Tools;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -13,8 +14,9 @@ public class Grunt extends Enemy{
     }
 
     @Override
-    public void getHit(int damage) {
-        health -= damage;
+    public boolean getHit(Position pos) {
+        return pos.getX() < this.pos.getX() + 0.05 && pos.getX() > this.pos.getX() - 0.05
+                && pos.getY() < this.pos.getY() + 0.05 && pos.getY() > this.pos.getY() - 0.05;
     }
 
     @Override
@@ -24,14 +26,14 @@ public class Grunt extends Enemy{
 
     @Override
     public void hunt(Position playerPos) {
-        double angle = - Math.atan2(pos.getX() - playerPos.getX(), pos.getY() - playerPos.getY());
-        move((float) Math.cos(angle) * speed, (float) Math.sin(angle) * speed);
-        System.out.println(angle);
+        float angle = Tools.angle(pos, playerPos);
+        Position moveTo = Tools.rotate(angle, new Position(0, speed));
+        move(moveTo.getX(), moveTo.getY());
     }
 
     @Override
     public void move(float x, float y) {
-        pos.setPosition(pos.getX() + x, pos.getY() + y);
+        pos.changePosition(x, y);
     }
 
     @Override

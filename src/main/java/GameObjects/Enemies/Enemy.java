@@ -10,7 +10,7 @@ public abstract class Enemy implements Object {
     public float speed;
     public Position pos;
 
-    public abstract void getHit(int damage);
+    public abstract boolean getHit(Position pos);
     public abstract int attack();
     public abstract void hunt(Position pos);
 

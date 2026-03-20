@@ -111,7 +111,10 @@ public class Main {
 
             game.frameForward();
             int reset = glfwGetKey(window, GLFW_KEY_R);
-            if (reset == GLFW_PRESS) game = new Game(window, 3);
+            if (reset == GLFW_PRESS) {
+                game = new Game(window, 3);
+                game.init();
+            }
             int close = glfwGetKey(window, GLFW_KEY_ESCAPE);
             if (close == GLFW_PRESS) break;
             glfwSwapBuffers(window); // swap the color buffers
