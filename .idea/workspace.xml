@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83b9b637-690e-476a-9f64-bea69a00fd5d" name="Changes" comment="implemented full camera, enemies orbit">
-      <change afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Weapons/PistolProjectile.java" afterDir="false" />
+    <list default="true" id="83b9b637-690e-476a-9f64-bea69a00fd5d" name="Changes" comment="implement weapons, enemies chase player, weapons shoot and kill enemies, enemies damage player.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Enemies/Tree.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Texture.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Enemies/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Enemies/Enemy.java" afterDir="false" />
@@ -13,11 +14,8 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Object.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Object.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Weapons/Pistol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Weapons/Pistol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Weapons/Projectile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Weapons/Projectile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Weapons/Weapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Weapons/Weapon.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utilities/Position.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utilities/Position.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utilities/Tools.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utilities/Tools.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,6 +156,8 @@
       <workItem from="1773918927688" duration="4524000" />
       <workItem from="1773923525373" duration="4825000" />
       <workItem from="1774004266452" duration="15113000" />
+      <workItem from="1774021150216" duration="186000" />
+      <workItem from="1774264316351" duration="12602000" />
     </task>
     <task id="LOCAL-00001" summary="implemented full camera, enemies orbit">
       <option name="closed" value="true" />
@@ -167,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773928733426</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="implement weapons, enemies chase player, weapons shoot and kill enemies, enemies damage player.">
+      <option name="closed" value="true" />
+      <created>1774021329107</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1774021329107</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,6 +229,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="change gitignore" />
     <MESSAGE value="implemented full camera, enemies orbit" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented full camera, enemies orbit" />
+    <MESSAGE value="implement weapons, enemies chase player, weapons shoot and kill enemies, enemies damage player." />
+    <option name="LAST_COMMIT_MESSAGE" value="implement weapons, enemies chase player, weapons shoot and kill enemies, enemies damage player." />
   </component>
 </project>

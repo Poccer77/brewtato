@@ -1,18 +1,47 @@
 package GameObjects.Enemies;
 
 import Utilities.Position;
-import Utilities.Tools;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Grunt extends Enemy{
+public class Tree extends Enemy{
 
-    boolean blink = false;
+    public boolean blink = false;
 
-    public Grunt(Position pos) {
-        health = 10;
-        speed = 0.01F;
+    public Tree(Position pos) {
         this.pos = pos;
+        health = 30;
+        speed = 0;
+    }
+
+    @Override
+    public void move(float x, float y) {
+        pos.changePosition(x, y);
+    }
+
+    public void draw(){
+        double [] color = {0.267, 0.6, 0, 1};
+
+        if (spawnAnimation > 0) {
+            if (spawnAnimation % 10 == 0) {
+                blink = !blink;
+            }
+            if (blink) {
+                spawnAnimation--;
+                return;
+            } else spawnAnimation--;
+        } else {color = new double[]{0.502, 0.38, 0, 1};}
+
+        glBegin(GL_QUADS);
+        glColor4dv(color);
+        glVertex2d(pos.getX() - 0.05, pos.getY() - 0.05);
+        glColor4dv(color);
+        glVertex2d(pos.getX() - 0.05, pos.getY() + 0.05);
+        glColor4dv(color);
+        glVertex2d(pos.getX() + 0.05, pos.getY() + 0.05);
+        glColor4dv(color);
+        glVertex2d(pos.getX() + 0.05, pos.getY() - 0.05);
+        glEnd();
     }
 
     @Override
@@ -27,40 +56,7 @@ public class Grunt extends Enemy{
     }
 
     @Override
-    public void hunt(Position playerPos) {
-        float angle = Tools.angle(pos, playerPos);
-        Position moveTo = Tools.rotate(angle, new Position(0, speed));
-        move(moveTo.getX(), moveTo.getY());
-    }
+    public void hunt(Position pos) {
 
-    @Override
-    public void move(float x, float y) {
-        pos.changePosition(x, y);
-    }
-
-    @Override
-    public void draw(){
-        double [] color = {0.78, 0, 0, 1};
-
-        if (spawnAnimation > 0) {
-            if (spawnAnimation % 10 == 0) {
-                blink = !blink;
-            }
-            if (blink) {
-                spawnAnimation--;
-                return;
-            } else spawnAnimation--;
-        } else {color = new double[]{0.584, 0, 0.78, 1};}
-
-        glBegin(GL_QUADS);
-        glColor4dv(color);
-        glVertex2d(pos.getX() - 0.05, pos.getY() - 0.05);
-        glColor4dv(color);
-        glVertex2d(pos.getX() - 0.05, pos.getY() + 0.05);
-        glColor4dv(color);
-        glVertex2d(pos.getX() + 0.05, pos.getY() + 0.05);
-        glColor4dv(color);
-        glVertex2d(pos.getX() + 0.05, pos.getY() - 0.05);
-        glEnd();
     }
 }

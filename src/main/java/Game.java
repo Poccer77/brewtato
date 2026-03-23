@@ -1,6 +1,7 @@
 import GameObjects.*;
 import GameObjects.Enemies.Enemy;
 import GameObjects.Enemies.Grunt;
+import GameObjects.Enemies.Tree;
 import GameObjects.Object;
 import GameObjects.Weapons.Pistol;
 import GameObjects.Weapons.Projectile;
@@ -22,6 +23,9 @@ public class Game {
     private Player player;
     private Weapon[] weapons;
     private List<Enemy> enemies;
+    private List<Enemy> spawningEnemies;
+    private int spawnDelay = 100;
+    Random rand = new Random();
 
     public Game(long window, double fieldSize){
         this.player = new Player();
@@ -29,17 +33,14 @@ public class Game {
         this.fieldSize = fieldSize;
         this.windowPosition = new Position((float) (fieldSize / 2), (float) (fieldSize / 2));
         enemies = new ArrayList<>();
+        spawningEnemies = new ArrayList<>();
     }
 
     public void init(){
 
-        Random rand = new Random();
-
-        for (int i = 0; i < 10; i++) {
-            enemies.add(new Grunt(new Position(x(rand.nextFloat(3)), y(rand.nextFloat(3)))));
-        }
+        spawnEnemies();
         for (int i = 0; i < player.weapons.length; i++) {
-            player.weapons[i] = new Pistol(1, 1000, 0.05F, 0.02F);
+            player.weapons[i] = new Pistol(1, 100, 0.05F, 0.02F, 1);
         }
         player.draw();
     }
@@ -86,6 +87,7 @@ public class Game {
         }
 
         checkCollisions();
+        spawnEnemies();
 
         for (Weapon weapon : player.weapons) {
             weapon.aim(enemies);
@@ -106,6 +108,9 @@ public class Game {
             enemy.hunt(player.pos);
             enemy.draw();
         }
+        for (Enemy enemy : spawningEnemies) {
+            enemy.draw();
+        }
     }
 
     private float x(float x) {
@@ -117,6 +122,9 @@ public class Game {
     private void moveCamera(float x, float y) {
         windowPosition.setPosition(windowPosition.getX() + x, windowPosition.getY() + y);
         for(Enemy enemy : enemies) {
+            enemy.move(-x, -y);
+        }
+        for(Enemy enemy : spawningEnemies) {
             enemy.move(-x, -y);
         }
         for(Weapon weapon : player.weapons) {
@@ -146,6 +154,29 @@ public class Game {
             }
             if (enemy.getHit(player.pos)) {
                 player.health -= enemy.damage;
+            }
+        }
+    }
+
+    private void spawnEnemies() {
+
+        System.out.println(enemies.size());
+        if (enemies.size() + spawningEnemies.size() < 15) {
+            Position spawnPos = new Position(x(rand.nextFloat(0.3F, 2.7F)), y(rand.nextFloat(0.3F, 2.7F)));
+            for (int i = 0; i < rand.nextInt(8, 13); i++) {
+                spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) (spawnPos.getX() - 0.3), (float) (spawnPos.getX() + 0.3))), y(rand.nextFloat((float) (spawnPos.getY() - 0.3), (float) (spawnPos.getY() + 0.3))))));
+            }
+        } else if (rand.nextInt(0, 101) > 95){
+            if (rand.nextInt(11) < 9) spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat(3)), y(rand.nextFloat(3)))));
+            else spawningEnemies.add(new Tree(new Position(x(rand.nextFloat(3)), y(rand.nextFloat(3)))));
+        }
+
+        Iterator<Enemy> enIt = spawningEnemies.iterator();
+        while (enIt.hasNext()) {
+            Enemy en = enIt.next();
+            if (en.spawnAnimation <= 0) {
+                enemies.add(en);
+                enIt.remove();
             }
         }
     }

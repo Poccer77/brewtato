@@ -3,7 +3,6 @@ package GameObjects;
 import GameObjects.Weapons.Weapon;
 import Utilities.Position;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Player implements Object {

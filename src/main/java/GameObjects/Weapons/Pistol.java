@@ -11,8 +11,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Pistol extends Weapon{
 
-    public Pistol(int damage, int attackSpeed, float length, float width) {
-        super(damage, attackSpeed, length, width);
+    boolean inRange;
+
+    public Pistol(int damage, int attackSpeed, float length, float width, double range) {
+        super(damage, attackSpeed, length, width, range);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class Pistol extends Weapon{
     }
 
     public void shoot() {
-        if (delay <= 0) {
+        if (delay <= 0 && inRange) {
             projectiles.add(new PistolProjectile(angle, 5, pos));
             delay = attackSpeed;
         } else {delay -= 10;}
@@ -61,9 +63,11 @@ public class Pistol extends Weapon{
                 closestEnemy = enemy;
             }
         }
+        if (distance(pos, closestEnemy.pos) < range) {
+            angle = angle(pos, closestEnemy.pos);
+            inRange = true;
+        } else inRange = false;
 
-        angle = angle(pos, closestEnemy.pos);
     }
-
 }
 

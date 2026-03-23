@@ -58,7 +58,7 @@ public class Main {
         });
 
         // Get the thread stack and push a new frame
-        try ( MemoryStack stack = stackPush() ) {
+        try ( MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -71,7 +71,6 @@ public class Main {
                     (vidmode.width() - pWidth.get(0)) / 2,
                     (vidmode.height() - pHeight.get(0)) / 2
             );
-
 
         } // the stack frame is popped automatically
 
@@ -90,6 +89,7 @@ public class Main {
         // bindings available for use.
         GL.createCapabilities();
 
+        glEnable(GL_TEXTURE_2D);
         glClearColor(0.53F, 0.53F, 0.53F, 1);
     }
 
