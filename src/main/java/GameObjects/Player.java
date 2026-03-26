@@ -1,8 +1,5 @@
 package GameObjects;
 
-import GameObjects.Enemies.Enemy;
-import GameObjects.Collectibles.Fruit;
-import GameObjects.Collectibles.Material;
 import GameObjects.Weapons.Weapon;
 import Utilities.Position;
 
@@ -15,11 +12,18 @@ public class Player implements Object {
     public int health;
     public float speed;
     public int armor;
+    public int luck;
     public int regen;
     public int damage;
     public int attackSpeed;
-    public int collectionRadius;
+    public int collectionRadius = 400;
     public int materials;
+    public float materialModifier = 1;
+    public int level;
+    public int exp;
+    public float expModifier;
+    public int dodge;
+    public int invulnerability = 100;
     public Position pos;
 
     public Player(Position pos) {
@@ -55,12 +59,19 @@ public class Player implements Object {
             angle += (float) Math.toRadians(anglePart);
         }
     }
-
-    public void getHit(Enemy enemy) {
-        float dist = distance(pos, enemy.pos);
-        if (enemy instanceof Material mat || enemy instanceof Fruit fruit && dist < collectionRadius) {
-            return;
+    public void getHit(int damage, boolean triggerInvul) {
+        damage *= 100 / (100 + armor);
+        if (!triggerInvul) {
+            health -= damage;
+            invulnerability -= 10;
+        } else if (invulnerability > 0) {
+            invulnerability -= 10;
+        } else {
+            health -= damage;
+            invulnerability = 100;
         }
-
+    }
+    public boolean collect(Position pos) {
+        return distance(this.pos, pos) < 60;
     }
 }

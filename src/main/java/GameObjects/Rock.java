@@ -1,31 +1,34 @@
-package GameObjects.Collectibles;
+package GameObjects;
 
-import GameObjects.Enemies.Enemy;
-import GameObjects.Player;
 import Utilities.Position;
 
-import java.util.List;
 import java.util.Random;
 
-import static Utilities.Tools.angle;
 import static Utilities.Tools.rotate;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Material extends Collectible {
+public class Rock implements Object {
 
-    private float angle;
-    private float size;
+    Position pos;
+    float angle;
+    float size;
 
-    public Material(Position pos) {
-        super(pos);
+    public Rock(Position pos) {
+        this.pos = pos;
         Random rand = new Random();
-        this.pos.changePosition(rand.nextFloat(-10, 11), rand.nextFloat(-10, 11));
+
         angle = (float) Math.toRadians(rand.nextInt(361));
-        size = rand.nextInt(20, 30);
+        size = rand.nextInt(20, 61);
+    }
+
+    @Override
+    public void move(float x, float y) {
+        pos.changePosition(x, y);
     }
 
     @Override
     public void draw() {
+
 
         Position pos1 = rotate(angle, new Position(-size / 2, -size / 2));
         Position pos2 = rotate(angle, new Position(-size / 2, size / 2));
@@ -33,21 +36,14 @@ public class Material extends Collectible {
         Position pos4 = rotate(angle, new Position(size / 2, -size / 2));
 
         glBegin(GL_QUADS);
-        glColor3d(0, 1, 0.482);
+        glColor3d(0.5, 0.5, 0.5);
         glVertex2d(pos.getX() + pos1.getX(), pos.getY() + pos1.getY());
-        glColor3d(0, 1, 0.482);
+        glColor3d(0.5, 0.5, 0.5);
         glVertex2d(pos.getX() + pos2.getX(), pos.getY() + pos2.getY());
-        glColor3d(0, 1, 0.482);
+        glColor3d(0.5, 0.5, 0.5);
         glVertex2d(pos.getX() + pos3.getX(), pos.getY() + pos3.getY());
-        glColor3d(0, 1, 0.482);
+        glColor3d(0.5, 0.5, 0.5);
         glVertex2d(pos.getX() + pos4.getX(), pos.getY() + pos4.getY());
         glEnd();
-
-    }
-
-    @Override
-    public void buff(Player player) {
-        player.materials += 1;
-        player.exp += player.expModifier;
     }
 }

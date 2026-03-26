@@ -1,14 +1,10 @@
 package GameObjects.Collectibles;
 
-import GameObjects.Enemies.Enemy;
 import GameObjects.Player;
 import Utilities.Position;
 
-import java.util.List;
-
-public class Fruit extends Collectible {
-
-    public Fruit(Position pos) {
+public class Chest extends Collectible{
+    public Chest(Position pos) {
         super(pos);
     }
 

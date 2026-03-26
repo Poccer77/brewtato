@@ -36,20 +36,20 @@ public class Tree extends Enemy{
 
         glBegin(GL_QUADS);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 0.05, pos.getY() - 0.05);
+        glVertex2d(pos.getX() - 50, pos.getY() - 50);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 0.05, pos.getY() + 0.05);
+        glVertex2d(pos.getX() - 50, pos.getY() + 50);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 0.05, pos.getY() + 0.05);
+        glVertex2d(pos.getX() + 50, pos.getY() + 50);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 0.05, pos.getY() - 0.05);
+        glVertex2d(pos.getX() + 50, pos.getY() - 50);
         glEnd();
     }
 
     @Override
     public boolean getHit(Position pos) {
-        return pos.getX() < this.pos.getX() + 0.05 && pos.getX() > this.pos.getX() - 0.05
-                && pos.getY() < this.pos.getY() + 0.05 && pos.getY() > this.pos.getY() - 0.05;
+        return pos.getX() < this.pos.getX() + 50 && pos.getX() > this.pos.getX() - 50
+                && pos.getY() < this.pos.getY() + 50 && pos.getY() > this.pos.getY() - 50;
     }
 
     @Override

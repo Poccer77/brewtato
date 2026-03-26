@@ -1,4 +1,7 @@
 import GameObjects.*;
+import GameObjects.Collectibles.Collectible;
+import GameObjects.Collectibles.Fruit;
+import GameObjects.Collectibles.Material;
 import GameObjects.Enemies.Enemy;
 import GameObjects.Enemies.Grunt;
 import GameObjects.Enemies.Tree;
@@ -17,6 +20,10 @@ import java.util.Random;
 
 import static Utilities.Tools.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glColor3d;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2d;
 
 public class Game {
 
@@ -31,26 +38,36 @@ public class Game {
     private List<Enemy> enemies;
     private List<Enemy> spawningEnemies;
     private int spawnDelay = 100;
+    private List<Collectible> collectibles;
+    private List<Rock> rocks = new ArrayList<>();
     Random rand = new Random();
 
     public Game(long window, GLFWVidMode vidmode){
         this.fieldSize = vidmode.width() * 3;
         windowHeight = vidmode.height();
         windowWidth = vidmode.width();
-        this.player = new Player(new Position((float) (fieldSize / 3), (float) (fieldSize / 3)));
+        this.player = new Player(new Position((float) (fieldSize / 2), (float) (fieldSize / 2)));
         this.window = window;
         this.windowPosition = new Position((float) (fieldSize / 3), (float) (fieldSize / 3));
         enemies = new ArrayList<>();
         spawningEnemies = new ArrayList<>();
+        collectibles = new ArrayList<>();
     }
 
     public void init(){
 
         spawnEnemies();
         for (int i = 0; i < player.weapons.length; i++) {
-            player.weapons[i] = new Pistol(1, 10000, 40F, 20F, 1000);
+            player.weapons[i] = new Pistol(1, 100, 40F, 20F, 1000);
         }
         player.draw();
+        draw();
+    }
+
+    public void draw() {
+        for (int i = 0; i < 1000; i++) {
+            rocks.add(new Rock(new Position(rand.nextFloat( x(0), x((float) fieldSize)), rand.nextFloat(x(0), x((float) fieldSize)))));
+        }
     }
 
     public void frameForward() {
@@ -94,6 +111,10 @@ public class Game {
             }
         }
 
+        for (Rock rock : rocks) {
+            rock.draw();
+        }
+
         checkCollisions();
         spawnEnemies();
 
@@ -110,8 +131,6 @@ public class Game {
                 }
             }
         }
-
-        player.draw();
         checkCollisions();
         for (Enemy enemy : enemies) {
             enemy.hunt(player.pos, enemies);
@@ -120,6 +139,11 @@ public class Game {
         for (Enemy enemy : spawningEnemies) {
             enemy.draw();
         }
+        for (Collectible collectible : collectibles) {
+            collectible.follow(player);
+            collectible.draw();
+        }
+        player.draw();
     }
 
     private float x(float x) {
@@ -130,6 +154,9 @@ public class Game {
     }
     private void moveCamera(float x, float y) {
         windowPosition.changePosition(x, y);
+        for (Rock rock : rocks) {
+            rock.move(-x, -y);
+        }
         for(Enemy enemy : enemies) {
             enemy.move(-x, -y);
         }
@@ -140,6 +167,9 @@ public class Game {
             for (Projectile projectile : weapon.projectiles) {
                 projectile.move(-x, -y);
             }
+        }
+        for(Collectible collectible : collectibles) {
+            collectible.move(-x, -y);
         }
     }
 
@@ -159,9 +189,29 @@ public class Game {
                 }
             }
             if (enemy.health <= 0) {
+                int min = 1;
+                int max = 3;
+                if (enemy instanceof Tree) {
+                    min += 2;
+                    max += 2;
+                }
+                for (int i = 0; i < Math.round(rand.nextInt(min, max) * player.materialModifier); i++) {
+                    collectibles.add(new Material(enemy.pos));
+                }
+                if (rand.nextInt(300) < Math.min(60, player.luck)) collectibles.add(new Fruit(enemy.pos));
                 enIt.remove();
             }
-            player.getHit(enemy);
+            if (enemy.getHit(player.pos)) {
+                player.getHit(enemy.damage, true);
+            }
+        }
+        Iterator<Collectible> colIt= collectibles.iterator();
+        while (colIt.hasNext()) {
+            Collectible collectible = colIt.next();
+            if (player.collect(collectible.pos)) {
+                collectible.buff(player);
+                colIt.remove();
+            }
         }
     }
 
@@ -174,7 +224,7 @@ public class Game {
             }
         } else if (rand.nextInt(0, 101) > 95){
             if (rand.nextInt(21) < 19) spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) fieldSize)), y(rand.nextFloat((float) fieldSize)))));
-            else spawningEnemies.add(new Tree(new Position(x(rand.nextFloat(3)), y(rand.nextFloat(3)))));
+            else spawningEnemies.add(new Tree(new Position(x(rand.nextFloat((float) fieldSize)), y(rand.nextFloat((float) fieldSize)))));
         }
 
         Iterator<Enemy> enIt = spawningEnemies.iterator();
