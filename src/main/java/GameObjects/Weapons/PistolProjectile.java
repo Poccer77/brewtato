@@ -15,9 +15,9 @@ public class PistolProjectile extends Projectile{
         this.pos = pos;
         this.angle = angle;
         this.damage = damage;
-        speed = 0.1F;
-        width = 0.01F;
-        length = 0.03F;
+        speed = 150F;
+        width = 10F;
+        length = 30F;
     }
 
     @Override
@@ -28,14 +28,14 @@ public class PistolProjectile extends Projectile{
     @Override
     public void draw() {
 
-        Position newPosition = Tools.rotate(angle, new Position(0, speed));
+        Position newPosition = Tools.rotate(angle, new Position(speed, 0));
 
         move(newPosition.getX(), newPosition.getY());
 
-        Position pos1 = rotate(angle, new Position(width / 2, 0));
-        Position pos2 = rotate(angle, new Position(-width / 2, 0));
-        Position pos3 = rotate(angle, new Position(-width / 2, length));
-        Position pos4 = rotate(angle, new Position(width / 2, length));
+        Position pos1 = rotate(angle, new Position(0, width / 2));
+        Position pos2 = rotate(angle, new Position(length, width / 2));
+        Position pos3 = rotate(angle, new Position(length, -width / 2));
+        Position pos4 = rotate(angle, new Position(0, -width / 2));
 
         glBegin(GL_QUADS);
         glColor3d(1, 1, 1);

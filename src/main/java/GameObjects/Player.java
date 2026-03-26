@@ -1,8 +1,12 @@
 package GameObjects;
 
+import GameObjects.Enemies.Enemy;
+import GameObjects.Collectibles.Fruit;
+import GameObjects.Collectibles.Material;
 import GameObjects.Weapons.Weapon;
 import Utilities.Position;
 
+import static Utilities.Tools.distance;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Player implements Object {
@@ -14,11 +18,13 @@ public class Player implements Object {
     public int regen;
     public int damage;
     public int attackSpeed;
+    public int collectionRadius;
+    public int materials;
     public Position pos;
 
-    public Player() {
-        speed = 0.02F;
-        pos = new Position(0, 0);
+    public Player(Position pos) {
+        speed = 25F;
+        this.pos = pos;
 
     }
 
@@ -28,39 +34,33 @@ public class Player implements Object {
     public void draw(){
         glBegin(GL_QUADS);
         glColor3d(0.878, 0.667, 0);
-        glVertex2d(pos.getX() - 0.05, pos.getY() - 0.05);
+        glVertex2d(pos.getX() - 40, pos.getY() - 40);
         glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() - 0.05, pos.getY() + 0.05);
+        glVertex2d(pos.getX() - 40, pos.getY() + 40);
         glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() + 0.05, pos.getY() + 0.05);
+        glVertex2d(pos.getX() + 40, pos.getY() + 40);
         glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() + 0.05, pos.getY() - 0.05);
+        glVertex2d(pos.getX() + 40, pos.getY() - 40);
         glEnd();
 
-        if (weapons[0] != null) {
-            weapons[0].setPos(new Position(pos.getX() - 0.06F, pos.getY() + 0.14F));
-            weapons[0].draw();
-        }
-        if (weapons[1] != null) {
-            weapons[1].setPos(new Position(pos.getX() + 0.06F, pos.getY() + 0.14F));
-            weapons[1].draw();
-        }
-        if (weapons[2] != null) {
-            weapons[2].setPos(new Position(pos.getX() + 0.1F, pos.getY()));
-            weapons[2].draw();
-        }
-        if (weapons[3] != null) {
-            weapons[3].setPos(new Position(pos.getX() + 0.06F, pos.getY() - 0.14F));
-            weapons[3].draw();
-        }
-        if (weapons[4] != null) {
-            weapons[4].setPos(new Position(pos.getX() - 0.06F, pos.getY() - 0.14F));
-            weapons[4].draw();
-        }
-        if (weapons[5] != null) {
-            weapons[5].setPos(new Position(pos.getX() - 0.1F, pos.getY()));
-            weapons[5].draw();
+        int weaponCount = weapons.length;
+        int anglePart = (360 / weaponCount);
+        float angle = 0;
+
+        for (Weapon weapon : weapons) {
+            weapon.setPos(new Position(100, 0));
+            weapon.pos.rotate(angle);
+            weapon.pos.changePosition(pos.getX(), pos.getY());
+            weapon.draw();
+            angle += (float) Math.toRadians(anglePart);
         }
     }
 
+    public void getHit(Enemy enemy) {
+        float dist = distance(pos, enemy.pos);
+        if (enemy instanceof Material mat || enemy instanceof Fruit fruit && dist < collectionRadius) {
+            return;
+        }
+
+    }
 }

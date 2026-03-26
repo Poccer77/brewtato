@@ -3,6 +3,8 @@ package GameObjects.Enemies;
 import GameObjects.Object;
 import Utilities.Position;
 
+import java.util.List;
+
 public abstract class Enemy implements Object {
 
     public int health;
@@ -13,6 +15,6 @@ public abstract class Enemy implements Object {
 
     public abstract boolean getHit(Position pos);
     public abstract int attack();
-    public abstract void hunt(Position pos);
+    public abstract void hunt(Position pos, List<Enemy> enemies);
 
 }

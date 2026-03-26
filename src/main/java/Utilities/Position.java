@@ -34,14 +34,18 @@ public class Position {
         return (float)(Math.atan2(deltaY, deltaX));
     }
 
-    public Position rotate(float n)
+    public void rotate(float n)
     {
         float rx = (float) ((this.getX() * Math.cos(n)) - (this.getY() * Math.sin(n)));
         float ry = (float) ((this.getX() * Math.sin(n)) + (this.getY() * Math.cos(n)));
-        return new Position(rx, ry);
+        setPosition(rx, ry);
     }
 
     public String print(){
         return getX() + ", " + getY();
+    }
+    public void normalize(){
+        X /= Tools.distance(new Position(0, 0), this);
+        Y /= Tools.distance(new Position(0, 0), this);
     }
 }

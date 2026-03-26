@@ -1,7 +1,9 @@
 package GameObjects.Enemies;
 
 import Utilities.Position;
-import Utilities.Tools;
+import static Utilities.Tools.*;
+
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -11,14 +13,13 @@ public class Grunt extends Enemy{
 
     public Grunt(Position pos) {
         health = 10;
-        speed = 0.01F;
+        speed = 20F;
         this.pos = pos;
     }
 
     @Override
     public boolean getHit(Position pos) {
-        return pos.getX() < this.pos.getX() + 0.05 && pos.getX() > this.pos.getX() - 0.05
-                && pos.getY() < this.pos.getY() + 0.05 && pos.getY() > this.pos.getY() - 0.05;
+        return distance(this.pos, pos) < 40;
     }
 
     @Override
@@ -27,9 +28,28 @@ public class Grunt extends Enemy{
     }
 
     @Override
-    public void hunt(Position playerPos) {
-        float angle = Tools.angle(pos, playerPos);
-        Position moveTo = Tools.rotate(angle, new Position(0, speed));
+    public void hunt(Position playerPos, List<Enemy> enemies) {
+        float angle = angle(pos, playerPos);
+        Position moveTo = rotate(angle, new Position(speed, 0));
+        int count = 0;
+        Position steer = new Position(0, 0);
+        Position target = new Position(pos.getX() + moveTo.getX(), pos.getY() + moveTo.getY());
+        for (Enemy enemy : enemies) {
+            if (enemy == this) continue;
+            float dist = distance(pos, enemy.pos);
+            if (dist < 80 && dist > 0) {
+                count++;
+                Position tempSteer = new Position(pos.getX() - enemy.pos.getX(), pos.getY() - enemy.pos.getY());
+                tempSteer.normalize();
+                float strength = 80 - dist;
+                steer.changePosition(tempSteer.getX() * strength, tempSteer.getY() * strength);
+            }
+        }
+        if (count > 0) {
+            steer.setPosition(steer.getX() / count, steer.getY() / count);
+        }
+
+        move(steer.getX(), steer.getY());
         move(moveTo.getX(), moveTo.getY());
     }
 
@@ -54,13 +74,13 @@ public class Grunt extends Enemy{
 
         glBegin(GL_QUADS);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 0.05, pos.getY() - 0.05);
+        glVertex2d(pos.getX() - 40, pos.getY() - 40);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 0.05, pos.getY() + 0.05);
+        glVertex2d(pos.getX() - 40, pos.getY() + 40);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 0.05, pos.getY() + 0.05);
+        glVertex2d(pos.getX() + 40, pos.getY() + 40);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 0.05, pos.getY() - 0.05);
+        glVertex2d(pos.getX() + 40, pos.getY() - 40);
         glEnd();
     }
 }

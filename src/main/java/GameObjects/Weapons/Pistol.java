@@ -20,10 +20,11 @@ public class Pistol extends Weapon{
     @Override
     public void draw() {
 
-        Position pos1 = rotate(angle, new Position(width / 2, 0));
-        Position pos2 = rotate(angle, new Position(-width / 2, 0));
-        Position pos3 = rotate(angle, new Position(-width / 2, length));
-        Position pos4 = rotate(angle, new Position(width / 2, length));
+        Position pos1 = rotate(angle, new Position(0, width / 2));
+        Position pos2 = rotate(angle, new Position(length, width / 2));
+        Position pos3 = rotate(angle, new Position(length, -width / 2));
+        Position pos4 = rotate(angle, new Position(0, -width / 2));
+
 
         glBegin(GL_QUADS);
         glColor3d(1, 1, 1);
@@ -66,7 +67,9 @@ public class Pistol extends Weapon{
         if (distance(pos, closestEnemy.pos) < range) {
             angle = angle(pos, closestEnemy.pos);
             inRange = true;
-        } else inRange = false;
+        } else {
+            inRange = false;
+        }
 
     }
 }

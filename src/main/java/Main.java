@@ -74,8 +74,10 @@ public class Main {
 
         } // the stack frame is popped automatically
 
+
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
+
         // Enable v-sync
         glfwSwapInterval(1);
 
@@ -89,13 +91,21 @@ public class Main {
         // bindings available for use.
         GL.createCapabilities();
 
-        glEnable(GL_TEXTURE_2D);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity(); // Resets any previous projection matrices
+        glOrtho(0, vidmode.width(), 0, vidmode.height(), 1, -1);
+        glMatrixMode(GL_MODELVIEW);
+
+
+        //glEnable(GL_TEXTURE_2D);
         glClearColor(0.53F, 0.53F, 0.53F, 1);
     }
 
     private void loop() {
 
-        Game game = new Game(window, 3);
+        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        Game game = new Game(window, vidmode);
 
         game.init();
 
@@ -112,7 +122,7 @@ public class Main {
             game.frameForward();
             int reset = glfwGetKey(window, GLFW_KEY_R);
             if (reset == GLFW_PRESS) {
-                game = new Game(window, 3);
+                game = new Game(window, glfwGetVideoMode(glfwGetPrimaryMonitor()));
                 game.init();
             }
             int close = glfwGetKey(window, GLFW_KEY_ESCAPE);

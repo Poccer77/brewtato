@@ -2,6 +2,8 @@ package GameObjects.Enemies;
 
 import Utilities.Position;
 
+import java.util.List;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class Tree extends Enemy{
@@ -56,7 +58,6 @@ public class Tree extends Enemy{
     }
 
     @Override
-    public void hunt(Position pos) {
-
+    public void hunt(Position pos, List<Enemy> enemies) {
     }
 }
