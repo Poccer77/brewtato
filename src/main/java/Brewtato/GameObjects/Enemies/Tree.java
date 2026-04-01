@@ -1,6 +1,6 @@
-package GameObjects.Enemies;
+package Brewtato.GameObjects.Enemies;
 
-import Utilities.Position;
+import Brewtato.Utilities.Position;
 
 import java.util.List;
 

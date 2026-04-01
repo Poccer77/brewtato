@@ -1,4 +1,4 @@
-package Utilities;
+package Brewtato.Utilities;
 
 public class Position {
 
@@ -18,6 +18,11 @@ public class Position {
     public void changePosition(float x, float y){
         X += x;
         Y += y;
+    }
+
+    public void changePosition(Position pos2){
+        X += pos2.getX();
+        Y += pos2.getY();
     }
 
     public float getX() {
@@ -44,8 +49,18 @@ public class Position {
     public String print(){
         return getX() + ", " + getY();
     }
+
     public void normalize(){
-        X /= Tools.distance(new Position(0, 0), this);
-        Y /= Tools.distance(new Position(0, 0), this);
+        float newX = X / Tools.distance(new Position(0, 0), this);
+        float newY = Y / Tools.distance(new Position(0, 0), this);
+        X = newX;
+        Y = newY;
+    }
+
+    public void normalize(float desiredLength){
+        float newX = (X / Tools.distance(this)) * desiredLength;
+        float newY = (Y / Tools.distance(this)) * desiredLength;
+        X = newX;
+        Y = newY;
     }
 }

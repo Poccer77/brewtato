@@ -1,9 +1,9 @@
-package GameObjects.Weapons;
+package Brewtato.GameObjects.Weapons;
 
-import Utilities.Position;
-import Utilities.Tools;
+import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
-import static Utilities.Tools.rotate;
+import static Brewtato.Utilities.Tools.rotate;
 import static org.lwjgl.opengl.GL11.*;
 
 public class PistolProjectile extends Projectile{
@@ -15,7 +15,7 @@ public class PistolProjectile extends Projectile{
         this.pos = pos;
         this.angle = angle;
         this.damage = damage;
-        speed = 150F;
+        speed = 100F;
         width = 10F;
         length = 30F;
     }

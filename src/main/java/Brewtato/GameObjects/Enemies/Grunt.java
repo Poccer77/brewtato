@@ -1,7 +1,7 @@
-package GameObjects.Enemies;
+package Brewtato.GameObjects.Enemies;
 
-import Utilities.Position;
-import static Utilities.Tools.*;
+import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class Grunt extends Enemy{
 
     @Override
     public boolean getHit(Position pos) {
-        return distance(this.pos, pos) < 40;
+        return Tools.distance(this.pos, pos) < 40;
     }
 
     @Override
@@ -29,14 +29,13 @@ public class Grunt extends Enemy{
 
     @Override
     public void hunt(Position playerPos, List<Enemy> enemies) {
-        float angle = angle(pos, playerPos);
-        Position moveTo = rotate(angle, new Position(speed, 0));
+        float angle = Tools.angle(pos, playerPos);
+        Position moveTo = Tools.rotate(angle, new Position(speed, 0));
         int count = 0;
         Position steer = new Position(0, 0);
-        Position target = new Position(pos.getX() + moveTo.getX(), pos.getY() + moveTo.getY());
         for (Enemy enemy : enemies) {
             if (enemy == this) continue;
-            float dist = distance(pos, enemy.pos);
+            float dist = Tools.distance(pos, enemy.pos);
             if (dist < 80 && dist > 0) {
                 count++;
                 Position tempSteer = new Position(pos.getX() - enemy.pos.getX(), pos.getY() - enemy.pos.getY());

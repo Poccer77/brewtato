@@ -1,12 +1,11 @@
-package GameObjects.Weapons;
+package Brewtato.GameObjects.Weapons;
 
-import GameObjects.Enemies.Enemy;
-import Utilities.Position;
+import Brewtato.GameObjects.Enemies.Enemy;
+import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
 import java.util.List;
 
-import static Utilities.Tools.*;
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Pistol extends Weapon{
@@ -20,10 +19,10 @@ public class Pistol extends Weapon{
     @Override
     public void draw() {
 
-        Position pos1 = rotate(angle, new Position(0, width / 2));
-        Position pos2 = rotate(angle, new Position(length, width / 2));
-        Position pos3 = rotate(angle, new Position(length, -width / 2));
-        Position pos4 = rotate(angle, new Position(0, -width / 2));
+        Position pos1 = Tools.rotate(angle, new Position(0, width / 2));
+        Position pos2 = Tools.rotate(angle, new Position(length, width / 2));
+        Position pos3 = Tools.rotate(angle, new Position(length, -width / 2));
+        Position pos4 = Tools.rotate(angle, new Position(0, -width / 2));
 
 
         glBegin(GL_QUADS);
@@ -60,12 +59,12 @@ public class Pistol extends Weapon{
         Enemy closestEnemy = enemies.get(0);
 
         for (Enemy enemy : enemies) {
-            if (distance(pos, enemy.pos) < distance(pos, closestEnemy.pos)) {
+            if (Tools.distance(pos, enemy.pos) < Tools.distance(pos, closestEnemy.pos)) {
                 closestEnemy = enemy;
             }
         }
-        if (distance(pos, closestEnemy.pos) < range) {
-            angle = angle(pos, closestEnemy.pos);
+        if (Tools.distance(pos, closestEnemy.pos) < range) {
+            angle = Tools.angle(pos, closestEnemy.pos);
             inRange = true;
         } else {
             inRange = false;

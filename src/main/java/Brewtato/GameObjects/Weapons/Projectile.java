@@ -1,7 +1,7 @@
-package GameObjects.Weapons;
+package Brewtato.GameObjects.Weapons;
 
-import GameObjects.Object;
-import Utilities.*;
+import Brewtato.GameObjects.Object;
+import Brewtato.Utilities.Position;
 
 public abstract class Projectile implements Object {
 

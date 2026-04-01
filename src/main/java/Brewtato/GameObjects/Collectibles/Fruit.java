@@ -1,10 +1,7 @@
-package GameObjects.Collectibles;
+package Brewtato.GameObjects.Collectibles;
 
-import GameObjects.Enemies.Enemy;
-import GameObjects.Player;
-import Utilities.Position;
-
-import java.util.List;
+import Brewtato.GameObjects.Player;
+import Brewtato.Utilities.Position;
 
 public class Fruit extends Collectible {
 

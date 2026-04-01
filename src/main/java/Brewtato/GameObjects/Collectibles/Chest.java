@@ -1,7 +1,7 @@
-package GameObjects.Collectibles;
+package Brewtato.GameObjects.Collectibles;
 
-import GameObjects.Player;
-import Utilities.Position;
+import Brewtato.GameObjects.Player;
+import Brewtato.Utilities.Position;
 
 public class Chest extends Collectible{
     public Chest(Position pos) {

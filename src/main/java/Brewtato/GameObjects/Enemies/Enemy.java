@@ -1,7 +1,7 @@
-package GameObjects.Enemies;
+package Brewtato.GameObjects.Enemies;
 
-import GameObjects.Object;
-import Utilities.Position;
+import Brewtato.GameObjects.Object;
+import Brewtato.Utilities.Position;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ public abstract class Enemy implements Object {
     public float speed;
     public Position pos;
     public int spawnAnimation = 70;
+    public int materialModifier;
 
     public abstract boolean getHit(Position pos);
     public abstract int attack();

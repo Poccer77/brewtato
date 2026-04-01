@@ -1,8 +1,8 @@
-package GameObjects.Weapons;
+package Brewtato.GameObjects.Weapons;
 
-import GameObjects.Enemies.Enemy;
-import GameObjects.Object;
-import Utilities.Position;
+import Brewtato.GameObjects.Enemies.Enemy;
+import Brewtato.GameObjects.Object;
+import Brewtato.Utilities.Position;
 
 import java.util.ArrayList;
 import java.util.List;

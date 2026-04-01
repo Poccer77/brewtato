@@ -1,10 +1,8 @@
-package GameObjects.Collectibles;
+package Brewtato.GameObjects.Collectibles;
 
-import GameObjects.Enemies.Enemy;
-import GameObjects.Player;
-import Utilities.Position;
-
-import static Utilities.Tools.*;
+import Brewtato.GameObjects.Player;
+import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
 public abstract class Collectible {
 
@@ -20,10 +18,10 @@ public abstract class Collectible {
     }
 
     public void follow(Player player) {
-        if (distance(pos, player.pos) < player.collectionRadius) inRange = true;
+        if (Tools.distance(pos, player.pos) < player.collectionRadius) inRange = true;
         if (!inRange) return;
-        float angle = angle(pos, player.pos);
-        Position moveTo = rotate(angle, new Position(speed, 0));
+        float angle = Tools.angle(pos, player.pos);
+        Position moveTo = Tools.rotate(angle, new Position(speed, 0));
         move(moveTo.getX(), moveTo.getY());
         if (speed < maxSpeed) speed *= 1.1;
     }

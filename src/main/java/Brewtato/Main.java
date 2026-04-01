@@ -1,9 +1,13 @@
-import Utilities.Position;
+package Brewtato;
+
+import Brewtato.Phases.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -14,9 +18,16 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
     // The window handle
-    private long window;
+    public static long window;
+    public static GLFWVidMode vidmode;
+    private static List<Phase> phases = new ArrayList<>();
+    private static Phase currentPhase;
+    private static boolean paused = false;
+    private static Pause pauseScreen = new Pause();
+    private static int phaseCounter = 0;
+    public static int tickTime = 10;
 
-    public void run() {
+    public static void run() {
 
         init();
         loop();
@@ -30,7 +41,7 @@ public class Main {
         glfwSetErrorCallback(null).free();
     }
 
-    private void init() {
+    private static void init() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -44,16 +55,16 @@ public class Main {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        // Get information about user screen
+        vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         // Create the window
         window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Hello World!", NULL, NULL);
-        if ( window == NULL )
-            throw new RuntimeException("Failed to create the GLFW window");
+        if ( window == NULL ) throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
 
@@ -93,22 +104,22 @@ public class Main {
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(0, vidmode.width(), 0, vidmode.height(), 1, -1);
+        glOrtho(0, vidmode.width(), 0, vidmode.height(), -1, 1);
         glMatrixMode(GL_MODELVIEW);
 
 
         //glEnable(GL_TEXTURE_2D);
         glClearColor(0.53F, 0.53F, 0.53F, 1);
+
+        phases.add(new Game());
+        phases.add(new Chests());
+        phases.add(new LevelUp());
+        phases.add(new Shop());
+
+        phases.get(phaseCounter).init();
     }
 
-    private void loop() {
-
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-        Game game = new Game(window, vidmode);
-
-        game.init();
-
+    private static void loop() {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -118,17 +129,20 @@ public class Main {
             // invoked during this call.
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) paused = !paused;
 
-            game.frameForward();
-            int reset = glfwGetKey(window, GLFW_KEY_R);
-            if (reset == GLFW_PRESS) {
-                game = new Game(window, glfwGetVideoMode(glfwGetPrimaryMonitor()));
-                game.init();
+            if (paused) {
+                phases.get(phaseCounter).draw();
+                pauseScreen.frameForward();
+            } else {
+                phases.get(phaseCounter).frameForward();
+                if (phases.get(phaseCounter).finished()) {
+                    phaseCounter = (phaseCounter + 1) % phases.size();
+                    phases.get(phaseCounter).init();
+                }
             }
-            int close = glfwGetKey(window, GLFW_KEY_ESCAPE);
-            if (close == GLFW_PRESS) break;
             glfwSwapBuffers(window); // swap the color buffers
-            try {Thread.sleep(10);}
+            try {Thread.sleep(tickTime);}
             catch (InterruptedException e) {
                 System.out.println("tf happened");
             }
@@ -136,7 +150,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new Main().run();
+        run();
     }
 
 }

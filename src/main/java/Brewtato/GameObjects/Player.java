@@ -1,9 +1,9 @@
-package GameObjects;
+package Brewtato.GameObjects;
 
-import GameObjects.Weapons.Weapon;
-import Utilities.Position;
+import Brewtato.GameObjects.Weapons.Weapon;
+import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
-import static Utilities.Tools.distance;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Player implements Object {
@@ -72,6 +72,6 @@ public class Player implements Object {
         }
     }
     public boolean collect(Position pos) {
-        return distance(this.pos, pos) < 60;
+        return Tools.distance(this.pos, pos) < 60;
     }
 }

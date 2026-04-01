@@ -1,10 +1,10 @@
-package GameObjects;
+package Brewtato.GameObjects;
 
-import Utilities.Position;
+import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
 import java.util.Random;
 
-import static Utilities.Tools.rotate;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Rock implements Object {
@@ -30,10 +30,10 @@ public class Rock implements Object {
     public void draw() {
 
 
-        Position pos1 = rotate(angle, new Position(-size / 2, -size / 2));
-        Position pos2 = rotate(angle, new Position(-size / 2, size / 2));
-        Position pos3 = rotate(angle, new Position(size / 2, size / 2));
-        Position pos4 = rotate(angle, new Position(size / 2, -size / 2));
+        Position pos1 = Tools.rotate(angle, new Position(-size / 2, -size / 2));
+        Position pos2 = Tools.rotate(angle, new Position(-size / 2, size / 2));
+        Position pos3 = Tools.rotate(angle, new Position(size / 2, size / 2));
+        Position pos4 = Tools.rotate(angle, new Position(size / 2, -size / 2));
 
         glBegin(GL_QUADS);
         glColor3d(0.5, 0.5, 0.5);

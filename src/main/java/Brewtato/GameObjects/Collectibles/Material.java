@@ -1,14 +1,11 @@
-package GameObjects.Collectibles;
+package Brewtato.GameObjects.Collectibles;
 
-import GameObjects.Enemies.Enemy;
-import GameObjects.Player;
-import Utilities.Position;
+import Brewtato.GameObjects.Player;
+import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
-import java.util.List;
 import java.util.Random;
 
-import static Utilities.Tools.angle;
-import static Utilities.Tools.rotate;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Material extends Collectible {
@@ -19,7 +16,7 @@ public class Material extends Collectible {
     public Material(Position pos) {
         super(pos);
         Random rand = new Random();
-        this.pos.changePosition(rand.nextFloat(-10, 11), rand.nextFloat(-10, 11));
+        this.pos.changePosition(rand.nextFloat(-30, 31), rand.nextFloat(-30, 31));
         angle = (float) Math.toRadians(rand.nextInt(361));
         size = rand.nextInt(20, 30);
     }
@@ -27,10 +24,10 @@ public class Material extends Collectible {
     @Override
     public void draw() {
 
-        Position pos1 = rotate(angle, new Position(-size / 2, -size / 2));
-        Position pos2 = rotate(angle, new Position(-size / 2, size / 2));
-        Position pos3 = rotate(angle, new Position(size / 2, size / 2));
-        Position pos4 = rotate(angle, new Position(size / 2, -size / 2));
+        Position pos1 = Tools.rotate(angle, new Position(-size / 2, -size / 2));
+        Position pos2 = Tools.rotate(angle, new Position(-size / 2, size / 2));
+        Position pos3 = Tools.rotate(angle, new Position(size / 2, size / 2));
+        Position pos4 = Tools.rotate(angle, new Position(size / 2, -size / 2));
 
         glBegin(GL_QUADS);
         glColor3d(0, 1, 0.482);

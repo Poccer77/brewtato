@@ -1,6 +1,4 @@
-package GameObjects;
-
-import Utilities.*;
+package Brewtato.GameObjects;
 
 public interface Object {
 
