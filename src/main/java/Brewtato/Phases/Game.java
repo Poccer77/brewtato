@@ -13,6 +13,7 @@ import Brewtato.GameObjects.Weapons.Pistol;
 import Brewtato.GameObjects.Weapons.Projectile;
 import Brewtato.GameObjects.Weapons.Weapon;
 import Brewtato.Utilities.Position;
+import static Brewtato.Stats.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +31,6 @@ public class Game implements Phase{
     private int windowWidth;
     private Player player;
     private Weapon[] weapons;
-    private int materials;
     private List<Enemy> enemies;
     private List<Enemy> spawningEnemies;
     private int spawnDelay = 100;
@@ -70,12 +70,12 @@ public class Game implements Phase{
 
         Position movement = new Position(0, 0);
 
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) movement.changePosition(-player.speed, 0);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) movement.changePosition(player.speed, 0);
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) movement.changePosition(0, player.speed);
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) movement.changePosition(0, -player.speed);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) movement.changePosition(-playerSpeed, 0);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) movement.changePosition(playerSpeed, 0);
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) movement.changePosition(0, playerSpeed);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) movement.changePosition(0, -playerSpeed);
 
-        movement.normalize(player.speed);
+        movement.normalize(playerSpeed);
 
         if (movement.getX() < 0) {
             if (windowPosition.getX() > 0 && windowPosition.getX() < fieldSize - windowWidth + 100 && player.pos.getX() <= (float) windowWidth / 2) {
@@ -115,8 +115,11 @@ public class Game implements Phase{
         spawnEnemies();
 
         for (Weapon weapon : player.weapons) {
-            weapon.aim(enemies);
+            weapon.aim(enemies, movement);
             if (!enemies.isEmpty()) weapon.shoot();
+            for (Projectile projectile : weapon.projectiles) {
+                projectile.move();
+            }
             for (int i = 0; i < weapon.projectiles.size(); i++) {
                 if (weapon.projectiles.get(i).pos.getX() + windowPosition.getX() < 0 || weapon.projectiles.get(i).pos.getX() + windowPosition.getX() > fieldSize
                         || weapon.projectiles.get(i).pos.getY() + windowPosition.getY() < 0 || weapon.projectiles.get(i).pos.getY() + windowPosition.getY() > fieldSize) {
@@ -174,7 +177,7 @@ public class Game implements Phase{
 
     @Override
     public boolean finished() {
-        return waveOver;
+        return materials >= 3;
     }
 
     private void checkCollisions() {
@@ -202,10 +205,10 @@ public class Game implements Phase{
                     min +=2;
                     max +=2;
                 }
-                for (int i = 0; i < rand.nextInt(min, (int) (player.materialModifier + max)); i++) {
+                for (int i = 0; i < rand.nextInt(min, (int) (materialModifier + max)); i++) {
                     collectibles.add(new Material(new Position(rand.nextFloat(enemy.pos.getX() - 10, enemy.pos.getX() + 11), rand.nextFloat(enemy.pos.getY() - 10, enemy.pos.getY() + 11))));
                 }
-                if (rand.nextInt(300) < Math.min(60, player.luck)) collectibles.add(new Fruit(enemy.pos));
+                if (rand.nextInt(300) < Math.min(60, luck)) collectibles.add(new Fruit(enemy.pos));
                 enIt.remove();
             }
         }
@@ -230,6 +233,8 @@ public class Game implements Phase{
             if (rand.nextInt(21) < 19) spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) fieldSize)), y(rand.nextFloat((float) fieldSize)))));
             else spawningEnemies.add(new Tree(new Position(x(rand.nextFloat((float) fieldSize)), y(rand.nextFloat((float) fieldSize)))));
         }
+
+        for (Enemy enemy : spawningEnemies) enemy.spawn();
 
         Iterator<Enemy> enIt = spawningEnemies.iterator();
         while (enIt.hasNext()) {

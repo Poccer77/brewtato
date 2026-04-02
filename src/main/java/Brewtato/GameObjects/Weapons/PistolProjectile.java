@@ -22,15 +22,17 @@ public class PistolProjectile extends Projectile{
 
     @Override
     public void move(float x, float y) {
-        pos.changePosition(x, y);
+        Position newPosition = Tools.rotate(angle, new Position(speed, 0));
+        pos.changePosition(newPosition);
+    }
+
+    public void move() {
+        Position newPosition = Tools.rotate(angle, new Position(speed, 0));
+        pos.changePosition(newPosition);
     }
 
     @Override
     public void draw() {
-
-        Position newPosition = Tools.rotate(angle, new Position(speed, 0));
-
-        move(newPosition.getX(), newPosition.getY());
 
         Position pos1 = rotate(angle, new Position(0, width / 2));
         Position pos2 = rotate(angle, new Position(length, width / 2));

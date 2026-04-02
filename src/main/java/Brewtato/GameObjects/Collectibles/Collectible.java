@@ -3,6 +3,7 @@ package Brewtato.GameObjects.Collectibles;
 import Brewtato.GameObjects.Player;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
+import static Brewtato.Stats.*;
 
 public abstract class Collectible {
 
@@ -18,7 +19,7 @@ public abstract class Collectible {
     }
 
     public void follow(Player player) {
-        if (Tools.distance(pos, player.pos) < player.collectionRadius) inRange = true;
+        if (Tools.distance(pos, player.pos) < collectionRadius) inRange = true;
         if (!inRange) return;
         float angle = Tools.angle(pos, player.pos);
         Position moveTo = Tools.rotate(angle, new Position(speed, 0));

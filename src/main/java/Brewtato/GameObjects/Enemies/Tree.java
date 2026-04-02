@@ -21,18 +21,22 @@ public class Tree extends Enemy{
         pos.changePosition(x, y);
     }
 
-    public void draw(){
-        double [] color = {0.267, 0.6, 0, 1};
+    public void spawn(){
+        if (spawnAnimation % 10 == 0) {
+            blink = !blink;
+        }
+        if (blink) {
+            spawnAnimation--;
+            color = new double[]{0.502, 0.38, 0, 1};
+        } else {
+            spawnAnimation--;
+            color = new double[]{1, 0, 0, 0};
+        }
+    }
 
-        if (spawnAnimation > 0) {
-            if (spawnAnimation % 10 == 0) {
-                blink = !blink;
-            }
-            if (blink) {
-                spawnAnimation--;
-                return;
-            } else spawnAnimation--;
-        } else {color = new double[]{0.502, 0.38, 0, 1};}
+    public void draw(){
+
+        if (spawnAnimation <= 0) color = new double[]{0.267, 0.6, 0, 1};
 
         glBegin(GL_QUADS);
         glColor4dv(color);

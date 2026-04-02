@@ -1,6 +1,9 @@
 package Brewtato.Utilities;
 
+import Brewtato.Main;
+
 import static java.lang.Math.*;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Tools {
 
@@ -19,5 +22,18 @@ public class Tools {
     public static Position rotate(float angle, Position pos) {
         pos.rotate(angle);
         return pos;
+    }
+
+    public static void dim() {
+        glBegin(GL_QUADS);
+        glColor4d(0, 0, 0, 0.5);
+        glVertex2d(0, 0);
+        glColor4d(0, 0, 0, 0.5);
+        glVertex2d(Main.vidmode.width(), 0);
+        glColor4d(0, 0, 0, 0.5);
+        glVertex2d(Main.vidmode.width(), Main.vidmode.height());
+        glColor4d(0, 0, 0, 0.5);
+        glVertex2d(0, Main.vidmode.height());
+        glEnd();
     }
 }

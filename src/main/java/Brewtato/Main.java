@@ -20,9 +20,9 @@ public class Main {
     // The window handle
     public static long window;
     public static GLFWVidMode vidmode;
-    private static List<Phase> phases = new ArrayList<>();
+    public static List<Phase> phases = new ArrayList<>();
     private static Phase currentPhase;
-    private static boolean paused = false;
+    public static boolean paused = false;
     private static Pause pauseScreen = new Pause();
     private static int phaseCounter = 0;
     public static int tickTime = 10;
@@ -65,7 +65,7 @@ public class Main {
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+                paused = !paused; // We will detect this in the rendering loop
         });
 
         // Get the thread stack and push a new frame
@@ -102,19 +102,22 @@ public class Main {
         // bindings available for use.
         GL.createCapabilities();
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
         glOrtho(0, vidmode.width(), 0, vidmode.height(), -1, 1);
         glMatrixMode(GL_MODELVIEW);
 
-
-        //glEnable(GL_TEXTURE_2D);
         glClearColor(0.53F, 0.53F, 0.53F, 1);
 
+
+
         phases.add(new Game());
-        phases.add(new Chests());
+        //phases.add(new Chests());
         phases.add(new LevelUp());
-        phases.add(new Shop());
+        //phases.add(new Shop());
 
         phases.get(phaseCounter).init();
     }
@@ -129,7 +132,6 @@ public class Main {
             // invoked during this call.
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
-            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) paused = !paused;
 
             if (paused) {
                 phases.get(phaseCounter).draw();

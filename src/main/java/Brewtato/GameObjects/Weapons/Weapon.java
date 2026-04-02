@@ -41,7 +41,7 @@ public abstract class Weapon implements Object {
         delay = 0;
     }
 
-    public void aim(List<Enemy> enemies) {
+    public void aim(List<Enemy> enemies, Position playerMove) {
 
     }
 

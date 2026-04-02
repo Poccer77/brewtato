@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Pistol extends Weapon{
+public class Pistol extends Weapon {
 
     boolean inRange;
 
@@ -46,30 +46,30 @@ public class Pistol extends Weapon{
         if (delay <= 0 && inRange) {
             projectiles.add(new PistolProjectile(angle, 5, pos));
             delay = attackSpeed;
-        } else {delay -= 10;}
+        } else {
+            delay -= 10;
+        }
     }
 
-    public void aim(List<Enemy> enemies) {
+    public void aim(List<Enemy> enemies, Position playerMove) {
 
-        if (enemies.isEmpty()) {
-            angle = 0;
-            return;
-        }
 
-        Enemy closestEnemy = enemies.get(0);
-
-        for (Enemy enemy : enemies) {
-            if (Tools.distance(pos, enemy.pos) < Tools.distance(pos, closestEnemy.pos)) {
-                closestEnemy = enemy;
+        if (!enemies.isEmpty()) {
+            Enemy closestEnemy = enemies.get(0);
+            for (Enemy enemy : enemies) {
+                if (Tools.distance(pos, enemy.pos) < Tools.distance(pos, closestEnemy.pos)) {
+                    closestEnemy = enemy;
+                }
+            }
+            if (Tools.distance(pos, closestEnemy.pos) < range) {
+                angle = Tools.angle(pos, closestEnemy.pos);
+                inRange = true;
+                return;
             }
         }
-        if (Tools.distance(pos, closestEnemy.pos) < range) {
-            angle = Tools.angle(pos, closestEnemy.pos);
-            inRange = true;
-        } else {
-            inRange = false;
-        }
-
+        if (playerMove.getX() < 0) angle = (float) Math.toRadians(180);
+        else if (playerMove.getX() > 0) angle = 0;
+        inRange = false;
     }
 }
 

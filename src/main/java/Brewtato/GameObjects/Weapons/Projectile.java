@@ -9,5 +9,6 @@ public abstract class Projectile implements Object {
     public float speed;
     public int damage;
     public float angle;
+    public abstract void move();
 
 }

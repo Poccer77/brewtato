@@ -3,6 +3,7 @@ package Brewtato.GameObjects.Collectibles;
 import Brewtato.GameObjects.Player;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
+import static Brewtato.Stats.*;
 
 import java.util.Random;
 
@@ -44,7 +45,7 @@ public class Material extends Collectible {
 
     @Override
     public void buff(Player player) {
-        player.materials += 1;
-        player.exp += player.expModifier;
+        materials += 1;
+        exp += 1 + expModifier;
     }
 }

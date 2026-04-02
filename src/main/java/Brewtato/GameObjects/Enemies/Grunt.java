@@ -9,12 +9,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Grunt extends Enemy{
 
-    boolean blink = false;
-
     public Grunt(Position pos) {
         health = 10;
         speed = 20F;
         this.pos = pos;
+        color = new double[]{0.78, 0, 0, 1};
     }
 
     @Override
@@ -57,19 +56,23 @@ public class Grunt extends Enemy{
         pos.changePosition(x, y);
     }
 
+    public void spawn() {
+        if (spawnAnimation % 10 == 0) {
+            blink = !blink;
+        }
+        if (blink) {
+            spawnAnimation--;
+            color = new double[]{0.78, 0, 0, 1};
+        } else {
+            spawnAnimation--;
+            color = new double[]{1, 0, 0, 0};
+        }
+    }
+
     @Override
     public void draw(){
-        double [] color = {0.78, 0, 0, 1};
 
-        if (spawnAnimation > 0) {
-            if (spawnAnimation % 10 == 0) {
-                blink = !blink;
-            }
-            if (blink) {
-                spawnAnimation--;
-                return;
-            } else spawnAnimation--;
-        } else {color = new double[]{0.584, 0, 0.78, 1};}
+        if (spawnAnimation <= 0) color = new double[] {0.584, 0, 0.78, 1};
 
         glBegin(GL_QUADS);
         glColor4dv(color);
