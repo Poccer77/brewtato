@@ -1,6 +1,7 @@
 package Brewtato;
 
 import Brewtato.Phases.*;
+import Brewtato.Utilities.Tools;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -138,6 +139,7 @@ public class Main {
                 pauseScreen.frameForward();
             } else {
                 phases.get(phaseCounter).frameForward();
+                Tools.write("This is text");
                 if (phases.get(phaseCounter).finished()) {
                     phaseCounter = (phaseCounter + 1) % phases.size();
                     phases.get(phaseCounter).init();
