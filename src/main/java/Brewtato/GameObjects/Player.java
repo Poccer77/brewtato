@@ -1,23 +1,28 @@
 package Brewtato.GameObjects;
 
 import Brewtato.GameObjects.Weapons.Weapon;
-import Brewtato.Utilities.Position;
-import Brewtato.Utilities.Tools;
+import Brewtato.Utilities.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static Brewtato.Stats.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Player implements Object {
 
-    public Weapon[] weapons = new Weapon[6];
+    public Hitbox hit;
+
+    public List<Weapon> weapons = new ArrayList<>();
 
     private int invul = invulnerability;
     public Position pos;
 
     public Player(Position pos) {
-        playerSpeed = 25F;
+        playerSpeed = 19F;
         this.pos = pos;
-
+        hit = new Hitbox();
     }
 
     public void move(float x, float y){
@@ -27,24 +32,28 @@ public class Player implements Object {
     public void draw(){
         glBegin(GL_QUADS);
         glColor3d(0.878, 0.667, 0);
-        glVertex2d(pos.getX() - 40, pos.getY() - 40);
+        glVertex2d(pos.getX() - 60, pos.getY() - 60);
         glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() - 40, pos.getY() + 40);
+        glVertex2d(pos.getX() - 60, pos.getY() + 60);
         glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() + 40, pos.getY() + 40);
+        glVertex2d(pos.getX() + 60, pos.getY() + 60);
         glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() + 40, pos.getY() - 40);
+        glVertex2d(pos.getX() + 60, pos.getY() - 60);
         glEnd();
 
-        int weaponCount = weapons.length;
+        hit.x1.setPosition(pos.getX() - 80, pos.getY() - 80);
+        hit.x2.setPosition(pos.getX() - 80, pos.getY() + 80);
+        hit.x3.setPosition(pos.getX() + 80, pos.getY() + 80);
+        hit.x4.setPosition(pos.getX() + 80, pos.getY() - 80);
+
+        int weaponCount = weapons.size();
         int anglePart = (360 / weaponCount);
         float angle = 0;
 
         for (Weapon weapon : weapons) {
-            weapon.setPos(new Position(100, 0));
+            weapon.setPos(new Position(150, 0));
             weapon.pos.rotate(angle);
             weapon.pos.changePosition(pos.getX(), pos.getY());
-            weapon.draw();
             angle += (float) Math.toRadians(anglePart);
         }
     }

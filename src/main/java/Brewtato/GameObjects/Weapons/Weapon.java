@@ -2,7 +2,7 @@ package Brewtato.GameObjects.Weapons;
 
 import Brewtato.GameObjects.Enemies.Enemy;
 import Brewtato.GameObjects.Object;
-import Brewtato.Utilities.Position;
+import Brewtato.Utilities.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ public abstract class Weapon implements Object {
     int delay;
     public float angle;
     public double range;
+    public Hitbox hit;
 
     public Position getPos() {
         return pos;

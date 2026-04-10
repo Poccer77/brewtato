@@ -5,24 +5,41 @@ import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
-
-public class Pistol extends Weapon {
+public class Shotgun extends Weapon {
 
     boolean inRange;
 
-    public Pistol(int damage, int attackSpeed, float length, float width, double range) {
+    public Shotgun(int damage, int attackSpeed, float length, float width, double range) {
         super(damage, attackSpeed, length, width, range);
+    }
+
+    @Override
+    public void shoot() {
+        if (delay <= 0 && inRange) {
+            for (int i = 0; i < 5; i++) {
+                projectiles.add(new PistolProjectile(angle + (float) Math.toRadians(new Random().nextInt(61) - 30), 5, pos));
+            }
+            delay = attackSpeed;
+        } else {
+            delay -= 10;
+        }
+    }
+
+    @Override
+    public void move(float x, float y) {
+
     }
 
     @Override
     public void draw() {
 
-        Position pos1 = Tools.rotate(angle, new Position(0, width / 2));
-        Position pos2 = Tools.rotate(angle, new Position(length, width / 2));
-        Position pos3 = Tools.rotate(angle, new Position(length, -width / 2));
-        Position pos4 = Tools.rotate(angle, new Position(0, -width / 2));
+        Position pos1 = Tools.rotate(angle, new Position(0, width / 2.5F));
+        Position pos2 = Tools.rotate(angle, new Position(length, width / 1.5F));
+        Position pos3 = Tools.rotate(angle, new Position(length, -width / 1.5F));
+        Position pos4 = Tools.rotate(angle, new Position(0, -width / 2.5F));
 
 
         glBegin(GL_QUADS);
@@ -35,20 +52,6 @@ public class Pistol extends Weapon {
         glColor3d(1, 1, 1);
         glVertex2d(pos.getX() + pos4.getX(), pos.getY() + pos4.getY());
         glEnd();
-    }
-
-    @Override
-    public void move(float x, float y) {
-
-    }
-
-    public void shoot() {
-        if (delay <= 0 && inRange) {
-            projectiles.add(new PistolProjectile(angle, 5, pos));
-            delay = attackSpeed;
-        } else {
-            delay -= 10;
-        }
     }
 
     public void aim(List<Enemy> enemies, Position playerMove) {
@@ -71,4 +74,3 @@ public class Pistol extends Weapon {
         inRange = false;
     }
 }
-

@@ -11,9 +11,11 @@ import Brewtato.GameObjects.Enemies.Enemy;
 import Brewtato.GameObjects.Enemies.Grunt;
 import Brewtato.GameObjects.Weapons.Pistol;
 import Brewtato.GameObjects.Weapons.Projectile;
+import Brewtato.GameObjects.Weapons.Shotgun;
 import Brewtato.GameObjects.Weapons.Weapon;
 import Brewtato.Utilities.Position;
 import static Brewtato.Stats.*;
+import static Brewtato.Utilities.Tools.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,8 +55,8 @@ public class Game implements Phase{
     public void init(){
 
         spawnEnemies();
-        for (int i = 0; i < player.weapons.length; i++) {
-            player.weapons[i] = new Pistol(1, 100, 40F, 20F, 1000);
+        for (int i = 0; i < 5; i++) {
+            player.weapons.add(new Pistol(1, 100, 60, 30, 1000));
         }
         player.draw();
         initRocks();
@@ -97,7 +99,7 @@ public class Game implements Phase{
             if (windowPosition.getY() < fieldSize - windowHeight && windowPosition.getY() > -100 && player.pos.getY() >= (float) windowHeight / 2) {
                 moveCamera(0, movement.getY());
             }
-            else if (player.pos.getY() < windowHeight){
+            else if (player.pos.getY() < windowHeight) {
                 player.move(0, movement.getY());
             }
         }
@@ -110,9 +112,15 @@ public class Game implements Phase{
                 player.move(0, movement.getY());
             }
         }
+        spawnEnemies();
 
         checkCollisions();
-        spawnEnemies();
+        for (Enemy enemy : enemies) {
+            enemy.hunt(player.pos, enemies);
+        }
+        for (Collectible collectible : collectibles) {
+            collectible.follow(player);
+        }
 
         for (Weapon weapon : player.weapons) {
             weapon.aim(enemies, movement);
@@ -128,14 +136,9 @@ public class Game implements Phase{
                 }
             }
         }
-        checkCollisions();
-        for (Enemy enemy : enemies) {
-            enemy.hunt(player.pos, enemies);
-        }
-        for (Collectible collectible : collectibles) {
-            collectible.follow(player);
-        }
+
         draw();
+
     }
 
     private float x(float x) {
@@ -144,6 +147,7 @@ public class Game implements Phase{
     private float y(float y) {
         return y - windowPosition.getY();
     }
+
     private void moveCamera(float x, float y) {
         windowPosition.changePosition(x, y);
         for (Rock rock : rocks) {
@@ -169,15 +173,18 @@ public class Game implements Phase{
         rocks.forEach(Rock::draw);
         collectibles.forEach(Collectible::draw);
         player.draw();
-        spawningEnemies.forEach(Object::draw);
-        enemies.forEach(Object::draw);
-        for (Weapon weapon : player.weapons) weapon.projectiles.forEach(Object::draw);
+        spawningEnemies.forEach(Enemy::draw);
+        enemies.forEach(Enemy::draw);
+        for (Weapon weapon : player.weapons) {
+            weapon.draw();
+            weapon.projectiles.forEach(Projectile::draw);
+        }
 
     }
 
     @Override
     public boolean finished() {
-        return materials >= 3;
+        return false;
     }
 
     private void checkCollisions() {
@@ -189,13 +196,13 @@ public class Game implements Phase{
                 Iterator<Projectile> proIt = weapon.projectiles.iterator();
                 while(proIt.hasNext()) {
                     Projectile projectile = proIt.next();
-                    if (enemy.getHit(projectile.pos)) {
+                    if (overlap(enemy.hit, projectile.hit)) {
                         enemy.health -= projectile.damage;
                         proIt.remove();
                     }
                 }
             }
-            if (enemy.getHit(player.pos)) {
+            if (overlap(player.hit, enemy.hit)) {
                 player.getHit(enemy.damage, true);
             }
             if (enemy.health <= 0) {

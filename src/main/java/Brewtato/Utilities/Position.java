@@ -15,10 +15,16 @@ public class Position {
         Y = y;
     }
 
+    public void setPosition(Position pos){
+        X = pos.getX();
+        Y = pos.getY();
+    }
+
     public void changePosition(float x, float y){
         X += x;
         Y += y;
     }
+
 
     public void changePosition(Position pos2){
         X += pos2.getX();
@@ -46,18 +52,19 @@ public class Position {
         setPosition(rx, ry);
     }
 
-    public String print(){
+    public String toString(){
         return getX() + ", " + getY();
     }
 
     public void normalize(){
-        float newX = X / Tools.distance(new Position(0, 0), this);
-        float newY = Y / Tools.distance(new Position(0, 0), this);
+        float newX = (X == 0) ? 0 : (X / Tools.distance(new Position(0, 0), this));
+        float newY = (Y == 0) ? 0 : (Y / Tools.distance(new Position(0, 0), this));
         X = newX;
         Y = newY;
     }
 
     public void normalize(float desiredLength){
+        if (X == 0 && Y == 0) return;
         float newX = (X / Tools.distance(this)) * desiredLength;
         float newY = (Y / Tools.distance(this)) * desiredLength;
         X = newX;

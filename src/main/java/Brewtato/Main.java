@@ -1,11 +1,13 @@
 package Brewtato;
 
 import Brewtato.Phases.*;
+import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import java.io.File;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,9 @@ public class Main {
     private static Pause pauseScreen = new Pause();
     private static int phaseCounter = 0;
     public static int tickTime = 10;
+    public static TrueTypeFont ttf;
+
+
 
     public static void run() {
 
@@ -103,17 +108,22 @@ public class Main {
         // bindings available for use.
         GL.createCapabilities();
 
+        try {
+            ttf = new TrueTypeFont("src/main/resources/monofonto.ttf");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(0, vidmode.width(), 0, vidmode.height(), -1, 1);
+        glOrtho(0, vidmode.width(), 0, vidmode.height(),-1, 1);
         glMatrixMode(GL_MODELVIEW);
 
         glClearColor(0.53F, 0.53F, 0.53F, 1);
-
-
 
         phases.add(new Game());
         //phases.add(new Chests());
@@ -121,6 +131,7 @@ public class Main {
         //phases.add(new Shop());
 
         phases.get(phaseCounter).init();
+
     }
 
     private static void loop() {
@@ -136,10 +147,10 @@ public class Main {
 
             if (paused) {
                 phases.get(phaseCounter).draw();
+
                 pauseScreen.frameForward();
             } else {
                 phases.get(phaseCounter).frameForward();
-                Tools.write("This is text");
                 if (phases.get(phaseCounter).finished()) {
                     phaseCounter = (phaseCounter + 1) % phases.size();
                     phases.get(phaseCounter).init();

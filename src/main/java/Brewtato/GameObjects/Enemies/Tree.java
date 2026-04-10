@@ -1,5 +1,6 @@
 package Brewtato.GameObjects.Enemies;
 
+import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class Tree extends Enemy{
         this.pos = pos;
         health = 30;
         speed = 0;
+        hit = new Hitbox();
     }
 
     @Override
@@ -40,20 +42,25 @@ public class Tree extends Enemy{
 
         glBegin(GL_QUADS);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 50, pos.getY() - 50);
+        glVertex2d(pos.getX() - 75, pos.getY() - 75);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 50, pos.getY() + 50);
+        glVertex2d(pos.getX() - 75, pos.getY() + 75);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 50, pos.getY() + 50);
+        glVertex2d(pos.getX() + 75, pos.getY() + 75);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 50, pos.getY() - 50);
+        glVertex2d(pos.getX() + 75, pos.getY() - 75);
         glEnd();
+
+        hit.x1.setPosition(pos.getX() - 75, pos.getY() - 75);
+        hit.x2.setPosition(pos.getX() - 75, pos.getY() + 75);
+        hit.x3.setPosition(pos.getX() + 75, pos.getY() + 75);
+        hit.x4.setPosition(pos.getX() + 75, pos.getY() - 75);
     }
 
     @Override
     public boolean getHit(Position pos) {
-        return pos.getX() < this.pos.getX() + 50 && pos.getX() > this.pos.getX() - 50
-                && pos.getY() < this.pos.getY() + 50 && pos.getY() > this.pos.getY() - 50;
+        return pos.getX() < this.pos.getX() + 75 && pos.getX() > this.pos.getX() - 75
+               && pos.getY() < this.pos.getY() + 75 && pos.getY() > this.pos.getY() - 75;
     }
 
     @Override

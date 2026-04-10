@@ -1,12 +1,13 @@
 package Brewtato.GameObjects.Enemies;
 
 import Brewtato.GameObjects.Object;
-import Brewtato.Utilities.Position;
+import Brewtato.Utilities.*;
 
 import java.util.List;
 
 public abstract class Enemy implements Object {
 
+    public Hitbox hit;
     public int health;
     public int damage;
     public float speed;

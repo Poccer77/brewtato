@@ -1,5 +1,6 @@
 package Brewtato.GameObjects.Enemies;
 
+import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 
@@ -11,14 +12,17 @@ public class Grunt extends Enemy{
 
     public Grunt(Position pos) {
         health = 10;
-        speed = 20F;
+        speed = 13F;
         this.pos = pos;
         color = new double[]{0.78, 0, 0, 1};
+        hit = new Hitbox();
     }
 
     @Override
     public boolean getHit(Position pos) {
-        return Tools.distance(this.pos, pos) < 40;
+
+        return pos.getX() < this.pos.getX() + 60 && pos.getX() > this.pos.getX() - 60
+               && pos.getY() < this.pos.getY() + 60 && pos.getY() > this.pos.getY() - 60;
     }
 
     @Override
@@ -76,13 +80,18 @@ public class Grunt extends Enemy{
 
         glBegin(GL_QUADS);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 40, pos.getY() - 40);
+        glVertex2d(pos.getX() - 60, pos.getY() - 60);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 40, pos.getY() + 40);
+        glVertex2d(pos.getX() - 60, pos.getY() + 60);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 40, pos.getY() + 40);
+        glVertex2d(pos.getX() + 60, pos.getY() + 60);
         glColor4dv(color);
-        glVertex2d(pos.getX() + 40, pos.getY() - 40);
+        glVertex2d(pos.getX() + 60, pos.getY() - 60);
         glEnd();
+
+        hit.x1.setPosition(pos.getX() - 60, pos.getY() - 60);
+        hit.x2.setPosition(pos.getX() - 60, pos.getY() + 60);
+        hit.x3.setPosition(pos.getX() + 60, pos.getY() + 60);
+        hit.x4.setPosition(pos.getX() + 60, pos.getY() - 60);
     }
 }

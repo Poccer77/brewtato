@@ -2,8 +2,16 @@ package Brewtato.Utilities;
 
 import Brewtato.Main;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBTruetype;
 
+import javax.swing.text.AttributeSet;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+
+import static Brewtato.Main.vidmode;
+import static org.lwjgl.opengl.GL46.*;
 
 import static java.lang.Math.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -33,23 +41,18 @@ public class Tools {
         glColor4d(0, 0, 0, 0.5);
         glVertex2d(0, 0);
         glColor4d(0, 0, 0, 0.5);
-        glVertex2d(Main.vidmode.width(), 0);
+        glVertex2d(vidmode.width(), 0);
         glColor4d(0, 0, 0, 0.5);
-        glVertex2d(Main.vidmode.width(), Main.vidmode.height());
+        glVertex2d(vidmode.width(), vidmode.height());
         glColor4d(0, 0, 0, 0.5);
-        glVertex2d(0, Main.vidmode.height());
+        glVertex2d(0, vidmode.height());
         glEnd();
     }
 
-    public static void write(String text) {
-        ByteBuffer buffer = BufferUtils.createByteBuffer(text.length() * 270);
+    public static void write(String text, Position pos) {
+    }
 
-        int quads = stb_easy_font_print(Main.vidmode.width() / 2, Main.vidmode.height() / 2, text, null, buffer);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(2, GL_FLOAT, 16, buffer);
-        glColor3f(255, 255, 255);
-        glDrawArrays(GL_QUADS, 0, quads * 4);
+    public static boolean overlap(Hitbox h1, Hitbox h2) {
+        return h1.isWithin(h2.x1) || h1.isWithin(h2.x2) || h1.isWithin(h2.x3) || h1.isWithin(h2.x4);
     }
 }
