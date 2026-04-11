@@ -184,7 +184,7 @@ public class Game implements Phase{
 
     @Override
     public boolean finished() {
-        return false;
+        return materials > 3;
     }
 
     private void checkCollisions() {

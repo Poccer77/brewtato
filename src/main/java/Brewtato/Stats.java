@@ -26,5 +26,6 @@ public class Stats {
     public static int invulnerability;
     public static int collectibleHealAmount;
     public static int chests;
+    public static float waveRarityScaling;
 
 }

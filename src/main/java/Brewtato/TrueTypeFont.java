@@ -4,8 +4,8 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -17,11 +17,10 @@ public class TrueTypeFont {
     private Graphics2D imageGraphics;
     private int image = 0;
 
-    private static final Map<Integer, String> CHARS = new HashMap<Integer, String>() {{
-        put(1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        put(2, "abcdefghijklmnopqrstuvwxyz");
+    private static final Map<Integer, String> CHARS = new HashMap<>() {{
+        put(1, "ABCDEFGHIJKLMNOPRSTUVWXYQZ");
+        put(2, "abcdefhiklmnorstuvwxzgpqyj");
         put(3, "0123456789");
-        put(4, "Ãƒâ€žÃƒâ€ÃƒÅÃƒÂ¤ÃƒÂ¶ÃƒÂ¼ÃƒÅ¸");   // Yep - I am from Germany ^^
         put(5, "$+-*/=%\"'#@&_(),.;:?!\\|<>[]Ã,Â§`^~");
     }};
 
@@ -47,16 +46,16 @@ public class TrueTypeFont {
         glBegin(GL_QUADS);
 
         glTexCoord2f(0, 0);
-        glVertex3f(x, y, 0);
+        glVertex3f(x, y + 512, 0);
 
         glTexCoord2f(1, 0);
-        glVertex3f(x + 512, y, 0);
-
-        glTexCoord2f(1, 1);
         glVertex3f(x + 512, y + 512, 0);
 
+        glTexCoord2f(1, 1);
+        glVertex3f(x + 512, y, 0);
+
         glTexCoord2f(0, 1);
-        glVertex3f(x, y + 512, 0);
+        glVertex3f(x, y, 0);
 
         glEnd();
         glDisable(GL_TEXTURE_2D);
@@ -66,6 +65,7 @@ public class TrueTypeFont {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, image);
         glBegin(GL_QUADS);
+        Set<Character> lowercaseChars = new HashSet<>(Arrays.asList('p', 'q', 'j', 'g', 'y'));
         for (char c : text.toCharArray()) {
             for (int index : CHARS.keySet()) {
                 float p = (float) CHARS.get(index).indexOf(c);
@@ -75,18 +75,29 @@ public class TrueTypeFont {
                     float xStart = recX * p;
                     float yStart = recY * (index - 1);
 
+                    float lowercase = 0;
+
+                    if (lowercaseChars.contains(c)) {
+                        lowercase += 1f / 512f * 4f;
+                        recY += lowercase;
+                        lowercase = 3f;
+                    }
+
+
+
+
 
                     glTexCoord2f(xStart, yStart + recY);
-                    glVertex3f(x, y, 0);
+                    glVertex3f(x, y - lowercase, 0);
 
                     glTexCoord2f(xStart + recX, yStart + recY);
-                    glVertex3f(x + size, y, 0);
+                    glVertex3f(x + size, y - lowercase, 0);
 
                     glTexCoord2f(xStart + recX, yStart);
-                    glVertex3f(x + size, y + size * 2, 0);
+                    glVertex3f(x + size, y - lowercase + size * 2, 0);
 
                     glTexCoord2f(xStart, yStart);
-                    glVertex3f(x, y + size * 2, 0);
+                    glVertex3f(x, y - lowercase + size * 2, 0);
 
                     break;
                 }
@@ -96,6 +107,10 @@ public class TrueTypeFont {
 
         glEnd();
         glDisable(GL_TEXTURE_2D);
+    }
+
+    public int stringWidth (String string, int size) {
+        return size * string.length();
     }
 
     private void generateTexture() {
