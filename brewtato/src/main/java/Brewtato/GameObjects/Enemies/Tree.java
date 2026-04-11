@@ -1,0 +1,74 @@
+package Brewtato.GameObjects.Enemies;
+
+import Brewtato.Utilities.Hitbox;
+import Brewtato.Utilities.Position;
+
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
+
+public class Tree extends Enemy{
+
+    public boolean blink = false;
+
+    public Tree(Position pos) {
+        this.pos = pos;
+        health = 30;
+        speed = 0;
+        hit = new Hitbox();
+    }
+
+    @Override
+    public void move(float x, float y) {
+        pos.changePosition(x, y);
+    }
+
+    public void spawn(){
+        if (spawnAnimation % 10 == 0) {
+            blink = !blink;
+        }
+        if (blink) {
+            spawnAnimation--;
+            color = new double[]{0.502, 0.38, 0, 1};
+        } else {
+            spawnAnimation--;
+            color = new double[]{1, 0, 0, 0};
+        }
+    }
+
+    public void draw(){
+
+        if (spawnAnimation <= 0) color = new double[]{0.267, 0.6, 0, 1};
+
+        glBegin(GL_QUADS);
+        glColor4dv(color);
+        glVertex2d(pos.getX() - 75, pos.getY() - 75);
+        glColor4dv(color);
+        glVertex2d(pos.getX() - 75, pos.getY() + 75);
+        glColor4dv(color);
+        glVertex2d(pos.getX() + 75, pos.getY() + 75);
+        glColor4dv(color);
+        glVertex2d(pos.getX() + 75, pos.getY() - 75);
+        glEnd();
+
+        hit.x1.setPosition(pos.getX() - 75, pos.getY() - 75);
+        hit.x2.setPosition(pos.getX() - 75, pos.getY() + 75);
+        hit.x3.setPosition(pos.getX() + 75, pos.getY() + 75);
+        hit.x4.setPosition(pos.getX() + 75, pos.getY() - 75);
+    }
+
+    @Override
+    public boolean getHit(Position pos) {
+        return pos.getX() < this.pos.getX() + 75 && pos.getX() > this.pos.getX() - 75
+               && pos.getY() < this.pos.getY() + 75 && pos.getY() > this.pos.getY() - 75;
+    }
+
+    @Override
+    public int attack() {
+        return 0;
+    }
+
+    @Override
+    public void hunt(Position pos, List<Enemy> enemies) {
+    }
+}

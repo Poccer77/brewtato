@@ -1,0 +1,95 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"83b9b637-690e-476a-9f64-bea69a00fd5d\" name=\"Changes\" comment=\"implement enemy spawning\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Chest.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/GameObjects/Rock.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/gradle.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/gradle.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/misc.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/Game.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Game.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Collectible.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Collectible.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Fruit.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Fruit.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Material.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Material.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/GameObjects/Enemies/Tree.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/GameObjects/Enemies/Tree.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/GameObjects/Player.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/GameObjects/Player.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Interface\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"3B7IJL1uglEkrnBcAk72LJXib72\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"autoscrollFromSource\" value=\"true\" />\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n    <option name=\"sortByType\" value=\"true\" />\r\n    <option name=\"sortKey\" value=\"BY_TYPE\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.Main.executor\": \"Run\",\r\n    \"Gradle.Build brewtato.executor\": \"Run\",\r\n    \"Gradle.Download Sources.executor\": \"Run\",\r\n    \"Gradle.Projects [:Main.main()].executor\": \"Run\",\r\n    \"Gradle.brewtato [:Main.main()].executor\": \"Run\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"RunOnceActivity.typescript.service.memoryLimit.init\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"codeWithMe.voiceChat.enabledByDefault\": \"false\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"D:/Files/files/Projekte/brewtato\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"settings.editor.selected.configurable\": \"preferences.lookFeel\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration default=\"true\" type=\"Babashka\" factoryName=\"BabashkaLocalRepl\" activateToolWindowBeforeRun=\"false\">\r\n      <setting name=\"displayName\" value=\"\" />\r\n      <setting name=\"bbPath\" value=\"\" />\r\n      <setting name=\"parameters\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <setting name=\"workingDir\" value=\"\" />\r\n      <setting name=\"focusEditor\" value=\"false\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"ClojureREPL\" factoryName=\"Local\" activateToolWindowBeforeRun=\"false\">\r\n      <option name=\"configVersion\" value=\"1\" />\r\n      <option name=\"options\" />\r\n      <option name=\"profiles\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"ClojureREPL\" factoryName=\"Remote\" activateToolWindowBeforeRun=\"false\">\r\n      <setting name=\"displayName\" value=\"\" />\r\n      <setting name=\"host\" value=\"\" />\r\n      <setting name=\"port\" value=\"0\" />\r\n      <setting name=\"replType\" value=\"SOCKET\" />\r\n      <setting name=\"configType\" value=\"SPECIFY\" />\r\n      <setting name=\"replPortFileType\" value=\"STANDARD\" />\r\n      <setting name=\"customPortFile\" value=\"\" />\r\n      <setting name=\"fixLineNumbers\" value=\"false\" />\r\n      <setting name=\"useHeartbeat\" value=\"true\" />\r\n      <setting name=\"focusEditor\" value=\"false\" />\r\n      <setting name=\"urlFile\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"brewtato.main\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\".*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.15989.150\" />\r\n        <option value=\"bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-IU-241.15989.150\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"83b9b637-690e-476a-9f64-bea69a00fd5d\" name=\"Changes\" comment=\"\" />\r\n      <created>1773833614743</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1773833614743</updated>\r\n      <workItem from=\"1773833615822\" duration=\"495000\" />\r\n      <workItem from=\"1773834755639\" duration=\"9225000\" />\r\n      <workItem from=\"1773918855766\" duration=\"18000\" />\r\n      <workItem from=\"1773918927688\" duration=\"4524000\" />\r\n      <workItem from=\"1773923525373\" duration=\"4825000\" />\r\n      <workItem from=\"1774004266452\" duration=\"15113000\" />\r\n      <workItem from=\"1774021150216\" duration=\"186000\" />\r\n      <workItem from=\"1774264316351\" duration=\"13636000\" />\r\n      <workItem from=\"1774296467517\" duration=\"647000\" />\r\n      <workItem from=\"1774306141844\" duration=\"1045000\" />\r\n      <workItem from=\"1774437276948\" duration=\"5187000\" />\r\n      <workItem from=\"1774444851446\" duration=\"71000\" />\r\n      <workItem from=\"1774487874350\" duration=\"3949000\" />\r\n      <workItem from=\"1774522965486\" duration=\"11303000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"implemented full camera, enemies orbit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1773928733426</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1773928733426</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"implement weapons, enemies chase player, weapons shoot and kill enemies, enemies damage player.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1774021329107</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1774021329107</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"implement enemy spawning\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1774277989762</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1774277989762</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"4\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"RECENT_FILTERS\">\r\n      <map>\r\n        <entry key=\"Paths\">\r\n          <value>\r\n            <list>\r\n              <RecentGroup>\r\n                <option name=\"FILTER_VALUES\">\r\n                  <option value=\"file:$PROJECT_DIR$/src/main/java/Main.java\" />\r\n                </option>\r\n              </RecentGroup>\r\n            </list>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"main\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                  <entry key=\"structure\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"file:$PROJECT_DIR$/src/main/java/Main.java\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"change gitignore\" />\r\n    <MESSAGE value=\"implemented full camera, enemies orbit\" />\r\n    <MESSAGE value=\"implement weapons, enemies chase player, weapons shoot and kill enemies, enemies damage player.\" />\r\n    <MESSAGE value=\"implement enemy spawning\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"implement enemy spawning\" />\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 80c35d13a4e0a32d1d5f396faac9ac2ad4a3026a)
++++ b/.idea/workspace.xml	(date 1774561499550)
+@@ -4,18 +4,8 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="83b9b637-690e-476a-9f64-bea69a00fd5d" name="Changes" comment="implement enemy spawning">
+-      <change afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Chest.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Rock.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
++    <list default="true" id="83b9b637-690e-476a-9f64-bea69a00fd5d" name="Changes" comment="implement materials and rocks (materials float sometimes)">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Game.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Collectible.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Collectible.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Fruit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Fruit.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Collectibles/Material.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Enemies/Tree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Enemies/Tree.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/GameObjects/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameObjects/Player.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -38,6 +28,22 @@
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
++  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
++  "lastFilter": {
++    "state": "OPEN",
++    "assignee": "Poccer77"
++  }
++}]]></component>
++  <component name="GithubPullRequestsUISettings"><![CDATA[{
++  "selectedUrlAndAccountId": {
++    "url": "https://github.com/Poccer77/brewtato.git",
++    "accountId": "cae170d9-ae5e-40ef-97b7-cd8d0bf212c0"
++  }
++}]]></component>
++  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
++  <component name="KubernetesApiProvider"><![CDATA[{
++  "isMigrated": true
++}]]></component>
+   <component name="ProjectColorInfo">{
+   &quot;associatedIndex&quot;: 8
+ }</component>
+@@ -73,7 +79,7 @@
+     "node.js.selected.package.eslint": "(autodetect)",
+     "node.js.selected.package.tslint": "(autodetect)",
+     "nodejs_package_manager_path": "npm",
+-    "settings.editor.selected.configurable": "preferences.lookFeel",
++    "settings.editor.selected.configurable": "editor.preferences.completion.inline",
+     "vue.rearranger.settings.migration": "true"
+   }
+ }]]></component>
+@@ -163,6 +169,7 @@
+       <workItem from="1774444851446" duration="71000" />
+       <workItem from="1774487874350" duration="3949000" />
+       <workItem from="1774522965486" duration="11303000" />
++      <workItem from="1774561470036" duration="30000" />
+     </task>
+     <task id="LOCAL-00001" summary="implemented full camera, enemies orbit">
+       <option name="closed" value="true" />
+@@ -188,7 +195,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1774277989762</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="implement materials and rocks (materials float sometimes)">
++      <option name="closed" value="true" />
++      <created>1774561356968</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1774561356968</updated>
++    </task>
++    <option name="localTasksCounter" value="5" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -244,6 +259,7 @@
+     <MESSAGE value="implemented full camera, enemies orbit" />
+     <MESSAGE value="implement weapons, enemies chase player, weapons shoot and kill enemies, enemies damage player." />
+     <MESSAGE value="implement enemy spawning" />
+-    <option name="LAST_COMMIT_MESSAGE" value="implement enemy spawning" />
++    <MESSAGE value="implement materials and rocks (materials float sometimes)" />
++    <option name="LAST_COMMIT_MESSAGE" value="implement materials and rocks (materials float sometimes)" />
+   </component>
+ </project>
+\ No newline at end of file
