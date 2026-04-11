@@ -63,7 +63,6 @@ public class LevelUp implements Phase{
 
             pos += window + margin;
         }
-        Main.ttf.drawBitmap(Main.vidmode.width() / 2, Main.vidmode.height() / 2);
     }
 
     @Override
