@@ -2,6 +2,7 @@ package Brewtato.GameObjects.Enemies;
 
 import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
 
 import java.util.List;
 
@@ -58,9 +59,8 @@ public class Tree extends Enemy{
     }
 
     @Override
-    public boolean getHit(Position pos) {
-        return pos.getX() < this.pos.getX() + 75 && pos.getX() > this.pos.getX() - 75
-               && pos.getY() < this.pos.getY() + 75 && pos.getY() > this.pos.getY() - 75;
+    public boolean getHit(Hitbox hitbox) {
+        return Tools.overlap(hit, hitbox);
     }
 
     @Override

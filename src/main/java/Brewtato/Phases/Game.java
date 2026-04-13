@@ -13,16 +13,17 @@ import Brewtato.GameObjects.Weapons.Pistol;
 import Brewtato.GameObjects.Weapons.Projectile;
 import Brewtato.GameObjects.Weapons.Shotgun;
 import Brewtato.GameObjects.Weapons.Weapon;
+import Brewtato.Stats;
 import Brewtato.Utilities.Position;
 import static Brewtato.Stats.*;
 import static Brewtato.Utilities.Tools.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import static Brewtato.Main.*;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Game implements Phase{
@@ -32,7 +33,6 @@ public class Game implements Phase{
     private int windowHeight;
     private int windowWidth;
     private Player player;
-    private Weapon[] weapons;
     private List<Enemy> enemies;
     private List<Enemy> spawningEnemies;
     private int spawnDelay = 100;
@@ -55,9 +55,8 @@ public class Game implements Phase{
     public void init(){
 
         spawnEnemies();
-        for (int i = 0; i < 5; i++) {
-            player.weapons.add(new Pistol(1, 100, 60, 30, 1000));
-        }
+        playerMaxHealth = 30;
+        playerCurrentHealth = playerMaxHealth;
         player.draw();
         initRocks();
     }
@@ -112,17 +111,20 @@ public class Game implements Phase{
                 player.move(0, movement.getY());
             }
         }
-        spawnEnemies();
 
+        spawnEnemies();
+        levelUp();
         checkCollisions();
+
+        player.invul -= 10;
+
         for (Enemy enemy : enemies) {
             enemy.hunt(player.pos, enemies);
         }
         for (Collectible collectible : collectibles) {
             collectible.follow(player);
         }
-
-        for (Weapon weapon : player.weapons) {
+        for (Weapon weapon : weapons) {
             weapon.aim(enemies, movement);
             if (!enemies.isEmpty()) weapon.shoot();
             for (Projectile projectile : weapon.projectiles) {
@@ -159,7 +161,7 @@ public class Game implements Phase{
         for(Enemy enemy : spawningEnemies) {
             enemy.move(-x, -y);
         }
-        for(Weapon weapon : player.weapons) {
+        for(Weapon weapon : weapons) {
             for (Projectile projectile : weapon.projectiles) {
                 projectile.move(-x, -y);
             }
@@ -175,16 +177,16 @@ public class Game implements Phase{
         player.draw();
         spawningEnemies.forEach(Enemy::draw);
         enemies.forEach(Enemy::draw);
-        for (Weapon weapon : player.weapons) {
+        for (Weapon weapon : weapons) {
             weapon.draw();
             weapon.projectiles.forEach(Projectile::draw);
         }
-
+        drawUI();
     }
 
     @Override
     public boolean finished() {
-        return materials > 3;
+        return levelsGained >= 1;
     }
 
     private void checkCollisions() {
@@ -192,7 +194,7 @@ public class Game implements Phase{
         Iterator<Enemy> enIt = enemies.iterator();
         while (enIt.hasNext()) {
             Enemy enemy = enIt.next();
-            for(Weapon weapon : player.weapons) {
+            for(Weapon weapon : weapons) {
                 Iterator<Projectile> proIt = weapon.projectiles.iterator();
                 while(proIt.hasNext()) {
                     Projectile projectile = proIt.next();
@@ -229,6 +231,15 @@ public class Game implements Phase{
         }
     }
 
+    private void levelUp() {
+        if (exp >= currentExpCap) {
+            exp -= currentExpCap;
+            level++;
+            levelsGained++;
+            currentExpCap = (int) Math.pow(level + 3, 2);
+        }
+    }
+
     private void spawnEnemies() {
 
         if (enemies.size() + spawningEnemies.size() < 25) {
@@ -251,5 +262,124 @@ public class Game implements Phase{
                 enIt.remove();
             }
         }
+    }
+
+    private void drawUI() {
+
+        float height = 1.2F/21F * vidmode.height();
+        float width = 5/21F * vidmode.width();
+        float ogWidth = width;
+        Position position = new Position(1/21F * vidmode.width(), 19/21F * vidmode.height());
+        Position ogPos = new Position(position.getX(), position.getY());
+        position.setPosition(((vidmode.height() - position.getY()) - height / 2) * ((float)vidmode.height() / (float)vidmode.width()),19/21F * vidmode.height());
+
+        glBegin(GL_QUADS);
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX(), position.getY());
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX(), position.getY() + height);
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX() + width, position.getY() + height);
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX() + width, position.getY());
+        glEnd();
+
+        position.setPosition(position.getX() * 1.2F, position.getY() * 1.01F);
+        height *= 0.7F;
+        width *= 0.96F;
+
+        glBegin(GL_QUADS);
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX(), position.getY());
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX(), position.getY() + height);
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX() + width, position.getY() + height);
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX() + width, position.getY());
+        glEnd();
+
+        width /= playerMaxHealth;
+
+        for (int i = 0; i < playerCurrentHealth; i++) {
+            glBegin(GL_QUADS);
+            glColor4d(0.7, 0, 0, 1);
+            glVertex2d(position.getX(), position.getY());
+            glColor4d(0.7, 0, 0, 1);
+            glVertex2d(position.getX(), position.getY() + height);
+            glColor4d(0.7, 0, 0, 1);
+            glVertex2d(position.getX() + width, position.getY() + height);
+            glColor4d(0.7, 0, 0, 1);
+            glVertex2d(position.getX() + width, position.getY());
+            glColor4d(1, 1, 1, 1);
+            glEnd();
+
+            position.setX(position.getX() + width);
+        }
+
+        String hp = Math.max(playerCurrentHealth, 0) + "/" + playerMaxHealth;
+
+        glColor4d(1, 1, 1, 1);
+
+        ttf.drawText(hp, (ogPos.getX() + ogWidth) / 2 - (float)ttf.stringWidth(hp, 30) / 2, ogPos.getY() + (height / 2) - 20F / 2, 30);
+
+
+        height = 1.2F/21F * vidmode.height();
+        width = 5/21F * vidmode.width();
+        ogWidth = width;
+        position = new Position(1/21F * vidmode.width(), 17.5F/21F * vidmode.height());
+        ogPos = new Position(position.getX(), position.getY());
+        position.setPosition(((vidmode.height() - (19F/21F * vidmode.height())) - height / 2) * ((float)vidmode.height() / (float)vidmode.width()),position.getY());
+
+        glBegin(GL_QUADS);
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX(), position.getY());
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX(), position.getY() + height);
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX() + width, position.getY() + height);
+        glColor4d(0, 0, 0, 1);
+        glVertex2d(position.getX() + width, position.getY());
+        glEnd();
+
+        position.setPosition(position.getX() * 1.2F, position.getY() * 1.01F);
+        height *= 0.7F;
+        width *= 0.96F;
+
+        glBegin(GL_QUADS);
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX(), position.getY());
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX(), position.getY() + height);
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX() + width, position.getY() + height);
+        glColor4d(0.2, 0.2, 0.2, 1);
+        glVertex2d(position.getX() + width, position.getY());
+        glEnd();
+
+        width /= currentExpCap;
+
+        for (int i = 0; i < Math.min(exp, currentExpCap); i++) {
+            glBegin(GL_QUADS);
+            glColor4d(0, 0.7, 0, 1);
+            glVertex2d(position.getX(), position.getY());
+            glColor4d(0, 0.7, 0, 1);
+            glVertex2d(position.getX(), position.getY() + height);
+            glColor4d(0, 0.7, 0, 1);
+            glVertex2d(position.getX() + width, position.getY() + height);
+            glColor4d(0, 0.7, 0, 1);
+            glVertex2d(position.getX() + width, position.getY());
+            glColor4d(1, 1, 1, 1);
+            glEnd();
+
+            position.setX(position.getX() + width);
+        }
+
+        String lvl = "Lv." + level;
+
+        glColor4d(1, 1, 1, 1);
+
+        ttf.drawText(lvl, (ogPos.getX() + ogWidth) / 5.5F - (float)ttf.stringWidth(hp, 30) / 2, ogPos.getY() + (height / 2) - 20F / 2, 30);
+
     }
 }

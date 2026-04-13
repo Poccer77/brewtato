@@ -8,9 +8,11 @@ import javax.swing.text.AttributeSet;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
 import java.nio.charset.Charset;
 
 import static Brewtato.Main.vidmode;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 
 import static java.lang.Math.*;
@@ -49,10 +51,14 @@ public class Tools {
         glEnd();
     }
 
-    public static void write(String text, Position pos) {
-    }
-
     public static boolean overlap(Hitbox h1, Hitbox h2) {
         return h1.isWithin(h2.x1) || h1.isWithin(h2.x2) || h1.isWithin(h2.x3) || h1.isWithin(h2.x4);
+    }
+
+    public static Position getMousePos() {
+        DoubleBuffer posX = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer posY = BufferUtils.createDoubleBuffer(1);
+        glfwGetCursorPos(Main.window, posX, posY);
+        return new Position((float) posX.get(0), vidmode.height() - (float) posY.get(0));
     }
 }

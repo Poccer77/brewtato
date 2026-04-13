@@ -2,6 +2,11 @@ package Brewtato.Utilities;
 
 public class Position {
 
+    public Position(){
+        X = 0;
+        Y = 0;
+    }
+
     public Position(float x, float y){
         X = x;
         Y = y;
@@ -38,6 +43,10 @@ public class Position {
     public float getY() {
         return Y;
     }
+
+    public void setX(float x) {X = x;}
+
+    public void setY(float y) {Y = y;}
 
     public float findAngle(Position pos){
         float deltaX = this.getX() - pos.getX();

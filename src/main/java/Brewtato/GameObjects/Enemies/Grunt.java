@@ -16,13 +16,14 @@ public class Grunt extends Enemy{
         this.pos = pos;
         color = new double[]{0.78, 0, 0, 1};
         hit = new Hitbox();
+        damage = 1;
     }
 
     @Override
-    public boolean getHit(Position pos) {
+    public boolean getHit(Hitbox hitbox) {
 
-        return pos.getX() < this.pos.getX() + 60 && pos.getX() > this.pos.getX() - 60
-               && pos.getY() < this.pos.getY() + 60 && pos.getY() > this.pos.getY() - 60;
+        return Tools.overlap(hit, hitbox);
+
     }
 
     @Override

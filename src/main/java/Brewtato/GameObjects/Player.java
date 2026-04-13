@@ -1,6 +1,7 @@
 package Brewtato.GameObjects;
 
 import Brewtato.GameObjects.Weapons.Weapon;
+import Brewtato.Stats;
 import Brewtato.Utilities.*;
 
 import java.util.ArrayList;
@@ -14,9 +15,7 @@ public class Player implements Object {
 
     public Hitbox hit;
 
-    public List<Weapon> weapons = new ArrayList<>();
-
-    private int invul = invulnerability;
+    public int invul = invulnerability;
     public Position pos;
 
     public Player(Position pos) {
@@ -47,6 +46,7 @@ public class Player implements Object {
         hit.x4.setPosition(pos.getX() + 80, pos.getY() - 80);
 
         int weaponCount = weapons.size();
+        if (weaponCount == 0) return;
         int anglePart = (360 / weaponCount);
         float angle = 0;
 
@@ -63,13 +63,10 @@ public class Player implements Object {
     }
 
     public void getHit(int damage, boolean triggerInvul) {
-        damage *= (int) (100.0 / (100 + armor));
+        damage = Math.round(damage * ((float) 100 / (100 + armor)));
         if (!triggerInvul) {
             playerCurrentHealth -= damage;
-            invul -= 10;
-        } else if (invul > 0) {
-            invul -= 10;
-        } else {
+        } else if (invul <= 0) {
             playerCurrentHealth -= damage;
             invul = invulnerability;
         }

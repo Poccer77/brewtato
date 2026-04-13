@@ -1,5 +1,6 @@
 package Brewtato;
 
+import Brewtato.GameObjects.Weapons.Shotgun;
 import Brewtato.Phases.*;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
@@ -65,14 +66,20 @@ public class Main {
         vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         // Create the window
-        window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Hello World!", glfwGetPrimaryMonitor(), NULL);
         if ( window == NULL ) throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 paused = !paused; // We will detect this in the rendering loop
+            if (key == GLFW_KEY_0 && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
         });
+
+        glfwSetMouseButtonCallback(window, (window, key, action, mods) -> {});
+        for (int i = 0; i < 3; i++) {
+            Stats.weapons.add(new Shotgun(1, 100, 60, 30, 1000));
+        }
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush()) {
@@ -115,6 +122,8 @@ public class Main {
         }
 
 
+        glEnable(GLFW_CURSOR);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -149,13 +158,10 @@ public class Main {
                 phases.get(phaseCounter).draw();
 
                 pauseScreen.frameForward();
-            } else {
-                phases.get(phaseCounter).frameForward();
-                if (phases.get(phaseCounter).finished()) {
+            } else if (phases.get(phaseCounter).finished()) {
                     phaseCounter = (phaseCounter + 1) % phases.size();
                     phases.get(phaseCounter).init();
-                }
-            }
+            } else phases.get(phaseCounter).frameForward();
             glfwSwapBuffers(window); // swap the color buffers
             try {Thread.sleep(tickTime);}
             catch (InterruptedException e) {
