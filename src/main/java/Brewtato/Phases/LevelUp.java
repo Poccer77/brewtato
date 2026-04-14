@@ -29,12 +29,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class LevelUp implements Phase{
 
     float width = ((float) Main.vidmode.width()) * ((1F/5) - (1.5F/10));
-    float window = ((float) Main.vidmode.width()) / 5F;
-    float margin = ((float) Main.vidmode.width()) / 30F;
+    float window = ((float) Main.vidmode.width()) / 6F;
+    float margin = ((float) Main.vidmode.width()) / 50F;
     float heightMargin = ((float) Main.vidmode.width()) / 6F;
     boolean selected = true;
 
     LevelUps[] stats = new LevelUps[4];
+    LevelUps[] statsDisplay = LevelUps.values();
     int[] rarities = new int[4];
     Brewtato.Utilities.Button[] buttons = new Button[4];
 
@@ -44,7 +45,7 @@ public class LevelUp implements Phase{
         Main.phases.get(0).draw();
         dim();
 
-        float pos = width;
+        float pos = width / 2;
 
         for (int i = 0; i < 4; i++) {
 
@@ -75,6 +76,35 @@ public class LevelUp implements Phase{
 
             pos += window + margin;
         }
+
+        double[] color = new double[]{0.15, 0.15, 0.15};
+        glBegin(GL_QUADS);
+        glColor3dv(color);
+        glVertex2d(pos, Main.vidmode.height() - (heightMargin / 2));
+        glVertex2d(Main.vidmode.width() - margin, Main.vidmode.height() - (heightMargin / 2));
+        glVertex2d(Main.vidmode.width() - margin, (heightMargin / 2));
+        glVertex2d(pos, (heightMargin / 2));
+        Arrays.fill(color, 1);
+        glColor3dv(color);
+        glEnd();
+
+        Main.ttf.drawText("STATS", pos + ((Main.vidmode.width() - margin - pos) / 2) - ((float) Main.ttf.stringWidth("STATS", 40) / 2), Main.vidmode.height() - (heightMargin / 2) - 90, 40);
+        for (LevelUps lvlup : statsDisplay) {
+            Arrays.fill(color, 0);
+
+            if (lvlup.getStat.get() > 0) {
+                color[1] = 0.8;
+            } else if (lvlup.getStat.get() < 0) {
+                color[0] = 0.8;
+            } else Arrays.fill(color, 1);
+
+            glColor3dv(color);
+
+            Main.ttf.drawText(lvlup.string, pos + 10, Main.vidmode.height() - heightMargin, 30);
+            Main.ttf.drawText(lvlup.getStat.get().toString(), (Main.vidmode.width() - margin - 10) - ((float) Main.ttf.stringWidth(lvlup.getStat.get().toString(), 30)), Main.vidmode.height() - heightMargin, 30);
+            heightMargin += 60;
+        }
+        heightMargin = ((float) Main.vidmode.width()) / 6F;
     }
 
     @Override
@@ -108,7 +138,7 @@ public class LevelUp implements Phase{
 
     @Override
     public void init() {
-        float pos = width;
+        float pos = width / 2;
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new Button(new Position(pos + 20, heightMargin + 20), "Choose", (Main.vidmode.height() * (1/20F)), window - 40, new double[]{0, 0, 0, 0,});
             pos += window + margin;

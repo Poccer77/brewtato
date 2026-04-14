@@ -10,6 +10,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Grunt extends Enemy{
 
+    public float width;
+    public float height;
+
     public Grunt(Position pos) {
         health = 10;
         speed = 13F;
@@ -17,6 +20,7 @@ public class Grunt extends Enemy{
         color = new double[]{0.78, 0, 0, 1};
         hit = new Hitbox();
         damage = 1;
+        width = height = 120;
     }
 
     @Override
@@ -75,19 +79,29 @@ public class Grunt extends Enemy{
     }
 
     @Override
+    public boolean die() {
+        if (deathAnimation > 0) {
+            width *= ((float) deathAnimation / 50);
+            height *= ((float) deathAnimation / 50);
+            deathAnimation -= 10;
+            return false;
+        } else return true;
+    }
+
+    @Override
     public void draw(){
 
         if (spawnAnimation <= 0) color = new double[] {0.584, 0, 0.78, 1};
 
         glBegin(GL_QUADS);
         glColor4dv(color);
-        glVertex2d(pos.getX() - 60, pos.getY() - 60);
+        glVertex2d(pos.getX() - (width / 2), pos.getY() - (height / 2));
         glColor4dv(color);
-        glVertex2d(pos.getX() - 60, pos.getY() + 60);
+        glVertex2d(pos.getX() - (width / 2), pos.getY() + (height / 2));
         glColor4dv(color);
-        glVertex2d(pos.getX() + 60, pos.getY() + 60);
+        glVertex2d(pos.getX() + (width / 2), pos.getY() + (height / 2));
         glColor4dv(color);
-        glVertex2d(pos.getX() + 60, pos.getY() - 60);
+        glVertex2d(pos.getX() + (width / 2), pos.getY() - (height / 2));
         glEnd();
 
         hit.x1.setPosition(pos.getX() - 60, pos.getY() - 60);

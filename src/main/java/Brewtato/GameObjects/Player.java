@@ -19,7 +19,7 @@ public class Player implements Object {
     public Position pos;
 
     public Player(Position pos) {
-        playerSpeed = 19F;
+        playerSpeed = 19;
         this.pos = pos;
         hit = new Hitbox();
     }

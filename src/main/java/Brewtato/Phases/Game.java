@@ -35,6 +35,7 @@ public class Game implements Phase{
     private Player player;
     private List<Enemy> enemies;
     private List<Enemy> spawningEnemies;
+    private List<Enemy> dyingEnemies;
     private int spawnDelay = 100;
     private List<Collectible> collectibles;
     private List<Rock> rocks = new ArrayList<>();
@@ -46,19 +47,18 @@ public class Game implements Phase{
         windowHeight = vidmode.height();
         windowWidth = vidmode.width();
         this.windowPosition = new Position((float) (fieldSize / 3), (float) (fieldSize / 3));
-        this.player = new Player(new Position(windowWidth / 2, windowHeight / 2));
+        this.player = new Player(new Position((float) windowWidth / 2, (float) windowHeight / 2));
         enemies = new ArrayList<>();
         spawningEnemies = new ArrayList<>();
+        dyingEnemies = new ArrayList<>();
         collectibles = new ArrayList<>();
+        initRocks();
     }
 
     public void init(){
-
         spawnEnemies();
-        playerMaxHealth = 30;
         playerCurrentHealth = playerMaxHealth;
         player.draw();
-        initRocks();
     }
 
     public void initRocks() {
@@ -113,6 +113,7 @@ public class Game implements Phase{
         }
 
         spawnEnemies();
+        enemiesDying();
         levelUp();
         checkCollisions();
 
@@ -161,6 +162,9 @@ public class Game implements Phase{
         for(Enemy enemy : spawningEnemies) {
             enemy.move(-x, -y);
         }
+        for(Enemy enemy : dyingEnemies) {
+            enemy.move(-x, -y);
+        }
         for(Weapon weapon : weapons) {
             for (Projectile projectile : weapon.projectiles) {
                 projectile.move(-x, -y);
@@ -174,9 +178,11 @@ public class Game implements Phase{
     public void draw(){
         rocks.forEach(Rock::draw);
         collectibles.forEach(Collectible::draw);
-        player.draw();
+
         spawningEnemies.forEach(Enemy::draw);
         enemies.forEach(Enemy::draw);
+        dyingEnemies.forEach(Enemy::draw);
+        player.draw();
         for (Weapon weapon : weapons) {
             weapon.draw();
             weapon.projectiles.forEach(Projectile::draw);
@@ -187,6 +193,10 @@ public class Game implements Phase{
     @Override
     public boolean finished() {
         return levelsGained >= 1;
+    }
+
+    private void enemiesDying() {
+        dyingEnemies.removeIf(Enemy::die);
     }
 
     private void checkCollisions() {
@@ -218,6 +228,7 @@ public class Game implements Phase{
                     collectibles.add(new Material(new Position(rand.nextFloat(enemy.pos.getX() - 10, enemy.pos.getX() + 11), rand.nextFloat(enemy.pos.getY() - 10, enemy.pos.getY() + 11))));
                 }
                 if (rand.nextInt(300) < Math.min(60, luck)) collectibles.add(new Fruit(enemy.pos));
+                dyingEnemies.add(enemy);
                 enIt.remove();
             }
         }
@@ -235,6 +246,8 @@ public class Game implements Phase{
         if (exp >= currentExpCap) {
             exp -= currentExpCap;
             level++;
+            playerMaxHealth++;
+            playerCurrentHealth++;
             levelsGained++;
             currentExpCap = (int) Math.pow(level + 3, 2);
         }

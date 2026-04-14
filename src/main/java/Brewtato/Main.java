@@ -66,7 +66,7 @@ public class Main {
         vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         // Create the window
-        window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Hello World!", glfwGetPrimaryMonitor(), NULL);
+        window = glfwCreateWindow(vidmode.width(), vidmode.height(), "Brewtato", glfwGetPrimaryMonitor(), NULL);
         if ( window == NULL ) throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.

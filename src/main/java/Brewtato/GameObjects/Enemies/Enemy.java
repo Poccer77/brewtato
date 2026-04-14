@@ -13,12 +13,13 @@ public abstract class Enemy implements Object {
     public float speed;
     public Position pos;
     public int spawnAnimation = 70;
+    public int deathAnimation = 60;
     boolean blink = false;
     double[] color;
-    public int materialModifier;
 
     public abstract boolean getHit(Hitbox hitbox);
     public abstract int attack();
     public abstract void hunt(Position pos, List<Enemy> enemies);
     public abstract void spawn();
+    public abstract boolean die();
 }
