@@ -40,13 +40,13 @@ public class Tools {
 
     public static void dim() {
         glBegin(GL_QUADS);
-        glColor4d(0, 0, 0, 0.5);
+        glColor4d(0, 0, 0, 0.6);
         glVertex2d(0, 0);
-        glColor4d(0, 0, 0, 0.5);
+        glColor4d(0, 0, 0, 0.6);
         glVertex2d(vidmode.width(), 0);
-        glColor4d(0, 0, 0, 0.5);
+        glColor4d(0, 0, 0, 0.6);
         glVertex2d(vidmode.width(), vidmode.height());
-        glColor4d(0, 0, 0, 0.5);
+        glColor4d(0, 0, 0, 0.6);
         glVertex2d(0, vidmode.height());
         glEnd();
     }

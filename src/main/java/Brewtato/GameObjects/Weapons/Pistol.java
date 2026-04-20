@@ -12,7 +12,7 @@ public class Pistol extends Weapon {
 
     boolean inRange;
 
-    public Pistol(int damage, int attackSpeed, float length, float width, double range) {
+    public Pistol(int damage, int attackSpeed, float length, float width, int range) {
         super(damage, attackSpeed, length, width, range);
     }
 
@@ -44,7 +44,7 @@ public class Pistol extends Weapon {
 
     public void shoot() {
         if (delay <= 0 && inRange) {
-            projectiles.add(new PistolProjectile(angle, 5, pos));
+            projectiles.add(new PistolProjectile(angle, 5, pos, range));
             delay = attackSpeed;
         } else {
             delay -= 10;

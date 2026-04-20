@@ -13,6 +13,7 @@ import Brewtato.GameObjects.Weapons.Pistol;
 import Brewtato.GameObjects.Weapons.Projectile;
 import Brewtato.GameObjects.Weapons.Shotgun;
 import Brewtato.GameObjects.Weapons.Weapon;
+import Brewtato.Main;
 import Brewtato.Stats;
 import Brewtato.Utilities.Position;
 import static Brewtato.Stats.*;
@@ -28,6 +29,8 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Game implements Phase{
 
+    private final double gameSize;
+    public int wave;
     private final double fieldSize;
     private Position windowPosition;
     private int windowHeight;
@@ -40,22 +43,28 @@ public class Game implements Phase{
     private List<Collectible> collectibles;
     private List<Rock> rocks = new ArrayList<>();
     private boolean waveOver = false;
+    private double waveTimer;
     Random rand = new Random();
 
     public Game(){
-        this.fieldSize = vidmode.width() * 3;
+        this.gameSize = vidmode.width() * 3;
+        this.fieldSize = gameSize * 0.8;
         windowHeight = vidmode.height();
         windowWidth = vidmode.width();
-        this.windowPosition = new Position((float) (fieldSize / 3), (float) (fieldSize / 3));
+        this.windowPosition = new Position((float) (gameSize / 3), (float) (gameSize / 3));
         this.player = new Player(new Position((float) windowWidth / 2, (float) windowHeight / 2));
         enemies = new ArrayList<>();
         spawningEnemies = new ArrayList<>();
         dyingEnemies = new ArrayList<>();
         collectibles = new ArrayList<>();
+        wave = 0;
         initRocks();
     }
 
     public void init(){
+        waveOver = false;
+        wave++;
+        waveTimer = Math.min((5 * wave), 60);
         spawnEnemies();
         playerCurrentHealth = playerMaxHealth;
         player.draw();
@@ -63,11 +72,19 @@ public class Game implements Phase{
 
     public void initRocks() {
         for (int i = 0; i < 1000; i++) {
-            rocks.add(new Rock(new Position(rand.nextFloat( x(0), x((float) fieldSize)), rand.nextFloat(x(0), x((float) fieldSize)))));
+            rocks.add(new Rock(new Position(rand.nextFloat( x((float) (gameSize * 0.1)), x((float) (gameSize * 0.9))), rand.nextFloat(x((float) (gameSize * 0.1)), x((float) (gameSize * 0.9))))));
         }
     }
 
     public void frameForward() {
+
+        waveTimer -= tickTime * 0.0015;
+
+        if ((int) (waveTimer + 1) <= 0) {
+            cleanup();
+            return;
+        }
+
 
         Position movement = new Position(0, 0);
 
@@ -79,35 +96,37 @@ public class Game implements Phase{
         movement.normalize(playerSpeed);
 
         if (movement.getX() < 0) {
-            if (windowPosition.getX() > 0 && windowPosition.getX() < fieldSize - windowWidth + 100 && player.pos.getX() <= (float) windowWidth / 2) {
+            if (windowPosition.getX() > 0 && player.pos.getX() <= (float) windowWidth / 2) {
                 moveCamera(movement.getX(), 0);
             }
-            else if (player.pos.getX() > 0) {
+            else if (player.pos.getX() - 75 > gameSize * 0.1) {
                 player.move(movement.getX(), 0);
             }
         }
+
         if (movement.getX() > 0) {
-            if (windowPosition.getX() < fieldSize - windowWidth && windowPosition.getX() > - 100 && player.pos.getX() >= (float) windowWidth / 2) {
+            if (windowPosition.getX() < gameSize - windowWidth && player.pos.getX() >= (float) windowWidth / 2) {
                 moveCamera(movement.getX(), 0);
             }
-            else if (player.pos.getX() < windowWidth){
+            else if (player.pos.getX() + 75 < windowWidth - (gameSize * 0.1)){
                 player.move(movement.getX(), 0);
             }
         }
+
         if (movement.getY() > 0) {
-            if (windowPosition.getY() < fieldSize - windowHeight && windowPosition.getY() > -100 && player.pos.getY() >= (float) windowHeight / 2) {
+            if (windowPosition.getY() < gameSize - windowHeight && player.pos.getY() >= (float) windowHeight / 2) {
                 moveCamera(0, movement.getY());
             }
-            else if (player.pos.getY() < windowHeight) {
+            else if (player.pos.getY() + 75 < windowHeight - (gameSize * 0.1)) {
                 player.move(0, movement.getY());
             }
         }
 
         if (movement.getY() < 0) {
-            if (windowPosition.getY() > 0 && windowPosition.getY() < (fieldSize + 100) - windowHeight && player.pos.getY() <= (float) windowHeight / 2) {
+            if (windowPosition.getY() > 0 && player.pos.getY() <= (float) windowHeight / 2) {
                 moveCamera(0, movement.getY());
             }
-            else if (player.pos.getY() > 0) {
+            else if (player.pos.getY() > (gameSize * 0.1) + 75) {
                 player.move(0, movement.getY());
             }
         }
@@ -132,8 +151,7 @@ public class Game implements Phase{
                 projectile.move();
             }
             for (int i = 0; i < weapon.projectiles.size(); i++) {
-                if (weapon.projectiles.get(i).pos.getX() + windowPosition.getX() < 0 || weapon.projectiles.get(i).pos.getX() + windowPosition.getX() > fieldSize
-                        || weapon.projectiles.get(i).pos.getY() + windowPosition.getY() < 0 || weapon.projectiles.get(i).pos.getY() + windowPosition.getY() > fieldSize) {
+                if (weapon.projectiles.get(i).range <= 0) {
                     weapon.projectiles.remove(i);
                     i--;
                 }
@@ -141,7 +159,20 @@ public class Game implements Phase{
         }
 
         draw();
+    }
 
+    private void cleanup() {
+        spawningEnemies.clear();
+        if (!enemies.isEmpty()) {
+            dyingEnemies.addAll(enemies);
+            enemies.clear();
+        }
+        collectibles.removeIf(collectible -> collectible instanceof Material);
+        collectibles.forEach(collectible -> {collectible.inRange = true; collectible.follow(player);});
+        dyingEnemies.removeIf(Enemy::die);
+        weapons.forEach(weapon -> {weapon.projectiles.forEach(Projectile::move);});
+        draw();
+        if(dyingEnemies.isEmpty() && collectibles.isEmpty() && (int) (waveTimer + 1) <= -1) waveOver = true;
     }
 
     private float x(float x) {
@@ -176,9 +207,9 @@ public class Game implements Phase{
     }
 
     public void draw(){
+        drawField();
         rocks.forEach(Rock::draw);
         collectibles.forEach(Collectible::draw);
-
         spawningEnemies.forEach(Enemy::draw);
         enemies.forEach(Enemy::draw);
         dyingEnemies.forEach(Enemy::draw);
@@ -187,12 +218,13 @@ public class Game implements Phase{
             weapon.draw();
             weapon.projectiles.forEach(Projectile::draw);
         }
+        if ((int) (waveTimer + 1) <= 0) dim();
         drawUI();
     }
 
     @Override
     public boolean finished() {
-        return levelsGained >= 1;
+        return waveOver;
     }
 
     private void enemiesDying() {
@@ -209,14 +241,16 @@ public class Game implements Phase{
                 while(proIt.hasNext()) {
                     Projectile projectile = proIt.next();
                     if (overlap(enemy.hit, projectile.hit)) {
-                        enemy.health -= projectile.damage;
+                        enemy.health -= Math.round((float)projectile.damage * damage);
                         proIt.remove();
                     }
                 }
             }
+
             if (overlap(player.hit, enemy.hit)) {
                 player.getHit(enemy.damage, true);
             }
+
             if (enemy.health <= 0) {
                 int min = 1;
                 int max = 3;
@@ -232,6 +266,7 @@ public class Game implements Phase{
                 enIt.remove();
             }
         }
+
         Iterator<Collectible> colIt= collectibles.iterator();
         while (colIt.hasNext()) {
             Collectible collectible = colIt.next();
@@ -255,14 +290,14 @@ public class Game implements Phase{
 
     private void spawnEnemies() {
 
+        Position spawnPos = new Position(rand.nextFloat((float)(gameSize * 0.1) + 300, (float)(gameSize * 0.9) - 300), rand.nextFloat((float)(gameSize * 0.1) + 300, (float)(gameSize * 0.9) - 300));
         if (enemies.size() + spawningEnemies.size() < 25) {
-            Position spawnPos = new Position(x(rand.nextFloat(0, (float) fieldSize)), y(rand.nextFloat(0, (float) fieldSize)));
             for (int i = 0; i < rand.nextInt(8, 13); i++) {
-                spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) (spawnPos.getX() - 300), (float) (spawnPos.getX() + 300))), y(rand.nextFloat((float) (spawnPos.getY() - 300), (float) (spawnPos.getY() + 300))))));
+                spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) (spawnPos.getX() - 150), (float) (spawnPos.getX() + 150))), y(rand.nextFloat((float) (spawnPos.getY() - 150), (float) (spawnPos.getY() + 150))))));
             }
         } else if (rand.nextInt(0, 101) > 95){
-            if (rand.nextInt(21) < 19) spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) fieldSize)), y(rand.nextFloat((float) fieldSize)))));
-            else spawningEnemies.add(new Tree(new Position(x(rand.nextFloat((float) fieldSize)), y(rand.nextFloat((float) fieldSize)))));
+            if (rand.nextInt(21) < 19) spawningEnemies.add(new Grunt(new Position(x(spawnPos.getX()),y(spawnPos.getY()))));
+            else spawningEnemies.add(new Tree(new Position(x(spawnPos.getX()), y(spawnPos.getY()))));
         }
 
         for (Enemy enemy : spawningEnemies) enemy.spawn();
@@ -285,6 +320,10 @@ public class Game implements Phase{
         Position position = new Position(1/21F * vidmode.width(), 19/21F * vidmode.height());
         Position ogPos = new Position(position.getX(), position.getY());
         position.setPosition(((vidmode.height() - position.getY()) - height / 2) * ((float)vidmode.height() / (float)vidmode.width()),19/21F * vidmode.height());
+
+        glColor4d(1, 1, 1, 1);
+        ttf.drawText("Wave " + wave, ((float) vidmode.width() / 2) - (float) ttf.stringWidth("Wave " + wave, 50) / 2, position.getY(), 50);
+        ttf.drawText(String.valueOf(Math.max((int)(waveTimer + 1), 0)), ((float) vidmode.width() / 2) - (float) ttf.stringWidth(String.valueOf((Math.max((int)(waveTimer + 1), 0))), 70) / 2, position.getY() - 150, 70);
 
         glBegin(GL_QUADS);
         glColor4d(0, 0, 0, 1);
@@ -393,6 +432,15 @@ public class Game implements Phase{
         glColor4d(1, 1, 1, 1);
 
         ttf.drawText(lvl, (ogPos.getX() + ogWidth) / 5.5F - (float)ttf.stringWidth(hp, 30) / 2, ogPos.getY() + (height / 2) - 20F / 2, 30);
+    }
 
+    private void drawField() {
+        glBegin(GL_QUADS);
+        glColor4d(0.53, 0.53, 0.53, 1);
+        glVertex2d(x((float) (gameSize * 0.1)), y((float) (gameSize * 0.1) - 140));
+        glVertex2d(x((float) (gameSize * 0.9)), y((float) (gameSize * 0.1) - 140));
+        glVertex2d(x((float) (gameSize * 0.9)), y((float) (gameSize * 0.9) + 140));
+        glVertex2d(x((float) (gameSize * 0.1)), y((float) (gameSize * 0.9) + 140));
+        glEnd();
     }
 }

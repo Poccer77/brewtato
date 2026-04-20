@@ -14,7 +14,6 @@ repositories {
 
 dependencies {
 	implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
-
 	implementation("org.lwjgl", "lwjgl")
 	implementation("org.lwjgl", "lwjgl-assimp")
 	implementation("org.lwjgl", "lwjgl-bgfx")
@@ -94,4 +93,5 @@ dependencies {
 	implementation ("org.lwjgl", "lwjgl-xxhash", classifier = lwjglNatives)
 	implementation ("org.lwjgl", "lwjgl-yoga", classifier = lwjglNatives)
 	implementation ("org.lwjgl", "lwjgl-zstd", classifier = lwjglNatives)
+	implementation("com.fasterxml.jackson.core", "jackson-databind")
 }

@@ -14,7 +14,7 @@ public abstract class Weapon implements Object {
     public final int attackSpeed;
     int delay;
     public float angle;
-    public double range;
+    public int range;
     public Hitbox hit;
 
     public Position getPos() {
@@ -33,7 +33,7 @@ public abstract class Weapon implements Object {
     final float width;
 
 
-    protected Weapon(int damage, int attackSpeed, float length, float width, double range) {
+    protected Weapon(int damage, int attackSpeed, float length, float width, int range) {
         this.damage = damage;
         this.attackSpeed = attackSpeed;
         this.length = length;

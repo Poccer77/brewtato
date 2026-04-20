@@ -1,6 +1,7 @@
 package Brewtato.GameObjects.Weapons;
 
 import Brewtato.GameObjects.Enemies.Enemy;
+import Brewtato.Stats;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 
@@ -12,15 +13,15 @@ public class Shotgun extends Weapon {
 
     boolean inRange;
 
-    public Shotgun(int damage, int attackSpeed, float length, float width, double range) {
-        super(damage, attackSpeed, length, width, range);
+    public Shotgun(int damage, int attackSpeed, float length, float width, int range) {
+        super(damage, attackSpeed, length, width, range + Stats.range);
     }
 
     @Override
     public void shoot() {
         if (delay <= 0 && inRange) {
             for (int i = 0; i < 5; i++) {
-                projectiles.add(new PistolProjectile(angle + (float) Math.toRadians(new Random().nextInt(61) - 30), 5, pos));
+                projectiles.add(new PistolProjectile(angle + (float) Math.toRadians(new Random().nextInt(61) - 30), 5, pos, range));
             }
             delay = attackSpeed;
         } else {

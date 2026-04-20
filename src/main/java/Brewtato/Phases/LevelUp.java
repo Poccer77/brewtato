@@ -32,18 +32,17 @@ public class LevelUp implements Phase{
     float window = ((float) Main.vidmode.width()) / 6F;
     float margin = ((float) Main.vidmode.width()) / 50F;
     float heightMargin = ((float) Main.vidmode.width()) / 6F;
-    boolean selected = true;
+    boolean selected = false;
 
     LevelUps[] stats = new LevelUps[4];
     LevelUps[] statsDisplay = LevelUps.values();
     int[] rarities = new int[4];
-    Brewtato.Utilities.Button[] buttons = new Button[4];
+    Brewtato.Utilities.Button[] buttons = new Button[5];
 
     @Override
     public void draw() {
 
         Main.phases.get(0).draw();
-        dim();
 
         float pos = width / 2;
 
@@ -76,6 +75,9 @@ public class LevelUp implements Phase{
 
             pos += window + margin;
         }
+
+        buttons[4].color = new double[]{0.15, 0.15, 0.15, 1};
+        buttons[4].draw();
 
         double[] color = new double[]{0.15, 0.15, 0.15};
         glBegin(GL_QUADS);
@@ -114,35 +116,39 @@ public class LevelUp implements Phase{
 
     @Override
     public void frameForward() {
-        if (levelsGained == 0 && selected) return;
+
+        if (levelsGained <= 0 && selected) return;
 
         for (int i = 0; i < 4; i++) {
-            buttons[i].hover();
             if (buttons[i].isPressed()) {
                 stats[i].applyStat.accept(rarities[i]);
                 selected = true;
-                select();
-            };
+                levelsGained--;
+                if (levelsGained > 0) select();
+            }
         }
+        if (buttons[4].isPressed()) {select();}
 
         draw();
     }
 
     public void select() {
-        if (levelsGained > 0) {
-            levelsGained--;
-            chooseStats();
-            selected = false;
-        }
+        chooseStats();
+        selected = false;
     }
 
     @Override
     public void init() {
+        if (levelsGained <= 0) {
+            selected = true;
+            return;
+        }
         float pos = width / 2;
-        for (int i = 0; i < buttons.length; i++) {
+        for (int i = 0; i < buttons.length - 1; i++) {
             buttons[i] = new Button(new Position(pos + 20, heightMargin + 20), "Choose", (Main.vidmode.height() * (1/20F)), window - 40, new double[]{0, 0, 0, 0,});
             pos += window + margin;
         }
+        buttons[4] = new Button(new Position((width / 2) + (2 * (window + margin)) - ((window) / 2), (heightMargin / 2) + 20), "Reroll", (Main.vidmode.height() * (1/20F)), window - 40, new double[]{0, 0, 0, 0,});
         select();
     }
 

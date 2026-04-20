@@ -31,7 +31,7 @@ public class Button {
         hitbox.x3 = new Position(pos.getX() + width, pos.getY() + height);
         hitbox.x4 = new Position(pos.getX() + width, pos.getY());
         Arrays.fill(buttonPress, false);
-        hover();
+        isPressed();
         draw();
     }
 
@@ -53,16 +53,19 @@ public class Button {
         if (buttonPress[0]) {
             currentColor = new double[]{1, 1, 1, 1};
             currentTextColor = new double[]{0, 0, 0, 1};
-        } else {
-            currentColor = Arrays.copyOf(color, color.length);
-            currentTextColor = Arrays.copyOf(textColor, textColor.length);
         }
     }
 
     public boolean isPressed() {
         buttonPress[0] = buttonPress[1] || hitbox.isWithin(Tools.getMousePos());
 
-        if (buttonPress[0] && glfwGetMouseButton(Main.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) buttonPress[1] = true;
+        if (buttonPress[0]) {
+            hover();
+            if (glfwGetMouseButton(Main.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) buttonPress[1] = true;
+        } else {
+            currentColor = Arrays.copyOf(color, color.length);
+            currentTextColor = Arrays.copyOf(textColor, textColor.length);
+        }
 
         if (buttonPress[1]){
             if (glfwGetMouseButton(Main.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {

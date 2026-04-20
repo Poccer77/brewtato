@@ -29,6 +29,7 @@ public class Main {
     public static boolean paused = false;
     private static Pause pauseScreen = new Pause();
     private static int phaseCounter = 0;
+    public static float delta;
     public static int tickTime = 10;
     public static TrueTypeFont ttf;
 
@@ -78,7 +79,7 @@ public class Main {
 
         glfwSetMouseButtonCallback(window, (window, key, action, mods) -> {});
         for (int i = 0; i < 3; i++) {
-            Stats.weapons.add(new Shotgun(1, 100, 60, 30, 1000));
+            Stats.weapons.add(new Shotgun(1, 500, 60, 30, 1000));
         }
 
         // Get the thread stack and push a new frame
@@ -132,7 +133,7 @@ public class Main {
         glOrtho(0, vidmode.width(), 0, vidmode.height(),-1, 1);
         glMatrixMode(GL_MODELVIEW);
 
-        glClearColor(0.53F, 0.53F, 0.53F, 1);
+        glClearColor(0.33F, 0.33F, 0.33F, 1);
 
         phases.add(new Game());
         //phases.add(new Chests());
@@ -145,6 +146,9 @@ public class Main {
 
     private static void loop() {
 
+        long elapsed = 0;
+        long start = 0;
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
@@ -153,6 +157,9 @@ public class Main {
             // invoked during this call.
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
+
+            if (start != 0 && elapsed != 0) delta = elapsed / 100000000F;
+            else delta = 0;
 
             if (paused) {
                 phases.get(phaseCounter).draw();
@@ -163,10 +170,13 @@ public class Main {
                     phases.get(phaseCounter).init();
             } else phases.get(phaseCounter).frameForward();
             glfwSwapBuffers(window); // swap the color buffers
+            elapsed = System.nanoTime() - start;
+            start = System.nanoTime();
             try {Thread.sleep(tickTime);}
             catch (InterruptedException e) {
                 System.out.println("tf happened");
             }
+
         }
     }
 

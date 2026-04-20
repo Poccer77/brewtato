@@ -1,24 +1,27 @@
 package Brewtato.GameObjects.Weapons;
 
+import Brewtato.Stats;
 import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 
+import static Brewtato.Utilities.Tools.distance;
 import static Brewtato.Utilities.Tools.rotate;
 import static org.lwjgl.opengl.GL11.*;
 
-public class PistolProjectile extends Projectile{
+public class PistolProjectile extends Projectile {
 
     private final float width;
     private final float length;
 
-    public PistolProjectile(float angle, int damage, Position pos) {
+    public PistolProjectile(float angle, int damage, Position pos, int range) {
         this.pos = new Position(pos.getX(), pos.getY());
         this.angle = angle;
         this.damage = damage;
         speed = 50;
         width = 15F;
         length = 75F;
+        this.range = range;
         hit = new Hitbox();
     }
 
@@ -30,6 +33,7 @@ public class PistolProjectile extends Projectile{
     public void move() {
         Position newPosition = Tools.rotate(angle, new Position(speed, 0));
         pos.changePosition(newPosition);
+        range -= distance(newPosition);
     }
 
     @Override

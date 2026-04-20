@@ -128,6 +128,8 @@ public class Stats {
         return engineering;
     }
 
+    public static int getRange() {return range;}
+
     public static int getWeaponLimit() {
         return weaponLimit;
     }
@@ -137,11 +139,12 @@ public class Stats {
     }
 
     public static int playerMaxHealth = 8;
+    public static int range;
     public static int playerCurrentHealth;
     public static int luck;
     public static int regenCounter;
     public static int regen;
-    public static int damage;
+    public static int damage = 1;
     public static int attackSpeed;
     public static int lifesteal;
     public static int playerSpeed;
