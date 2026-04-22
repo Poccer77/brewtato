@@ -138,7 +138,7 @@ public class Main {
         phases.add(new Game());
         //phases.add(new Chests());
         phases.add(new LevelUp());
-        //phases.add(new Shop());
+        phases.add(new Shop());
 
         phases.get(phaseCounter).init();
 

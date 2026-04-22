@@ -93,5 +93,4 @@ dependencies {
 	implementation ("org.lwjgl", "lwjgl-xxhash", classifier = lwjglNatives)
 	implementation ("org.lwjgl", "lwjgl-yoga", classifier = lwjglNatives)
 	implementation ("org.lwjgl", "lwjgl-zstd", classifier = lwjglNatives)
-	implementation("com.fasterxml.jackson.core", "jackson-databind")
 }

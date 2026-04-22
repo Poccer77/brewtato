@@ -1,6 +1,8 @@
 package Brewtato;
 
 import Brewtato.GameObjects.Weapons.Weapon;
+import Brewtato.Items.CreateItems;
+import Brewtato.Items.Item;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -140,6 +142,7 @@ public class Stats {
 
     public static int playerMaxHealth = 8;
     public static int range;
+    public static int harvesting;
     public static int playerCurrentHealth;
     public static int luck;
     public static int regenCounter;
@@ -169,7 +172,9 @@ public class Stats {
     public static int rangedDamage;
     public static int elementalDamage;
     public static int engineering;
+    public static float enemySpawns;
     public static int weaponLimit = 6;
     public static List<Weapon> weapons = new ArrayList<>();
+    public static List<Item> items = CreateItems.fill();
 
 }

@@ -11,7 +11,7 @@ public class Button {
 
     private Hitbox hitbox = new Hitbox();
     private Position pos;
-    private String text;
+    public String text;
     private float height;
     private float width;
     public double[] color;
@@ -19,6 +19,7 @@ public class Button {
     private double[] currentColor;
     private double[] currentTextColor;
     private Boolean[] buttonPress = new Boolean[3];
+    public int textSize = 20;
 
     public Button(Position pos, String text, float height, float width, double[] color) {
         this.color = color;
@@ -46,7 +47,7 @@ public class Button {
         glEnd();
 
         glColor4dv(currentTextColor);
-        Main.ttf.drawText(text, pos.getX() + ((width / 2) - ((float) Main.ttf.stringWidth(text, 20) / 2)), pos.getY() + ((height / 2) - 10), 20);
+        Main.ttf.drawText(text, pos.getX() + ((width / 2) - ((float) Main.ttf.stringWidth(text, textSize) / 2)), pos.getY() + ((height / 2) - ((float) textSize / 2)), textSize);
     }
 
     public void hover() {

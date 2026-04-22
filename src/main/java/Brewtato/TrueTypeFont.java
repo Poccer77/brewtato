@@ -18,7 +18,7 @@ public class TrueTypeFont {
     private int image = 0;
 
     private static final Map<Integer, String> CHARS = new HashMap<>() {{
-        put(1, "ABCDEFGHIJKLMNOPRSTUVWXYQZ");
+        put(1, "ABCDEFGHIJKLMNOPRSTUVWXYZ  Q");
         put(2, "abcdefhiklmnorstuvwxzgpqyj");
         put(3, "0123456789");
         put(5, "$+-*/=%\"'#@&_(),.;:?!\\|<>[]Ã,Â§`^~");

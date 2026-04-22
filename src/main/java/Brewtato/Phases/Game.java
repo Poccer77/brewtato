@@ -13,6 +13,8 @@ import Brewtato.GameObjects.Weapons.Pistol;
 import Brewtato.GameObjects.Weapons.Projectile;
 import Brewtato.GameObjects.Weapons.Shotgun;
 import Brewtato.GameObjects.Weapons.Weapon;
+import Brewtato.Items.CreateItems;
+import Brewtato.Items.Item;
 import Brewtato.Main;
 import Brewtato.Stats;
 import Brewtato.Utilities.Position;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BiConsumer;
+
 import static Brewtato.Main.*;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -42,6 +46,7 @@ public class Game implements Phase{
     private int spawnDelay = 100;
     private List<Collectible> collectibles;
     private List<Rock> rocks = new ArrayList<>();
+    private List<BiConsumer<Object, Object>> effects;
     private boolean waveOver = false;
     private double waveTimer;
     Random rand = new Random();
@@ -58,6 +63,7 @@ public class Game implements Phase{
         dyingEnemies = new ArrayList<>();
         collectibles = new ArrayList<>();
         wave = 0;
+        effects = new ArrayList<>();
         initRocks();
     }
 
@@ -72,7 +78,7 @@ public class Game implements Phase{
 
     public void initRocks() {
         for (int i = 0; i < 1000; i++) {
-            rocks.add(new Rock(new Position(rand.nextFloat( x((float) (gameSize * 0.1)), x((float) (gameSize * 0.9))), rand.nextFloat(x((float) (gameSize * 0.1)), x((float) (gameSize * 0.9))))));
+            rocks.add(new Rock(new Position(rand.nextFloat(x((float) (gameSize * 0.1)), x((float) (gameSize * 0.9))), rand.nextFloat(x((float) (gameSize * 0.1)), x((float) (gameSize * 0.9))))));
         }
     }
 
