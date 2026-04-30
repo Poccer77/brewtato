@@ -1,6 +1,8 @@
 package Brewtato.GameObjects.Weapons;
 
 import Brewtato.GameObjects.Enemies.Enemy;
+import Brewtato.Main;
+import Brewtato.Stats;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 
@@ -8,12 +10,14 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Pistol extends Weapon {
+public class Pistol extends Shooter {
 
-    boolean inRange;
-
-    public Pistol(int damage, int attackSpeed, float length, float width, int range) {
-        super(damage, attackSpeed, length, width, range);
+    public Pistol() {
+        super("Pistol", 10, 800, 80, 30, 1000 + Stats.range);
+        pierceDamageModifier = 0.75F;
+        damageMod = 1;
+        pierce += 1;
+        rarity = 1;
     }
 
     @Override
@@ -37,6 +41,13 @@ public class Pistol extends Weapon {
         glEnd();
     }
 
+    public void upgrade() {
+        damage += 5;
+        attackSpeed -= 50F;
+        damageMod += 0.1F;
+        super.upgrade();
+    }
+
     @Override
     public void move(float x, float y) {
 
@@ -44,10 +55,10 @@ public class Pistol extends Weapon {
 
     public void shoot() {
         if (delay <= 0 && inRange) {
-            projectiles.add(new PistolProjectile(angle, 5, pos, range));
+            projectiles.add(new PistolProjectile(angle, 5, pos, range, this));
             delay = attackSpeed;
         } else {
-            delay -= 10;
+            delay -= (float) (Main.tickTime);
         }
     }
 

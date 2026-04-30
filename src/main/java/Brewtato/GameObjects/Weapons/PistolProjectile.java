@@ -1,9 +1,13 @@
 package Brewtato.GameObjects.Weapons;
 
+import Brewtato.GameObjects.Enemies.Enemy;
 import Brewtato.Stats;
 import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static Brewtato.Utilities.Tools.distance;
 import static Brewtato.Utilities.Tools.rotate;
@@ -14,7 +18,7 @@ public class PistolProjectile extends Projectile {
     private final float width;
     private final float length;
 
-    public PistolProjectile(float angle, int damage, Position pos, int range) {
+    public PistolProjectile(float angle, int damage, Position pos, int range, Shooter originWeapon) {
         this.pos = new Position(pos.getX(), pos.getY());
         this.angle = angle;
         this.damage = damage;
@@ -23,6 +27,12 @@ public class PistolProjectile extends Projectile {
         length = 75F;
         this.range = range;
         hit = new Hitbox();
+        this.originWeapon = originWeapon;
+        piercedEnemies = new ArrayList<>();
+    }
+
+    public float getDamage() {
+        return (float) ((damage + (Stats.rangedDamage * originWeapon.damageMod)) * (Math.pow(originWeapon.pierceDamageModifier, piercedEnemies.size())));
     }
 
     @Override

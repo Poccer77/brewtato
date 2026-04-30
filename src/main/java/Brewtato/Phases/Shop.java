@@ -1,17 +1,19 @@
 package Brewtato.Phases;
 
-import Brewtato.Items.Item;
+import Brewtato.Items.Buyable;
+import Brewtato.Items.ItemCard;
+import Brewtato.Items.WeaponCard;
 import Brewtato.Main;
 import Brewtato.Stats;
 import Brewtato.Utilities.Button;
+import Brewtato.Utilities.GlobalUI;
 import Brewtato.Utilities.Position;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static Brewtato.Main.vidmode;
-import static Brewtato.Main.window;
-import static Brewtato.Stats.levelsGained;
+import static Brewtato.Stats.materials;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Shop implements Phase{
@@ -22,7 +24,7 @@ public class Shop implements Phase{
     float heightMargin = ((float) Main.vidmode.width()) / 6F;
     boolean finished = false;
     LevelUps[] statsDisplay = LevelUps.values();
-    Item[] items = new Item[4];
+    Buyable[] buyables = new Buyable[4];
     boolean[] locked = new boolean[4];
     Button[] buyButton = new Button[4];
     Button[] lockButton = new Button[4];
@@ -38,9 +40,11 @@ public class Shop implements Phase{
         for (int i = 0; i < 4; i++) {
 
             color = new double[]{0.15, 0.15, 0.15};
-            if (items[i].rarity == 2) color = new double[]{0.453, 0.529, 0.8};
-            if (items[i].rarity == 3) color = new double[]{0.686, 0.435, 0.8};
-            if (items[i].rarity == 4) color = new double[]{0.8, 0.38, 0.38};
+
+            if (buyables[i].rarity == 2) color = new double[]{0.453, 0.529, 0.8};
+            if (buyables[i].rarity == 3) color = new double[]{0.686, 0.435, 0.8};
+            if (buyables[i].rarity == 4) color = new double[]{0.8, 0.38, 0.38};
+
 
             glBegin(GL_QUADS);
             glColor3dv(color);
@@ -54,21 +58,10 @@ public class Shop implements Phase{
             glColor3dv(new double[]{1.0, 1.0, 1.0});
             glEnd();
 
-            Main.ttf.drawText(items[i].name, pos - ((float) Main.ttf.stringWidth(items[i].name, 50) / 2) + window / 2, (float) Main.vidmode.height() - (heightMargin / 2) - 120, 30);
-            float currenHeight = (float) Main.vidmode.height() - (heightMargin / 2) - 250;
-            for (Map.Entry<String, Integer> entry : items[i].desc.entrySet()) {
+            buyables[i].draw(pos);
 
-                String j = (entry.getValue() >= 0) ? "+" + entry.getValue() : String.valueOf(entry.getValue());
-                String d = entry.getKey();
-
-                glColor3dv((entry.getValue() >= 0) ? new double[]{0, 0.8, 0} : new double[]{0.8, 0, 0});
-                Main.ttf.drawText(j, pos + 20, currenHeight, 30);
-                glColor3dv(new double[]{1, 1, 1});
-                Main.ttf.drawText(d, pos + 20 + Main.ttf.stringWidth(j + " ", 30), currenHeight, 30);
-                currenHeight -= 60;
-            }
-
-
+            if (buyables[i].price > materials) buyButton[i].textColor = new double[]{0.8, 0, 0};
+            else buyButton[i].textColor = new double[]{1, 1, 1};
             buyButton[i].draw();
             lockButton[i].draw();
 
@@ -90,22 +83,9 @@ public class Shop implements Phase{
         glColor3dv(color);
         glEnd();
 
-        Main.ttf.drawText("STATS", pos + ((Main.vidmode.width() - margin - pos) / 2) - ((float) Main.ttf.stringWidth("STATS", 40) / 2), Main.vidmode.height() - (heightMargin / 2) - 90, 40);
-        for (LevelUps lvlup : statsDisplay) {
-            Arrays.fill(color, 0);
+        GlobalUI.drawStats();
+        GlobalUI.drawMaterials(new Position(vidmode.width() * (1F/21F), vidmode.height() * (9F/10F)));
 
-            if (lvlup.getStat.get() > 0) {
-                color[1] = 0.8;
-            } else if (lvlup.getStat.get() < 0) {
-                color[0] = 0.8;
-            } else Arrays.fill(color, 1);
-
-            glColor3dv(color);
-
-            Main.ttf.drawText(lvlup.string, pos + 10, Main.vidmode.height() - heightMargin, 30);
-            Main.ttf.drawText(lvlup.getStat.get().toString(), (Main.vidmode.width() - margin - 10) - ((float) Main.ttf.stringWidth(lvlup.getStat.get().toString(), 30)), Main.vidmode.height() - heightMargin, 30);
-            heightMargin += 60;
-        }
         heightMargin = ((float) Main.vidmode.width()) / 6F;
     }
 
@@ -128,8 +108,8 @@ public class Shop implements Phase{
                 }
             }
 
-            if (buyButton[i].isPressed()) {
-                items[i].apply.run();
+            if (buyButton[i].isPressed() && buyables[i].price <= materials && buyables[i].apply.get()) {
+                materials -= buyables[i].price;
                 locked[i] = false;
                 chooseItems();
             }
@@ -149,18 +129,18 @@ public class Shop implements Phase{
 
         finished = false;
 
-        chooseItems();
-
         double[] buttonColor = new double[]{0.15, 0.15, 0.15, 1};
 
         float pos = width / 2;
         for (int i = 0; i < lockButton.length; i++) {
-            buyButton[i] = new Button(new Position(pos + 20, (float) (heightMargin - (vidmode.height() * (1.25/20F)))), String.valueOf(items[i].price), (Main.vidmode.height() * (1/20F)), window - 40, buttonColor);
+            buyButton[i] = new Button(new Position(pos + 20, (float) (heightMargin - (vidmode.height() * (1.25/20F)))), "", (Main.vidmode.height() * (1/20F)), window - 40, buttonColor);
             buyButton[i].textSize = 30;
             lockButton[i] = new Button(new Position(pos + 20, (float) (heightMargin - (vidmode.height() * (2.5/20F)))), "Lock", (Main.vidmode.height() * (1/20F)), window - 40, buttonColor);
             lockButton[i].textSize = 30;
             pos += window + margin;
         }
+
+        chooseItems();
 
         otherButtons[0] = new Button(new Position(pos - (window + margin) + 20, vidmode.height() + 20 - heightMargin / 2), "Reroll", (Main.vidmode.height() * (1/20F)), window - 40, buttonColor);
         otherButtons[1] = new Button(new Position(vidmode.width() - window, 40), "Next Wave", (Main.vidmode.height() * (1/20F)), window - 40, buttonColor);
@@ -170,19 +150,35 @@ public class Shop implements Phase{
 
     public void chooseItems() {
 
-        List<Item> currentSelection = new ArrayList<>(Stats.items);
-
-        Collections.shuffle(currentSelection);
+        List<Buyable> currentSelection;
 
         for (int i = 0; i < 4; i++) {
+
             if (locked[i]) continue;
 
             float rarity = (float) (ThreadLocalRandom.current().nextFloat(0.85F) + Math.min(Stats.luck * 0.001, 0.1) + Math.min(Stats.waveRarityScaling, 0.2F));
 
-            int itemRarity = 1;
+            int itemRarity = ThreadLocalRandom.current().nextInt(1, 3);
 
-            items[i] = currentSelection.stream().filter((item) -> item.rarity == itemRarity).findAny().get();
-            currentSelection.remove(items[i]);
+            //currentSelection = ((ThreadLocalRandom.current().nextFloat(1F) < 0.65F) ? new ArrayList<>(Stats.items) : new ArrayList<>(Stats.weapons));
+            currentSelection = new ArrayList<>(Stats.weapons);
+            Collections.shuffle(currentSelection);
+
+            Buyable currentBuyable;
+
+            if (currentSelection.get(0) instanceof ItemCard) {
+                currentBuyable = currentSelection.stream().filter((item) -> item.rarity == itemRarity).findAny().get();
+                if (currentSelection.contains(currentBuyable)) {
+                    ItemCard temptempItem = (ItemCard) currentBuyable;
+                    ItemCard tempItem = Stats.items.stream().filter((item) -> item.equals(temptempItem)).findFirst().get();
+                    tempItem.amount -= 1;
+                    if (tempItem.amount == 0) Stats.items.remove(tempItem);
+                }
+            } else {
+                currentBuyable = currentSelection.stream().filter((item) -> item.rarity == itemRarity).findAny().get();
+            }
+            buyables[i] = currentBuyable;
+            buyButton[i].text = String.valueOf(buyables[i].price);
         }
     }
 }

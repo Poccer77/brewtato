@@ -1,5 +1,6 @@
 package Brewtato;
 
+import Brewtato.GameObjects.Weapons.Pistol;
 import Brewtato.GameObjects.Weapons.Shotgun;
 import Brewtato.Phases.*;
 import Brewtato.Utilities.Position;
@@ -79,7 +80,7 @@ public class Main {
 
         glfwSetMouseButtonCallback(window, (window, key, action, mods) -> {});
         for (int i = 0; i < 3; i++) {
-            Stats.weapons.add(new Shotgun(1, 500, 60, 30, 1000));
+            Stats.ownedWeapons.add(new Shotgun());
         }
 
         // Get the thread stack and push a new frame

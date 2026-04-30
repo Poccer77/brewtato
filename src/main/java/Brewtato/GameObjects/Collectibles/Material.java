@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Material extends Collectible {
 
     private float angle;
-    private float size;
+    public float size;
 
     public Material(Position pos) {
         super(pos);

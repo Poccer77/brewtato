@@ -45,12 +45,12 @@ public class Player implements Object {
         hit.x3.setPosition(pos.getX() + 80, pos.getY() + 80);
         hit.x4.setPosition(pos.getX() + 80, pos.getY() - 80);
 
-        int weaponCount = weapons.size();
+        int weaponCount = ownedWeapons.size();
         if (weaponCount == 0) return;
         int anglePart = (360 / weaponCount);
         float angle = 0;
 
-        for (Weapon weapon : weapons) {
+        for (Weapon weapon : ownedWeapons) {
             weapon.setPos(new Position(150, 0));
             weapon.pos.rotate(angle);
             weapon.pos.changePosition(pos.getX(), pos.getY());

@@ -5,18 +5,15 @@ import Brewtato.Main;
 import static Brewtato.Stats.levelsGained;
 import static Brewtato.Utilities.Tools.*;
 
+import Brewtato.Utilities.*;
 import Brewtato.Utilities.Button;
 import Brewtato.Utilities.Button.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import Brewtato.Stats;
-import Brewtato.Utilities.Hitbox;
-import Brewtato.Utilities.Position;
-import Brewtato.Utilities.Tools;
 import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.stb.STBTruetype.*;
-import org.lwjgl.system.linux.Stat;
 
 import java.awt.*;
 import java.awt.font.*;
@@ -79,33 +76,8 @@ public class LevelUp implements Phase{
         buttons[4].color = new double[]{0.15, 0.15, 0.15, 1};
         buttons[4].draw();
 
-        double[] color = new double[]{0.15, 0.15, 0.15};
-        glBegin(GL_QUADS);
-        glColor3dv(color);
-        glVertex2d(pos, Main.vidmode.height() - (heightMargin / 2));
-        glVertex2d(Main.vidmode.width() - margin, Main.vidmode.height() - (heightMargin / 2));
-        glVertex2d(Main.vidmode.width() - margin, (heightMargin / 2));
-        glVertex2d(pos, (heightMargin / 2));
-        Arrays.fill(color, 1);
-        glColor3dv(color);
-        glEnd();
+        GlobalUI.drawStats();
 
-        Main.ttf.drawText("STATS", pos + ((Main.vidmode.width() - margin - pos) / 2) - ((float) Main.ttf.stringWidth("STATS", 40) / 2), Main.vidmode.height() - (heightMargin / 2) - 90, 40);
-        for (LevelUps lvlup : statsDisplay) {
-            Arrays.fill(color, 0);
-
-            if (lvlup.getStat.get() > 0) {
-                color[1] = 0.8;
-            } else if (lvlup.getStat.get() < 0) {
-                color[0] = 0.8;
-            } else Arrays.fill(color, 1);
-
-            glColor3dv(color);
-
-            Main.ttf.drawText(lvlup.string, pos + 10, Main.vidmode.height() - heightMargin, 30);
-            Main.ttf.drawText(lvlup.getStat.get().toString(), (Main.vidmode.width() - margin - 10) - ((float) Main.ttf.stringWidth(lvlup.getStat.get().toString(), 30)), Main.vidmode.height() - heightMargin, 30);
-            heightMargin += 60;
-        }
         heightMargin = ((float) Main.vidmode.width()) / 6F;
     }
 

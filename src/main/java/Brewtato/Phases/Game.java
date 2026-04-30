@@ -9,14 +9,8 @@ import Brewtato.GameObjects.Collectibles.Fruit;
 import Brewtato.GameObjects.Collectibles.Material;
 import Brewtato.GameObjects.Enemies.Enemy;
 import Brewtato.GameObjects.Enemies.Grunt;
-import Brewtato.GameObjects.Weapons.Pistol;
-import Brewtato.GameObjects.Weapons.Projectile;
-import Brewtato.GameObjects.Weapons.Shotgun;
-import Brewtato.GameObjects.Weapons.Weapon;
-import Brewtato.Items.CreateItems;
-import Brewtato.Items.Item;
-import Brewtato.Main;
-import Brewtato.Stats;
+import Brewtato.GameObjects.Weapons.*;
+import Brewtato.Utilities.GlobalUI;
 import Brewtato.Utilities.Position;
 import static Brewtato.Stats.*;
 import static Brewtato.Utilities.Tools.*;
@@ -49,6 +43,7 @@ public class Game implements Phase{
     private List<BiConsumer<Object, Object>> effects;
     private boolean waveOver = false;
     private double waveTimer;
+    private List<Shooter> shooties = new ArrayList<>();
     Random rand = new Random();
 
     public Game(){
@@ -64,6 +59,7 @@ public class Game implements Phase{
         collectibles = new ArrayList<>();
         wave = 0;
         effects = new ArrayList<>();
+
         initRocks();
     }
 
@@ -74,6 +70,7 @@ public class Game implements Phase{
         spawnEnemies();
         playerCurrentHealth = playerMaxHealth;
         player.draw();
+        shooties = ownedWeapons.stream().filter(weapon -> weapon instanceof Shooter).map((weapon) -> (Shooter) weapon).toList();
     }
 
     public void initRocks() {
@@ -150,7 +147,8 @@ public class Game implements Phase{
         for (Collectible collectible : collectibles) {
             collectible.follow(player);
         }
-        for (Weapon weapon : weapons) {
+
+        for (Shooter weapon : shooties) {
             weapon.aim(enemies, movement);
             if (!enemies.isEmpty()) weapon.shoot();
             for (Projectile projectile : weapon.projectiles) {
@@ -176,7 +174,7 @@ public class Game implements Phase{
         collectibles.removeIf(collectible -> collectible instanceof Material);
         collectibles.forEach(collectible -> {collectible.inRange = true; collectible.follow(player);});
         dyingEnemies.removeIf(Enemy::die);
-        weapons.forEach(weapon -> {weapon.projectiles.forEach(Projectile::move);});
+        shooties.forEach(weapon -> {weapon.projectiles.forEach(Projectile::move);});
         draw();
         if(dyingEnemies.isEmpty() && collectibles.isEmpty() && (int) (waveTimer + 1) <= -1) waveOver = true;
     }
@@ -202,7 +200,7 @@ public class Game implements Phase{
         for(Enemy enemy : dyingEnemies) {
             enemy.move(-x, -y);
         }
-        for(Weapon weapon : weapons) {
+        for(Shooter weapon : shooties) {
             for (Projectile projectile : weapon.projectiles) {
                 projectile.move(-x, -y);
             }
@@ -220,7 +218,7 @@ public class Game implements Phase{
         enemies.forEach(Enemy::draw);
         dyingEnemies.forEach(Enemy::draw);
         player.draw();
-        for (Weapon weapon : weapons) {
+        for (Shooter weapon : shooties) {
             weapon.draw();
             weapon.projectiles.forEach(Projectile::draw);
         }
@@ -242,13 +240,14 @@ public class Game implements Phase{
         Iterator<Enemy> enIt = enemies.iterator();
         while (enIt.hasNext()) {
             Enemy enemy = enIt.next();
-            for(Weapon weapon : weapons) {
+            for(Shooter weapon : shooties) {
                 Iterator<Projectile> proIt = weapon.projectiles.iterator();
                 while(proIt.hasNext()) {
                     Projectile projectile = proIt.next();
-                    if (overlap(enemy.hit, projectile.hit)) {
-                        enemy.health -= Math.round((float)projectile.damage * damage);
-                        proIt.remove();
+                    if (overlap(enemy.hit, projectile.hit) && !projectile.piercedEnemies.contains(enemy)) {
+                        enemy.health -= (int) projectile.getDamage();
+                        projectile.piercedEnemies.add(enemy);
+                        if (projectile.piercedEnemies.size() > weapon.pierce) proIt.remove();
                     }
                 }
             }
@@ -297,11 +296,11 @@ public class Game implements Phase{
     private void spawnEnemies() {
 
         Position spawnPos = new Position(rand.nextFloat((float)(gameSize * 0.1) + 300, (float)(gameSize * 0.9) - 300), rand.nextFloat((float)(gameSize * 0.1) + 300, (float)(gameSize * 0.9) - 300));
-        if (enemies.size() + spawningEnemies.size() < 25) {
-            for (int i = 0; i < rand.nextInt(8, 13); i++) {
+        if (enemies.size() + spawningEnemies.size() < 5 * Math.min(wave, 50)) {
+            for (int i = 0; i < rand.nextInt(3 + (int) (wave * 0.8), 5 + (int) (wave * 0.8)); i++) {
                 spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) (spawnPos.getX() - 150), (float) (spawnPos.getX() + 150))), y(rand.nextFloat((float) (spawnPos.getY() - 150), (float) (spawnPos.getY() + 150))))));
             }
-        } else if (rand.nextInt(0, 101) > 95){
+        } else if (rand.nextInt(0, 1001) > 990 - wave * 10) {
             if (rand.nextInt(21) < 19) spawningEnemies.add(new Grunt(new Position(x(spawnPos.getX()),y(spawnPos.getY()))));
             else spawningEnemies.add(new Tree(new Position(x(spawnPos.getX()), y(spawnPos.getY()))));
         }
@@ -438,6 +437,8 @@ public class Game implements Phase{
         glColor4d(1, 1, 1, 1);
 
         ttf.drawText(lvl, (ogPos.getX() + ogWidth) / 5.5F - (float)ttf.stringWidth(hp, 30) / 2, ogPos.getY() + (height / 2) - 20F / 2, 30);
+
+        GlobalUI.drawMaterials(new Position(vidmode.width() * (1F/21F), position.getY() - 80));
     }
 
     private void drawField() {

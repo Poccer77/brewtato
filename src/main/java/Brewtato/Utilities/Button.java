@@ -15,7 +15,7 @@ public class Button {
     private float height;
     private float width;
     public double[] color;
-    private double[] textColor = new double[]{1, 1, 1, 1};
+    public double[] textColor = new double[]{1, 1, 1};
     private double[] currentColor;
     private double[] currentTextColor;
     private Boolean[] buttonPress = new Boolean[3];
@@ -46,7 +46,7 @@ public class Button {
         glVertex2f(pos.getX(), pos.getY() + height);
         glEnd();
 
-        glColor4dv(currentTextColor);
+        glColor3dv(currentTextColor);
         Main.ttf.drawText(text, pos.getX() + ((width / 2) - ((float) Main.ttf.stringWidth(text, textSize) / 2)), pos.getY() + ((height / 2) - ((float) textSize / 2)), textSize);
     }
 

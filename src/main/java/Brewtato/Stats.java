@@ -2,10 +2,11 @@ package Brewtato;
 
 import Brewtato.GameObjects.Weapons.Weapon;
 import Brewtato.Items.CreateItems;
-import Brewtato.Items.Item;
+import Brewtato.Items.CreateWeapons;
+import Brewtato.Items.ItemCard;
+import Brewtato.Items.WeaponCard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Stats {
@@ -136,7 +137,7 @@ public class Stats {
         return weaponLimit;
     }
 
-    public static List<Weapon> getWeapons() {
+    public static List<WeaponCard> getWeapons() {
         return weapons;
     }
 
@@ -164,7 +165,9 @@ public class Stats {
     public static int levelsGained;
     public static int dodge;
     public static int invulnerability = 250;
+    public static int pierce;
     public static int collectibleHealAmount;
+    public static float pierceDamage;
     public static int chests;
     public static float waveRarityScaling;
     public static int critChance;
@@ -174,7 +177,8 @@ public class Stats {
     public static int engineering;
     public static float enemySpawns;
     public static int weaponLimit = 6;
-    public static List<Weapon> weapons = new ArrayList<>();
-    public static List<Item> items = CreateItems.fill();
+    public static List<Weapon> ownedWeapons = new ArrayList<>();
+    public static List<WeaponCard> weapons = CreateWeapons.fill();
+    public static List<ItemCard> items = CreateItems.fill();
 
 }

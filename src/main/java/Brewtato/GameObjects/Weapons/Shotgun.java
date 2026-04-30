@@ -9,19 +9,23 @@ import java.util.List;
 import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
-public class Shotgun extends Weapon {
+public class Shotgun extends Shooter {
 
     boolean inRange;
 
-    public Shotgun(int damage, int attackSpeed, float length, float width, int range) {
-        super(damage, attackSpeed, length, width, range + Stats.range);
+    public Shotgun() {
+        super("Shotgun", 8, 1000, 60, 30, 800 + Stats.range);
+        pierce += 2;
+        pierceDamageModifier = 0.5F;
+        damageMod = 0.5F;
+        super.upgrade();
     }
 
     @Override
     public void shoot() {
         if (delay <= 0 && inRange) {
             for (int i = 0; i < 5; i++) {
-                projectiles.add(new PistolProjectile(angle + (float) Math.toRadians(new Random().nextInt(61) - 30), 5, pos, range));
+                projectiles.add(new PistolProjectile(angle + (float) Math.toRadians(new Random().nextInt(61) - 30), 5, pos, range, this));
             }
             delay = attackSpeed;
         } else {
@@ -73,5 +77,14 @@ public class Shotgun extends Weapon {
         if (playerMove.getX() < 0) angle = (float) Math.toRadians(180);
         else if (playerMove.getX() > 0) angle = 0;
         inRange = false;
+    }
+
+    @Override
+    public void upgrade() {
+        range += 25;
+        damage += 2;
+        pierceDamageModifier += 0.1F;
+        damageMod += 5;
+        attackSpeed -= 50F;
     }
 }

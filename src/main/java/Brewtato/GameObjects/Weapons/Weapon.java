@@ -10,12 +10,17 @@ import java.util.List;
 
 public abstract class Weapon implements Object {
 
-    public final int damage;
-    public final int attackSpeed;
-    int delay;
-    public float angle;
+    public int damage;
+    public String name;
+    public float attackSpeed;
+    float delay;
+    float angle;
     public int range;
+    public float damageMod;
+    public int pierce;
+    public int rarity;
     public Hitbox hit;
+    boolean inRange;
 
     public Position getPos() {
         return pos;
@@ -25,15 +30,14 @@ public abstract class Weapon implements Object {
         this.pos = pos;
     }
 
-    public List<Projectile> projectiles = new ArrayList<>();
-
     public Position pos;
 
     final float length;
     final float width;
 
 
-    protected Weapon(int damage, int attackSpeed, float length, float width, int range) {
+    protected Weapon(String name, int damage, int attackSpeed, float length, float width, int range) {
+        this.name = name;
         this.damage = damage;
         this.attackSpeed = attackSpeed;
         this.length = length;
@@ -46,7 +50,9 @@ public abstract class Weapon implements Object {
 
     }
 
-    public abstract void shoot();
+    public void upgrade() {
+        rarity++;
+    };
 
     public abstract void draw();
 
