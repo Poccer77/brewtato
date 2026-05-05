@@ -1,15 +1,10 @@
 package Brewtato;
 
-import Brewtato.GameObjects.Weapons.Pistol;
-import Brewtato.GameObjects.Weapons.Shotgun;
 import Brewtato.Phases.*;
-import Brewtato.Utilities.Position;
-import Brewtato.Utilities.Tools;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import java.io.File;
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +74,7 @@ public class Main {
         });
 
         glfwSetMouseButtonCallback(window, (window, key, action, mods) -> {});
-        for (int i = 0; i < 3; i++) {
-            Stats.ownedWeapons.add(new Shotgun());
-        }
+
 
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush()) {

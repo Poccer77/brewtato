@@ -164,6 +164,7 @@ public class Stats {
     public static int cap;
     public static int levelsGained;
     public static int dodge;
+    public static int bounce;
     public static int invulnerability = 250;
     public static int pierce;
     public static int collectibleHealAmount;

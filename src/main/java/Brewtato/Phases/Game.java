@@ -9,17 +9,19 @@ import Brewtato.GameObjects.Collectibles.Fruit;
 import Brewtato.GameObjects.Collectibles.Material;
 import Brewtato.GameObjects.Enemies.Enemy;
 import Brewtato.GameObjects.Enemies.Grunt;
-import Brewtato.GameObjects.Weapons.*;
+import Brewtato.GameObjects.Weapons.Shooter.Projectile;
+import Brewtato.GameObjects.Weapons.Shooter.SMG;
+import Brewtato.GameObjects.Weapons.Shooter.Shooter;
+import Brewtato.GameObjects.Weapons.Shooter.Slingshot;
+import Brewtato.Stats;
 import Brewtato.Utilities.GlobalUI;
 import Brewtato.Utilities.Position;
 import static Brewtato.Stats.*;
 import static Brewtato.Utilities.Tools.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiConsumer;
 
 import static Brewtato.Main.*;
@@ -41,6 +43,7 @@ public class Game implements Phase{
     private List<Collectible> collectibles;
     private List<Rock> rocks = new ArrayList<>();
     private List<BiConsumer<Object, Object>> effects;
+    private List<DamageNumber> damageNumbers = new ArrayList<>();
     private boolean waveOver = false;
     private double waveTimer;
     private List<Shooter> shooties = new ArrayList<>();
@@ -59,6 +62,9 @@ public class Game implements Phase{
         collectibles = new ArrayList<>();
         wave = 0;
         effects = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Stats.ownedWeapons.add(new Slingshot());
+        }
 
         initRocks();
     }
@@ -66,7 +72,7 @@ public class Game implements Phase{
     public void init(){
         waveOver = false;
         wave++;
-        waveTimer = Math.min((5 * wave), 60);
+        waveTimer = Math.min((15 + 5 * wave), 60);
         spawnEnemies();
         playerCurrentHealth = playerMaxHealth;
         player.draw();
@@ -154,13 +160,10 @@ public class Game implements Phase{
             for (Projectile projectile : weapon.projectiles) {
                 projectile.move();
             }
-            for (int i = 0; i < weapon.projectiles.size(); i++) {
-                if (weapon.projectiles.get(i).range <= 0) {
-                    weapon.projectiles.remove(i);
-                    i--;
-                }
-            }
+            weapon.projectiles.removeIf((projectile -> projectile.range + range <= 0));
         }
+
+        damageNumbers.removeIf(DamageNumber::disappear);
 
         draw();
     }
@@ -171,12 +174,19 @@ public class Game implements Phase{
             dyingEnemies.addAll(enemies);
             enemies.clear();
         }
-        collectibles.removeIf(collectible -> collectible instanceof Material);
+
         collectibles.forEach(collectible -> {collectible.inRange = true; collectible.follow(player);});
         dyingEnemies.removeIf(Enemy::die);
-        shooties.forEach(weapon -> {weapon.projectiles.forEach(Projectile::move);});
+        shooties.forEach(weapon -> {
+            weapon.projectiles.forEach(Projectile::move);
+            weapon.projectiles.removeIf(projectile -> projectile.range + range <= 0);
+        });
+        damageNumbers.removeIf(DamageNumber::disappear);
         draw();
-        if(dyingEnemies.isEmpty() && collectibles.isEmpty() && (int) (waveTimer + 1) <= -1) waveOver = true;
+        if(dyingEnemies.isEmpty() && (int) (waveTimer + 1) <= -1) {
+            collectibles.removeIf(collectible -> collectible instanceof Material);
+            waveOver = true;
+        }
     }
 
     private float x(float x) {
@@ -208,6 +218,9 @@ public class Game implements Phase{
         for(Collectible collectible : collectibles) {
             collectible.move(-x, -y);
         }
+        for(DamageNumber damageNumber : damageNumbers) {
+            damageNumber.move(-x, -y);
+        }
     }
 
     public void draw(){
@@ -222,6 +235,7 @@ public class Game implements Phase{
             weapon.draw();
             weapon.projectiles.forEach(Projectile::draw);
         }
+        damageNumbers.forEach(DamageNumber::draw);
         if ((int) (waveTimer + 1) <= 0) dim();
         drawUI();
     }
@@ -244,10 +258,18 @@ public class Game implements Phase{
                 Iterator<Projectile> proIt = weapon.projectiles.iterator();
                 while(proIt.hasNext()) {
                     Projectile projectile = proIt.next();
-                    if (overlap(enemy.hit, projectile.hit) && !projectile.piercedEnemies.contains(enemy)) {
-                        enemy.health -= (int) projectile.getDamage();
-                        projectile.piercedEnemies.add(enemy);
-                        if (projectile.piercedEnemies.size() > weapon.pierce) proIt.remove();
+                    if (overlap(enemy.hit, projectile.hit) && !projectile.hitEnemies.contains(enemy)) {
+                        boolean crit = ThreadLocalRandom.current().nextDouble(1) < critChance;
+                        enemy.health -= (int) ((crit) ? projectile.getDamage() : projectile.getDamage() * 2);
+                        double[] color = (crit) ? new double[]{1, 1, 0.5} : new double[]{1, 1, 1};
+                        damageNumbers.add(new DamageNumber((int) projectile.getDamage(), color, new Position(projectile.pos)));
+                        projectile.hitEnemies.add(enemy);
+                        if (projectile.hitEnemies.size() <= weapon.bounce + bounce) {
+                            List<Enemy> tmpList = enemies.stream().filter((tempEnemy) -> !projectile.hitEnemies.contains(tempEnemy)).toList();
+                            projectile.range = Integer.MAX_VALUE;
+                            projectile.aim(tmpList);
+                        }
+                        else if (projectile.hitEnemies.size() > weapon.pierce + pierce + weapon.bounce + bounce) proIt.remove();
                     }
                 }
             }
@@ -450,4 +472,42 @@ public class Game implements Phase{
         glVertex2d(x((float) (gameSize * 0.1)), y((float) (gameSize * 0.9) + 140));
         glEnd();
     }
+}
+
+class DamageNumber {
+
+    private String number;
+    private double[] color;
+    private float animationTimer = 50;
+    private Position pos;
+
+    public DamageNumber(int damage, double[] color, Position pos) {
+        number = String.valueOf(damage);
+        this.color = color;
+        this.pos = pos;
+        this.color = new double[4];
+        System.arraycopy(color, 0, this.color, 0, 3);
+        this.color[3] = 5;
+    }
+
+    public boolean disappear() {
+        return color[3] <= 0;
+    }
+
+    public void draw() {
+
+        glColor4dv(color);
+        ttf.drawText(number, pos.getX() - ttf.stringWidth(number, 40), pos.getY(), 40);
+        if (animationTimer >= -10) {
+            pos.setPosition(pos.getX(),  pos.getY() + animationTimer);
+            animationTimer -= 8F;
+        } else {
+            color[3] -= 0.2;
+        }
+    }
+
+    public void move(float x, float y) {
+        pos.changePosition(x, y);
+    }
+
 }

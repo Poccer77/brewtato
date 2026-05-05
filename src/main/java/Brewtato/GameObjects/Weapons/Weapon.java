@@ -13,14 +13,13 @@ public abstract class Weapon implements Object {
     public int damage;
     public String name;
     public float attackSpeed;
-    float delay;
-    float angle;
+    protected float delay;
+    protected float angle;
     public int range;
     public float damageMod;
     public int pierce;
     public int rarity;
-    public Hitbox hit;
-    boolean inRange;
+    protected boolean inRange;
 
     public Position getPos() {
         return pos;
@@ -32,8 +31,8 @@ public abstract class Weapon implements Object {
 
     public Position pos;
 
-    final float length;
-    final float width;
+    protected final float length;
+    protected final float width;
 
 
     protected Weapon(String name, int damage, int attackSpeed, float length, float width, int range) {

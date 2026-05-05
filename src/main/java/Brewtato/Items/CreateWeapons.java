@@ -1,11 +1,8 @@
 package Brewtato.Items;
 
-import Brewtato.GameObjects.Weapons.Pistol;
-import Brewtato.GameObjects.Weapons.Shotgun;
-import Brewtato.GameObjects.Weapons.Weapon;
+import Brewtato.GameObjects.Weapons.Shooter.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public interface CreateWeapons {
@@ -23,6 +20,14 @@ public interface CreateWeapons {
                                 15 * i),
                         new WeaponCard("Shotgun",
                                 Shotgun::new,
+                                i,
+                                20 * i),
+                        new WeaponCard("SMG",
+                                SMG::new,
+                                i,
+                                15 * i),
+                        new WeaponCard("Slingshot",
+                                Slingshot::new,
                                 i,
                                 20 * i)
                     ));

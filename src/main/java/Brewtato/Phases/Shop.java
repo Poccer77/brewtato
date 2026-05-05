@@ -26,6 +26,7 @@ public class Shop implements Phase{
     LevelUps[] statsDisplay = LevelUps.values();
     Buyable[] buyables = new Buyable[4];
     boolean[] locked = new boolean[4];
+    boolean[] bought = new boolean[4];
     Button[] buyButton = new Button[4];
     Button[] lockButton = new Button[4];
     Button[] otherButtons = new Button[2];
@@ -39,31 +40,34 @@ public class Shop implements Phase{
 
         for (int i = 0; i < 4; i++) {
 
-            color = new double[]{0.15, 0.15, 0.15};
+            if (!bought[i]) {
 
-            if (buyables[i].rarity == 2) color = new double[]{0.453, 0.529, 0.8};
-            if (buyables[i].rarity == 3) color = new double[]{0.686, 0.435, 0.8};
-            if (buyables[i].rarity == 4) color = new double[]{0.8, 0.38, 0.38};
+                color = new double[]{0.15, 0.15, 0.15};
+
+                if (buyables[i].rarity == 2) color = new double[]{0.453, 0.529, 0.8};
+                if (buyables[i].rarity == 3) color = new double[]{0.686, 0.435, 0.8};
+                if (buyables[i].rarity == 4) color = new double[]{0.8, 0.38, 0.38};
 
 
-            glBegin(GL_QUADS);
-            glColor3dv(color);
-            glVertex2f(pos, heightMargin);
-            glColor3dv(color);
-            glVertex2f(pos + window, heightMargin);
-            glColor3dv(color);
-            glVertex2f(pos + window, Main.vidmode.height() - (heightMargin / 2));
-            glColor3dv(color);
-            glVertex2f(pos, Main.vidmode.height() - (heightMargin / 2));
-            glColor3dv(new double[]{1.0, 1.0, 1.0});
-            glEnd();
+                glBegin(GL_QUADS);
+                glColor3dv(color);
+                glVertex2f(pos, heightMargin);
+                glColor3dv(color);
+                glVertex2f(pos + window, heightMargin);
+                glColor3dv(color);
+                glVertex2f(pos + window, Main.vidmode.height() - (heightMargin / 2));
+                glColor3dv(color);
+                glVertex2f(pos, Main.vidmode.height() - (heightMargin / 2));
+                glColor3dv(new double[]{1.0, 1.0, 1.0});
+                glEnd();
 
-            buyables[i].draw(pos);
+                buyables[i].draw(pos);
 
-            if (buyables[i].price > materials) buyButton[i].textColor = new double[]{0.8, 0, 0};
-            else buyButton[i].textColor = new double[]{1, 1, 1};
-            buyButton[i].draw();
-            lockButton[i].draw();
+                if (buyables[i].price > materials) buyButton[i].textColor = new double[]{0.8, 0, 0};
+                else buyButton[i].textColor = new double[]{1, 1, 1};
+                buyButton[i].draw();
+                lockButton[i].draw();
+            }
 
             pos += window + margin;
         }
@@ -111,10 +115,8 @@ public class Shop implements Phase{
             if (buyButton[i].isPressed() && buyables[i].price <= materials && buyables[i].apply.get()) {
                 materials -= buyables[i].price;
                 locked[i] = false;
-                chooseItems();
+                bought[i] = true;
             }
-
-
         }
 
         if (otherButtons[0].isPressed()) chooseItems();
@@ -154,7 +156,12 @@ public class Shop implements Phase{
 
         for (int i = 0; i < 4; i++) {
 
-            if (locked[i]) continue;
+            bought[i] = false;
+
+            if (locked[i]) {
+                buyButton[i].text = String.valueOf(buyables[i].price);
+                continue;
+            }
 
             float rarity = (float) (ThreadLocalRandom.current().nextFloat(0.85F) + Math.min(Stats.luck * 0.001, 0.1) + Math.min(Stats.waveRarityScaling, 0.2F));
 

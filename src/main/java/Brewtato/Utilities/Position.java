@@ -15,6 +15,11 @@ public class Position {
     private float X;
     private float Y;
 
+    public Position(Position pos) {
+        X = pos.getX();
+        Y = pos.getY();
+    }
+
     public void setPosition(float x, float y){
         X = x;
         Y = y;
