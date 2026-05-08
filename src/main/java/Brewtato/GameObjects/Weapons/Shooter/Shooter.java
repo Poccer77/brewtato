@@ -46,5 +46,9 @@ public abstract class Shooter extends Weapon {
 
     public abstract void shoot();
 
+    public void triggerEffects(Enemy enemy, Projectile projectile) {}
+
+    public abstract Draw<Position, Float, Hitbox> getDrawFunc();
+
     public Draw<Position, Float, Hitbox> drawFunc;
 }

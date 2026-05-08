@@ -52,7 +52,8 @@ public class Tools {
     }
 
     public static boolean overlap(Hitbox h1, Hitbox h2) {
-        return h1.isWithin(h2.x1) || h1.isWithin(h2.x2) || h1.isWithin(h2.x3) || h1.isWithin(h2.x4);
+        return (h1.isWithin(h2.x1) || h1.isWithin(h2.x2) || h1.isWithin(h2.x3) || h1.isWithin(h2.x4)) ||
+               (h2.isWithin(h1.x1) || h2.isWithin(h1.x2) || h2.isWithin(h1.x3) || h2.isWithin(h1.x4));
     }
 
     public static Position getMousePos() {

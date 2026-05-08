@@ -33,7 +33,12 @@ public interface CreateWeapons {
                     ));
 
                     if (i >= 2) {
-                        tempList.addAll(List.of());
+                        tempList.addAll(List.of(
+                            new WeaponCard("Flamethrower",
+                                    Flamethrower::new,
+                                    i,
+                                    40 * i)
+                        ));
                     }
 
                     if (i >= 3) {

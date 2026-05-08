@@ -9,8 +9,8 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Button {
 
-    private Hitbox hitbox = new Hitbox();
     private Position pos;
+    private Hitbox hitbox;
     public String text;
     private float height;
     private float width;

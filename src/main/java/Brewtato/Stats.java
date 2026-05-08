@@ -171,6 +171,7 @@ public class Stats {
     public static float pierceDamage;
     public static int chests;
     public static float waveRarityScaling;
+    public static int explosionSize;
     public static int critChance;
     public static int meleeDamage;
     public static int rangedDamage;
