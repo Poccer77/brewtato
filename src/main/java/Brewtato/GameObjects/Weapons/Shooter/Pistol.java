@@ -18,9 +18,13 @@ public class Pistol extends Shooter {
     public Pistol() {
         super("Pistol", 10, 800, 80, 30, 1300);
         pierceDamageModifier = 0.75F;
-        damageMod = 1;
         pierce += 1;
         rarity = 1;
+    }
+
+    @Override
+    public Draw<Position, Float, Hitbox> getDrawFunc() {
+        return drawFunc;
     }
 
     @Override
@@ -47,6 +51,11 @@ public class Pistol extends Shooter {
         glEnd();
     }
 
+    @Override
+    public int getDamageMod() {
+        return (int) (damageMod * Stats.rangedDamage);
+    }
+
     public void upgrade() {
         damage += 10;
         attackSpeed -= 50F;
@@ -61,7 +70,7 @@ public class Pistol extends Shooter {
 
     public void shoot() {
         if (delay <= 0 && inRange) {
-            projectiles.add(new Projectile(angle, damage, pos, range, this, drawFunc));
+            projectiles.add(new Projectile(90, angle, damage, pos, range, this, drawFunc, pierce));
             delay = attackSpeed;
         } else {
             delay -= (float) (Main.tickTime);

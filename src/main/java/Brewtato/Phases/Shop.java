@@ -165,10 +165,9 @@ public class Shop implements Phase{
 
             float rarity = (float) (ThreadLocalRandom.current().nextFloat(0.85F) + Math.min(Stats.luck * 0.001, 0.1) + Math.min(Stats.waveRarityScaling, 0.2F));
 
-            int itemRarity = ThreadLocalRandom.current().nextInt(1, 3);
+            int itemRarity = ThreadLocalRandom.current().nextInt(1, 5);
 
-            //currentSelection = ((ThreadLocalRandom.current().nextFloat(1F) < 0.65F) ? new ArrayList<>(Stats.items) : new ArrayList<>(Stats.weapons));
-            currentSelection = new ArrayList<>(Stats.weapons);
+            currentSelection = ((ThreadLocalRandom.current().nextFloat(1F) < 0.65F) ? new ArrayList<>(Stats.items) : new ArrayList<>(Stats.weapons));
             Collections.shuffle(currentSelection);
 
             Buyable currentBuyable;

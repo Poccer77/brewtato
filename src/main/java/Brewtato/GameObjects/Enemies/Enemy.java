@@ -1,8 +1,11 @@
 package Brewtato.GameObjects.Enemies;
 
+import Brewtato.Effects.Debuff;
 import Brewtato.GameObjects.Object;
+import Brewtato.Phases.Game;
 import Brewtato.Utilities.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Enemy implements Object {
@@ -16,6 +19,7 @@ public abstract class Enemy implements Object {
     public int deathAnimation = 60;
     boolean blink = false;
     double[] color;
+    public List<Debuff> debuffs = new ArrayList<Debuff>();
 
     public abstract boolean getHit(Hitbox hitbox);
     public abstract int attack();

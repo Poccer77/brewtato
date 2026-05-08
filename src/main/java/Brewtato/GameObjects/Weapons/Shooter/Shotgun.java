@@ -25,10 +25,15 @@ public class Shotgun extends Shooter {
     }
 
     @Override
+    public Draw<Position, Float, Hitbox> getDrawFunc() {
+        return drawFunc;
+    }
+
+    @Override
     public void shoot() {
         if (delay <= 0 && inRange) {
             for (int i = 0; i < 5; i++) {
-                projectiles.add(new Projectile(angle + (float) Math.toRadians(new Random().nextInt(61) - 30), damage, pos, range, this, drawFunc));
+                projectiles.add(new Projectile(80, angle + (float) Math.toRadians(new Random().nextInt(61) - 30), damage, pos, range, this, drawFunc, pierce));
             }
             delay = attackSpeed;
         } else {
@@ -82,6 +87,11 @@ public class Shotgun extends Shooter {
         if (playerMove.getX() < 0) angle = (float) Math.toRadians(180);
         else if (playerMove.getX() > 0) angle = 0;
         inRange = false;
+    }
+
+    @Override
+    public int getDamageMod() {
+        return (int) (damageMod * Stats.rangedDamage);
     }
 
     @Override

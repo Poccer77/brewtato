@@ -17,7 +17,8 @@ public class Projectile {
 
     public float width;
     public float length;
-    private final Draw<Position, Float, Hitbox> drawFunc;
+    public int pierces;
+    public Draw<Position, Float, Hitbox> drawFunc;
     public Hitbox hit;
     public Position pos;
     public Shooter originWeapon;
@@ -27,11 +28,11 @@ public class Projectile {
     public float angle;
     public float range;
 
-    public Projectile(float angle, int damage, Position pos, int range, Shooter originWeapon, Draw<Position, Float, Hitbox> drawFunc) {
+    public Projectile(int speed, float angle, int damage, Position pos, int range, Shooter originWeapon, Draw<Position, Float, Hitbox> drawFunc, int pierces) {
         this.pos = new Position(pos.getX(), pos.getY());
         this.angle = angle;
         this.damage = damage;
-        speed = 50;
+        this.speed = speed;
         width = 15F;
         length = 75F;
         this.range = range;
@@ -42,7 +43,11 @@ public class Projectile {
     }
 
     public float getDamage() {
-        return (float) Math.max(1, (1 + ((double) Stats.damage / 100)) * ((damage + (Stats.rangedDamage * originWeapon.damageMod)) * (Math.pow(originWeapon.pierceDamageModifier, Math.max(hitEnemies.size() - (originWeapon.bounce + Stats.bounce), 0)))));
+        return (float) Math.max(1, (1 + ((double) Stats.damage / 100)) * (damage + originWeapon.getDamageMod() * (Math.pow(originWeapon.pierceDamageModifier, Math.max(hitEnemies.size() - (originWeapon.bounce + Stats.bounce), 0)))));
+    }
+
+    public void triggerEffects(Enemy enemy) {
+        originWeapon.triggerEffects(enemy, this);
     }
 
     public void aim(List<Enemy> enemies) {
@@ -56,6 +61,7 @@ public class Projectile {
             }
             angle = Tools.angle(new Position(pos.getX(), pos.getY()), closestEnemy.pos);
         } else angle = (float) ThreadLocalRandom.current().nextDouble(-Math.PI, Math.PI);
+
     }
 
     public void move(float x, float y) {

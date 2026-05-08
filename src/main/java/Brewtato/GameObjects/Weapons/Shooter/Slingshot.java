@@ -1,6 +1,7 @@
 package Brewtato.GameObjects.Weapons.Shooter;
 
 import Brewtato.Main;
+import Brewtato.Stats;
 import Brewtato.Utilities.Draw;
 import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
@@ -21,7 +22,7 @@ public class Slingshot extends Shooter{
 
     public void shoot() {
         if (delay <= 0 && inRange) {
-            Projectile pro = new Projectile(angle, damage, pos, range, this, drawFunc);
+            Projectile pro = new Projectile(70, angle, damage, pos, range, this, drawFunc, pierce);
             pro.length = pro.width = 30;
             projectiles.add(pro);
             delay = attackSpeed;
@@ -33,6 +34,11 @@ public class Slingshot extends Shooter{
     @Override
     public void move(float x, float y) {
 
+    }
+
+    @Override
+    public int getDamageMod() {
+        return (int) (damageMod * Stats.rangedDamage);
     }
 
     public void upgrade() {
@@ -85,6 +91,11 @@ public class Slingshot extends Shooter{
         glVertex2d(pos.getX() + pos11.getX(), pos.getY() + pos11.getY());
         glVertex2d(pos.getX() + pos12.getX(), pos.getY() + pos12.getY());
         glEnd();
+    }
+
+    @Override
+    public Draw<Position, Float, Hitbox> getDrawFunc() {
+        return drawFunc;
     }
 
     public Draw<Position, Float, Hitbox> drawFunc = (pos, angle, length, width, hit) -> {

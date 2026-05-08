@@ -6,6 +6,7 @@ import Brewtato.Utilities.Tools;
 
 import java.util.List;
 
+import static Brewtato.Utilities.Tools.distance;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Tree extends Enemy{
@@ -64,10 +65,10 @@ public class Tree extends Enemy{
         glVertex2d(pos.getX() + (width / 2), pos.getY() - (height / 2));
         glEnd();
 
-        hit.x1.setPosition(pos.getX() - 75, pos.getY() - 75);
-        hit.x2.setPosition(pos.getX() - 75, pos.getY() + 75);
-        hit.x3.setPosition(pos.getX() + 75, pos.getY() + 75);
-        hit.x4.setPosition(pos.getX() + 75, pos.getY() - 75);
+        hit.x1.setPosition(pos.getX() - (width / 2), pos.getY() - (height / 2));
+        hit.x2.setPosition(pos.getX() - (width / 2), pos.getY() + (height / 2));
+        hit.x3.setPosition(pos.getX() + (width / 2), pos.getY() + (height / 2));
+        hit.x4.setPosition(pos.getX() + (width / 2), pos.getY() - (height / 2));
     }
 
     @Override

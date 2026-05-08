@@ -68,7 +68,72 @@ public interface CreateItems {
                         },
                         -1,
                         1,
-                        20)
+                        20),
+                new ItemCard("Blindfold",
+                        new LinkedHashMap<>(Map.of("Pierce", 1, "Damage", -10)),
+                        () -> {
+                            Stats.pierce += 1;
+                            Stats.damage -= 10;
+                        },
+                        -1,
+                        3,
+                        80),
+                new ItemCard("Night Googles",
+                        new LinkedHashMap<>(Map.of("% Crit Chance", 15, "Range", 50, "Max HP", -3, "Armor", -1)),
+                        () -> {
+                            Stats.critChance += 15;
+                            Stats.range += 50;
+                            Stats.playerMaxHealth -= 3;
+                            Stats.armor -= 1;
+                        },
+                        -1,
+                        4,
+                        100),
+                new ItemCard("Shiny Coin",
+                        new LinkedHashMap<>(Map.of("Armor", 3, "Collection Range", 10000)),
+                        () -> {
+                            Stats.armor += 3;
+                            Stats.collectionRadius += 10000;
+                        },
+                        1,
+                        4,
+                        130),
+                new ItemCard("Blind Bonk",
+                        new LinkedHashMap<>(Map.of("Melee Damage", 6, "Ranged Damage", -3)),
+                        () -> {
+                            Stats.meleeDamage += 6;
+                            Stats.rangedDamage -= 3;
+                        },
+                        -1,
+                        2,
+                        50),
+                new ItemCard("Worm",
+                        new LinkedHashMap<>(Map.of("Damage", 12, "Range", -12)),
+                        () -> {
+                            Stats.damage += 12;
+                            Stats.range -= 12;
+                        },
+                        -1,
+                        2,
+                        60),
+                new ItemCard("Glass Cannon",
+                        new LinkedHashMap<>(Map.of("Damage", 25, "Armor", -3)),
+                        () -> {
+                            Stats.damage += 25;
+                            Stats.armor -= 3;
+                        },
+                        -1,
+                        3,
+                        80),
+                new ItemCard("Tractor",
+                        new LinkedHashMap<>(Map.of("Harvesting", 40, "Damage", -8)),
+                        () -> {
+                            Stats.harvesting += 40;
+                            Stats.damage -= 8;
+                        },
+                        -1,
+                        3,
+                        80)
         ));
     }
 }
