@@ -133,7 +133,33 @@ public interface CreateItems {
                         },
                         -1,
                         3,
-                        80)
+                        80),
+                new ItemCard("TNT",
+                        new LinkedHashMap<>(Map.of("Explosion Damage", 15)),
+                        () -> {
+                            Stats.explosionDamage += 15;
+                        },
+                        -1,
+                        1,
+                        20),
+                new ItemCard("Satchel Charge",
+                        new LinkedHashMap<>(Map.of("Explosion Size", 25)),
+                        () -> {
+                            Stats.explosionSize += 25;
+                        },
+                        -1,
+                        3,
+                        75),
+                new ItemCard("Explosive Shells",
+                        new LinkedHashMap<>(Map.of("Explosion Damage", 60, "Explosion Size", 15, "Damage", -15)),
+                        () -> {
+                            Stats.explosionDamage += 60;
+                            Stats.explosionSize += 15;
+                            Stats.damage -= 15;
+                        },
+                        -1,
+                        4,
+                        90)
         ));
     }
 }

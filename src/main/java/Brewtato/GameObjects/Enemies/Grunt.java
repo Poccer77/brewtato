@@ -1,10 +1,12 @@
 package Brewtato.GameObjects.Enemies;
 
+import Brewtato.Stats;
 import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
 import static Brewtato.Utilities.Tools.*;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -22,6 +24,8 @@ public class Grunt extends Enemy {
         hit = new Hitbox();
         damage = 1 + (int) (wave * 0.6);
         width = height = 120;
+        lootAmount = 1 + (int) ((ThreadLocalRandom.current().nextDouble( 1) < Stats.materialModifier - (int) Math.floor(Stats.materialModifier)) ? Math.ceil(Stats.materialModifier) : Math.floor(Stats.materialModifier));
+        lootChance= Math.max(0.09, Stats.luck * 0.001);
     }
 
     @Override

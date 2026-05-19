@@ -31,9 +31,9 @@ public class Flamethrower extends Shooter{
     @Override
     public void shoot() {
         if (delay <= 0 && inRange) {
-            Projectile pro = new Projectile(40, angle  + (float) Math.toRadians(new Random().nextInt(60) - 30), damage, pos, range, this, drawFunc, 99);
+            Projectile pro = new Projectile(40, angle  + (float) Math.toRadians(new Random().nextInt(60) - 30), damage, pos, range, this, drawFunc, 99, true);
             pro.length = pro.width = 70;
-            projectiles.add(pro);
+            Game.projectiles.add(pro);
             delay = attackSpeed;
         } else {
             delay -= (float) (Main.tickTime);

@@ -1,10 +1,12 @@
 package Brewtato.GameObjects.Enemies;
 
+import Brewtato.Stats;
 import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static Brewtato.Utilities.Tools.distance;
 import static org.lwjgl.opengl.GL11.*;
@@ -20,6 +22,8 @@ public class Tree extends Enemy{
         speed = 0;
         hit = new Hitbox();
         width = height = 150;
+        lootAmount = 3 + (int) ((ThreadLocalRandom.current().nextDouble( 1) < Stats.materialModifier - (int) Math.floor(Stats.materialModifier)) ? Math.ceil(Stats.materialModifier) : Math.floor(Stats.materialModifier));
+        lootChance = 1;
     }
 
     @Override

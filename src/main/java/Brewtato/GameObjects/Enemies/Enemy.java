@@ -19,6 +19,8 @@ public abstract class Enemy implements Object {
     public int deathAnimation = 60;
     boolean blink = false;
     double[] color;
+    public int lootAmount;
+    public double lootChance;
     public List<Debuff> debuffs = new ArrayList<Debuff>();
 
     public abstract boolean getHit(Hitbox hitbox);

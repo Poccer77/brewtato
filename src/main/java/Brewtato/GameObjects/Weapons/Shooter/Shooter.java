@@ -42,8 +42,6 @@ public abstract class Shooter extends Weapon {
         inRange = false;
     }
 
-    public List<Projectile> projectiles = new ArrayList<>();
-
     public abstract void shoot();
 
     public void triggerEffects(Enemy enemy, Projectile projectile) {}

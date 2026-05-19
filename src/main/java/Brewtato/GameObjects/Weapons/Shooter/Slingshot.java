@@ -1,6 +1,7 @@
 package Brewtato.GameObjects.Weapons.Shooter;
 
 import Brewtato.Main;
+import Brewtato.Phases.Game;
 import Brewtato.Stats;
 import Brewtato.Utilities.Draw;
 import Brewtato.Utilities.Hitbox;
@@ -22,9 +23,9 @@ public class Slingshot extends Shooter{
 
     public void shoot() {
         if (delay <= 0 && inRange) {
-            Projectile pro = new Projectile(70, angle, damage, pos, range, this, drawFunc, pierce);
+            Projectile pro = new Projectile(70, angle, damage, pos, range, this, drawFunc, pierce, true);
             pro.length = pro.width = 30;
-            projectiles.add(pro);
+            Game.projectiles.add(pro);
             delay = attackSpeed;
         } else {
             delay -= (float) (Main.tickTime);

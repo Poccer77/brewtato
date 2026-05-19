@@ -41,7 +41,8 @@ public class Game implements Phase{
     private List<Collectible> collectibles;
     private List<Rock> rocks = new ArrayList<>();
     private List<BiConsumer<Object, Object>> effects;
-    public static List<Projectile> explosions = new ArrayList<>();
+    public static List<Projectile> projectiles = new ArrayList<>();
+    public static List<Projectile> subProjectiles = new ArrayList<>();
     public static List<DamageNumber> damageNumbers = new ArrayList<>();
     private boolean waveOver = false;
     private double waveTimer;
@@ -62,7 +63,7 @@ public class Game implements Phase{
         wave = 0;
         effects = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-            Stats.ownedWeapons.add(new RocketLauncher());
+            Stats.ownedWeapons.add(new SMG());
         }
 
         initRocks();
@@ -157,10 +158,12 @@ public class Game implements Phase{
         for (Shooter weapon : shooties) {
             weapon.aim(enemies, movement);
             if (!enemies.isEmpty()) weapon.shoot();
-            for (Projectile projectile : weapon.projectiles) {
-                projectile.move();
-            }
-            weapon.projectiles.removeIf((projectile -> projectile.range + range <= 0));
+
+        }
+
+        projectiles.removeIf((projectile -> projectile.range + range <= 0));
+        for (Projectile projectile : projectiles) {
+            projectile.move();
         }
 
         damageNumbers.removeIf(DamageNumber::disappear);
@@ -177,10 +180,8 @@ public class Game implements Phase{
 
         collectibles.forEach(collectible -> {collectible.inRange = true; collectible.follow(player);});
         dyingEnemies.removeIf(Enemy::die);
-        shooties.forEach(weapon -> {
-            weapon.projectiles.forEach(Projectile::move);
-            weapon.projectiles.removeIf(projectile -> projectile.range + range <= 0);
-        });
+        projectiles.forEach(Projectile::move);
+        projectiles.removeIf(projectile -> projectile.range + range <= 0);
         damageNumbers.removeIf(DamageNumber::disappear);
         draw();
         if(dyingEnemies.isEmpty() && (int) (waveTimer + 1) <= -1) {
@@ -210,10 +211,8 @@ public class Game implements Phase{
         for(Enemy enemy : dyingEnemies) {
             enemy.move(-x, -y);
         }
-        for(Shooter weapon : shooties) {
-            for (Projectile projectile : weapon.projectiles) {
-                projectile.move(-x, -y);
-            }
+        for (Projectile projectile : projectiles) {
+            projectile.move(-x, -y);
         }
         for(Collectible collectible : collectibles) {
             collectible.move(-x, -y);
@@ -231,10 +230,8 @@ public class Game implements Phase{
         enemies.forEach(Enemy::draw);
         dyingEnemies.forEach(Enemy::draw);
         player.draw();
-        for (Shooter weapon : shooties) {
-            weapon.draw();
-            weapon.projectiles.forEach(Projectile::draw);
-        }
+        shooties.forEach(Shooter::draw);
+        projectiles.forEach(Projectile::draw);
         damageNumbers.forEach(DamageNumber::draw);
         if ((int) (waveTimer + 1) <= 0) dim();
         drawUI();
@@ -254,26 +251,26 @@ public class Game implements Phase{
         Iterator<Enemy> enIt = enemies.iterator();
         while (enIt.hasNext()) {
             Enemy enemy = enIt.next();
-            for(Shooter weapon : shooties) {
-                for (Projectile projectile : weapon.projectiles) {
+                for (Projectile projectile : projectiles) {
                     if (overlap(enemy.hit, projectile.hit) && !projectile.hitEnemies.contains(enemy)) {
-                        boolean crit = ThreadLocalRandom.current().nextDouble(1) < critChance;
-                        enemy.health -= (int) ((crit) ? projectile.getDamage() : projectile.getDamage() * 2);
+                        boolean crit = ThreadLocalRandom.current().nextInt(101) <= critChance;
+                        int damage = (int) ((crit) ? projectile.getDamage() * 2 : projectile.getDamage());
+                        enemy.health -= damage;
                         double[] color = (crit) ? new double[]{1, 1, 0.5} : new double[]{1, 1, 1};
-                        damageNumbers.add(new DamageNumber((int) projectile.getDamage(), color, new Position(enemy.pos)));
+                        damageNumbers.add(new DamageNumber(damage, color, new Position(enemy.pos)));
                         projectile.hitEnemies.add(enemy);
                         projectile.triggerEffects(enemy);
-                        if (projectile.hitEnemies.size() <= weapon.bounce + bounce) {
+                        if (projectile.hitEnemies.size() <= projectile.originWeapon.bounce + bounce) {
                             List<Enemy> tmpList = enemies.stream().filter((tempEnemy) -> !projectile.hitEnemies.contains(tempEnemy)).toList();
                             projectile.range = Integer.MAX_VALUE;
                             projectile.aim(tmpList);
                         }
                     }
-                }
-                weapon.projectiles.addAll(explosions);
-                if (!explosions.isEmpty()) {
-                    explosions.clear();
-                }
+
+            }
+            projectiles.addAll(subProjectiles);
+            if (!subProjectiles.isEmpty()) {
+                subProjectiles.clear();
             }
 
             if (overlap(player.hit, enemy.hit)) {
@@ -281,22 +278,16 @@ public class Game implements Phase{
             }
 
             if (enemy.health <= 0) {
-                int min = 1;
-                int max = 3;
-                if (enemy instanceof Tree) {
-                    min +=2;
-                    max +=2;
-                }
-                for (int i = 0; i < rand.nextInt(min, (int) (materialModifier + max)); i++) {
+                for (int i = 0; i < enemy.lootAmount; i++) {
                     collectibles.add(new Material(new Position(rand.nextFloat(enemy.pos.getX() - 10, enemy.pos.getX() + 11), rand.nextFloat(enemy.pos.getY() - 10, enemy.pos.getY() + 11))));
                 }
-                if (rand.nextInt(300) < Math.min(60, luck)) collectibles.add(new Fruit(enemy.pos));
+                if (rand.nextDouble(1) < enemy.lootChance) collectibles.add(new Fruit(enemy.pos));
                 dyingEnemies.add(enemy);
                 enIt.remove();
             }
         }
 
-        shooties.forEach(shooty -> shooty.projectiles.removeIf((projectile) -> projectile.hitEnemies.size() > projectile.pierces + pierce + shooty.bounce + bounce));
+        projectiles.removeIf((projectile) -> projectile.hitEnemies.size() > projectile.pierces + pierce + projectile.originWeapon.bounce + bounce);
 
         Iterator<Collectible> colIt= collectibles.iterator();
         while (colIt.hasNext()) {

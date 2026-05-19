@@ -1,6 +1,7 @@
 package Brewtato.GameObjects.Weapons.Shooter;
 
 import Brewtato.GameObjects.Enemies.Enemy;
+import Brewtato.Phases.Game;
 import Brewtato.Stats;
 import Brewtato.Utilities.Draw;
 import Brewtato.Utilities.Hitbox;
@@ -33,7 +34,7 @@ public class Shotgun extends Shooter {
     public void shoot() {
         if (delay <= 0 && inRange) {
             for (int i = 0; i < 5; i++) {
-                projectiles.add(new Projectile(80, angle + (float) Math.toRadians(new Random().nextInt(61) - 30), damage, pos, range, this, drawFunc, pierce));
+                Game.projectiles.add(new Projectile(80, angle + (float) Math.toRadians(new Random().nextInt(61) - 30), damage, pos, range, this, drawFunc, pierce, true));
             }
             delay = attackSpeed;
         } else {

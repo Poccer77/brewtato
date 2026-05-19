@@ -1,6 +1,7 @@
 package Brewtato.GameObjects.Weapons.Shooter;
 
 import Brewtato.Main;
+import Brewtato.Phases.Game;
 import Brewtato.Stats;
 import Brewtato.Utilities.Draw;
 import Brewtato.Utilities.Hitbox;
@@ -31,7 +32,7 @@ public class SMG extends Shooter{
     @Override
     public void shoot() {
         if (delay <= 0 && inRange) {
-            projectiles.add(new Projectile(80, angle + (float) Math.toRadians(new Random().nextInt(20) - 10), damage, pos, range, this, drawFunc, pierce));
+            Game.projectiles.add(new Projectile(80, angle + (float) Math.toRadians(new Random().nextInt(20) - 10), damage, pos, range, this, drawFunc, pierce, true));
             delay = attackSpeed;
         } else {
             delay -= (float) (Main.tickTime);

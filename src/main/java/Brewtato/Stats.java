@@ -148,7 +148,7 @@ public class Stats {
     public static int luck;
     public static int regenCounter;
     public static int regen;
-    public static int damage = 1;
+    public static int damage;
     public static int attackSpeed;
     public static int lifesteal;
     public static int playerSpeed;
@@ -172,6 +172,7 @@ public class Stats {
     public static int chests;
     public static float waveRarityScaling;
     public static int explosionSize;
+    public static int explosionDamage;
     public static int critChance;
     public static int meleeDamage;
     public static int rangedDamage;

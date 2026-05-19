@@ -17,7 +17,9 @@ public class RocketLauncher extends Shooter{
     public RocketLauncher() {
         super("RocketLauncher", 10, 1500, 120, 30, 2000);
         damageMod = 1;
+        pierceDamageModifier = 1;
         rarity = 2;
+        pierce = 1;
     }
 
     public Draw<Position, Float, Hitbox> getDrawFunc() {
@@ -25,9 +27,17 @@ public class RocketLauncher extends Shooter{
     }
 
     @Override
+    public void upgrade() {
+        damage += 5;
+        damageMod += 0.1F;
+        attackSpeed -= 100;
+        super.upgrade();
+    }
+
+    @Override
     public void shoot() {
         if (delay <= 0 && inRange) {
-            projectiles.add(new Projectile(70, angle, 0, pos, range, this, getDrawFunc(), pierce));
+            Game.projectiles.add(new Projectile(70, angle, damage, pos, range, this, getDrawFunc(), pierce, true));
             delay = attackSpeed;
         } else {
             delay -= (float) (Main.tickTime);
@@ -36,7 +46,7 @@ public class RocketLauncher extends Shooter{
 
     @Override
     public int getDamageMod() {
-        return (int) (damage + damageMod * Stats.rangedDamage);
+        return (int) (damageMod * Stats.rangedDamage);
     }
 
     @Override
@@ -73,9 +83,9 @@ public class RocketLauncher extends Shooter{
 
         if (projectile.speed == 1) return;
 
-        Projectile expl = new Projectile(1, projectile.angle, projectile.damage, projectile.pos, 10, this, (pos, angle, length, width, hit) -> {
+        Projectile expl = new Projectile(1, projectile.angle, projectile.damage * (1 + Stats.explosionDamage / 100), projectile.pos, 3, this, (pos, angle, length, width, hit) -> {
 
-            float size = 900f + Stats.explosionSize;
+            float size = 500f * (1 + (float) Stats.explosionSize / 100);
 
             glBegin(GL_QUADS);
             glColor3d(1, 1, 1);
@@ -88,14 +98,15 @@ public class RocketLauncher extends Shooter{
             glVertex2d(pos.getX() - (size / 2), pos.getY() + (size / 2));
             glEnd();
 
-            hit.x1.setPosition(pos.getX() + (size / 2), pos.getY() + (size / 2));
-            hit.x2.setPosition(pos.getX() + (size / 2), pos.getY() + (size / 2));
+            hit.x1.setPosition(pos.getX() - (size / 2), pos.getY() - (size / 2));
+            hit.x2.setPosition(pos.getX() - (size / 2), pos.getY() + (size / 2));
             hit.x3.setPosition(pos.getX() + (size / 2), pos.getY() + (size / 2));
-            hit.x4.setPosition(pos.getX() + (size / 2), pos.getY() + (size / 2));
+            hit.x4.setPosition(pos.getX() + (size / 2), pos.getY() - (size / 2));
 
             return hit;
-        }, 99);
-        Game.explosions.add(expl);
+        }, 99, false);
+        expl.hitEnemies.add(enemy);
+        Game.subProjectiles.add(expl);
     }
 
     public Draw<Position, Float, Hitbox> drawFunc = (pos, angle, length, width, hit) -> {

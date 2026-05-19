@@ -27,8 +27,9 @@ public class Projectile {
     public int damage;
     public float angle;
     public float range;
+    public boolean canTrigger;
 
-    public Projectile(int speed, float angle, int damage, Position pos, int range, Shooter originWeapon, Draw<Position, Float, Hitbox> drawFunc, int pierces) {
+    public Projectile(int speed, float angle, int damage, Position pos, int range, Shooter originWeapon, Draw<Position, Float, Hitbox> drawFunc, int pierces, boolean canTrigger) {
         this.pos = new Position(pos.getX(), pos.getY());
         this.angle = angle;
         this.damage = damage;
@@ -40,6 +41,8 @@ public class Projectile {
         this.originWeapon = originWeapon;
         hitEnemies = new ArrayList<>();
         this.drawFunc = drawFunc;
+        this.pierces = pierces;
+        this.canTrigger = canTrigger;
     }
 
     public float getDamage() {
@@ -47,7 +50,7 @@ public class Projectile {
     }
 
     public void triggerEffects(Enemy enemy) {
-        originWeapon.triggerEffects(enemy, this);
+        if (canTrigger) {originWeapon.triggerEffects(enemy, this);}
     }
 
     public void aim(List<Enemy> enemies) {

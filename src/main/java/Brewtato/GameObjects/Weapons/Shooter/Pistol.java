@@ -2,6 +2,7 @@ package Brewtato.GameObjects.Weapons.Shooter;
 
 import Brewtato.GameObjects.Enemies.Enemy;
 import Brewtato.Main;
+import Brewtato.Phases.Game;
 import Brewtato.Stats;
 import Brewtato.Utilities.Draw;
 import Brewtato.Utilities.Hitbox;
@@ -70,7 +71,7 @@ public class Pistol extends Shooter {
 
     public void shoot() {
         if (delay <= 0 && inRange) {
-            projectiles.add(new Projectile(90, angle, damage, pos, range, this, drawFunc, pierce));
+            Game.projectiles.add(new Projectile(90, angle, damage, pos, range, this, drawFunc, pierce, true));
             delay = attackSpeed;
         } else {
             delay -= (float) (Main.tickTime);

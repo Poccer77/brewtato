@@ -27,6 +27,7 @@ public class Button {
         this.text = text;
         this.width = width;
         this.pos = pos;
+        hitbox = new Hitbox();
         hitbox.x1 = new Position(pos.getX(), pos.getY());
         hitbox.x2 = new Position(pos.getX(), pos.getY() + height);
         hitbox.x3 = new Position(pos.getX() + width, pos.getY() + height);
