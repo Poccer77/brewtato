@@ -81,8 +81,6 @@ public class RocketLauncher extends Shooter{
 
     public void triggerEffects(Enemy enemy, Projectile projectile) {
 
-        if (projectile.speed == 1) return;
-
         Projectile expl = new Projectile(1, projectile.angle, projectile.damage * (1 + Stats.explosionDamage / 100), projectile.pos, 3, this, (pos, angle, length, width, hit) -> {
 
             float size = 500f * (1 + (float) Stats.explosionSize / 100);

@@ -63,7 +63,7 @@ public class Game implements Phase{
         wave = 0;
         effects = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-            Stats.ownedWeapons.add(new SMG());
+            Stats.ownedWeapons.add(new Shredder());
         }
 
         initRocks();

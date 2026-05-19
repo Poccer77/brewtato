@@ -29,7 +29,11 @@ public interface CreateWeapons {
                         new WeaponCard("Slingshot",
                                 Slingshot::new,
                                 i,
-                                20 * i)
+                                20 * i),
+                        new WeaponCard("Shredder",
+                                Shredder::new,
+                                i,
+                                15 * i)
                     ));
 
                     if (i >= 2) {
