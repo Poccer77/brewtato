@@ -56,23 +56,13 @@ public class Tree extends Enemy{
 
     public void draw(){
 
+        double[] bgcolor = new double[]{0, 0, 0, color[3]};
+
+        Tools.drawSquare(pos, width * 1.1, height * 1.1, bgcolor);
+
         if (spawnAnimation <= 0) color = new double[]{0.267, 0.6, 0, 1};
 
-        glBegin(GL_QUADS);
-        glColor4dv(color);
-        glVertex2d(pos.getX() - (width / 2), pos.getY() - (height / 2));
-        glColor4dv(color);
-        glVertex2d(pos.getX() - (width / 2), pos.getY() + (height / 2));
-        glColor4dv(color);
-        glVertex2d(pos.getX() + (width / 2), pos.getY() + (height / 2));
-        glColor4dv(color);
-        glVertex2d(pos.getX() + (width / 2), pos.getY() - (height / 2));
-        glEnd();
-
-        hit.x1.setPosition(pos.getX() - (width / 2), pos.getY() - (height / 2));
-        hit.x2.setPosition(pos.getX() - (width / 2), pos.getY() + (height / 2));
-        hit.x3.setPosition(pos.getX() + (width / 2), pos.getY() + (height / 2));
-        hit.x4.setPosition(pos.getX() + (width / 2), pos.getY() - (height / 2));
+        hit = Tools.drawSquare(pos, width, height, color);
     }
 
     @Override

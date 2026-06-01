@@ -31,7 +31,7 @@ public class Shotgun extends Shooter {
     }
 
     @Override
-    public void shoot() {
+    public void attack() {
         if (delay <= 0 && inRange) {
             for (int i = 0; i < 5; i++) {
                 Game.projectiles.add(new Projectile(80, angle + (float) Math.toRadians(new Random().nextInt(61) - 30), damage, pos, range, this, drawFunc, pierce, true));
@@ -70,25 +70,7 @@ public class Shotgun extends Shooter {
         glEnd();
     }
 
-    public void aim(List<Enemy> enemies, Position playerMove) {
 
-        if (!enemies.isEmpty()) {
-            Enemy closestEnemy = enemies.get(0);
-            for (Enemy enemy : enemies) {
-                if (Tools.distance(pos, enemy.pos) < Tools.distance(pos, closestEnemy.pos)) {
-                    closestEnemy = enemy;
-                }
-            }
-            if (Tools.distance(pos, closestEnemy.pos) < range) {
-                angle = Tools.angle(new Position(pos.getX(), pos.getY()), closestEnemy.pos);
-                inRange = true;
-                return;
-            }
-        }
-        if (playerMove.getX() < 0) angle = (float) Math.toRadians(180);
-        else if (playerMove.getX() > 0) angle = 0;
-        inRange = false;
-    }
 
     @Override
     public int getDamageMod() {

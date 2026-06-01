@@ -141,7 +141,10 @@ public class Stats {
         return weapons;
     }
 
+    public static int getBurnFrequency() {return burnFrequency;}
+
     public static int playerMaxHealth = 8;
+    public static int burnFrequency = 200;
     public static int range;
     public static int harvesting;
     public static int playerCurrentHealth;
@@ -171,7 +174,7 @@ public class Stats {
     public static float pierceDamage;
     public static int chests;
     public static float waveRarityScaling;
-    public static int explosionSize;
+    public static int explosionSize = 500;
     public static int explosionDamage;
     public static int critChance;
     public static int meleeDamage;

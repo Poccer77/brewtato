@@ -46,10 +46,15 @@ public interface CreateWeapons {
                     }
 
                     if (i >= 3) {
-                        tempList.addAll(List.of());
+                        tempList.addAll(List.of(
+                            new WeaponCard("Cluster Bomber",
+                                    ClusterBomber::new,
+                                    i,
+                                    90 * i)
+                        ));
                     }
 
-                    if (i >= 4) {
+                    if (i == 4) {
                         tempList.addAll(List.of());
                     }
                 }

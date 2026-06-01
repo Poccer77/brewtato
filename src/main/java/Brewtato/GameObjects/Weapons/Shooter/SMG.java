@@ -30,7 +30,7 @@ public class SMG extends Shooter{
     }
 
     @Override
-    public void shoot() {
+    public void attack() {
         if (delay <= 0 && inRange) {
             Game.projectiles.add(new Projectile(80, angle + (float) Math.toRadians(new Random().nextInt(20) - 10), damage, pos, range, this, drawFunc, pierce, true));
             delay = attackSpeed;

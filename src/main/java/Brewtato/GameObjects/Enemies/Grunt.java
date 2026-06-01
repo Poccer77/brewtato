@@ -3,8 +3,11 @@ package Brewtato.GameObjects.Enemies;
 import Brewtato.Stats;
 import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
+import Brewtato.Utilities.Tools;
+
 import static Brewtato.Utilities.Tools.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,7 +28,7 @@ public class Grunt extends Enemy {
         damage = 1 + (int) (wave * 0.6);
         width = height = 120;
         lootAmount = 1 + (int) ((ThreadLocalRandom.current().nextDouble( 1) < Stats.materialModifier - (int) Math.floor(Stats.materialModifier)) ? Math.ceil(Stats.materialModifier) : Math.floor(Stats.materialModifier));
-        lootChance= Math.max(0.09, Stats.luck * 0.001);
+        lootChance = Math.clamp(Stats.luck * 0.001, 0.09, 0.1);
     }
 
     @Override
@@ -96,20 +99,6 @@ public class Grunt extends Enemy {
 
         if (spawnAnimation <= 0) color = new double[] {0.584, 0, 0.78, 1};
 
-        glBegin(GL_QUADS);
-        glColor4dv(color);
-        glVertex2d(pos.getX() - (width / 2), pos.getY() - (height / 2));
-        glColor4dv(color);
-        glVertex2d(pos.getX() - (width / 2), pos.getY() + (height / 2));
-        glColor4dv(color);
-        glVertex2d(pos.getX() + (width / 2), pos.getY() + (height / 2));
-        glColor4dv(color);
-        glVertex2d(pos.getX() + (width / 2), pos.getY() - (height / 2));
-        glEnd();
-
-        hit.x1.setPosition(pos.getX() - (width / 2), pos.getY() - (height / 2));
-        hit.x2.setPosition(pos.getX() - (width / 2), pos.getY() + (height / 2));
-        hit.x3.setPosition(pos.getX() + (width / 2), pos.getY() + (height / 2));
-        hit.x4.setPosition(pos.getX() + (width / 2), pos.getY() - (height / 2));
+        hit = Tools.drawSquare(pos, width, height, color);
     }
 }

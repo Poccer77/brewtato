@@ -8,7 +8,6 @@ import Brewtato.Utilities.Hitbox;
 import Brewtato.Utilities.Position;
 import Brewtato.Utilities.Tools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Shooter extends Weapon {
@@ -22,10 +21,12 @@ public abstract class Shooter extends Weapon {
         pierce += Stats.pierce;
     }
 
-    public void aim(List<Enemy> enemies, Position playerMove) {
+    public Enemy aim(List<Enemy> enemies, Position playerMove) {
+
+        Enemy closestEnemy = null;
 
         if (!enemies.isEmpty()) {
-            Enemy closestEnemy = enemies.get(0);
+            closestEnemy = enemies.get(0);
             for (Enemy enemy : enemies) {
                 if (Tools.distance(pos, enemy.pos) < Tools.distance(pos, closestEnemy.pos)) {
                     closestEnemy = enemy;
@@ -34,15 +35,16 @@ public abstract class Shooter extends Weapon {
             if (Tools.distance(pos, closestEnemy.pos) < range) {
                 angle = Tools.angle(new Position(pos.getX(), pos.getY()), closestEnemy.pos);
                 inRange = true;
-                return;
+                return closestEnemy;
             }
         }
         if (playerMove.getX() < 0) angle = (float) Math.toRadians(180);
         else if (playerMove.getX() > 0) angle = 0;
         inRange = false;
+        return closestEnemy;
     }
 
-    public abstract void shoot();
+    public abstract void attack();
 
     public void triggerEffects(Enemy enemy, Projectile projectile) {}
 

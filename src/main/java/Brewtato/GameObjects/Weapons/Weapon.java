@@ -45,9 +45,11 @@ public abstract class Weapon implements Object {
         delay = 0;
     }
 
-    public void aim(List<Enemy> enemies, Position playerMove) {}
+    public Enemy aim(List<Enemy> enemies, Position playerMove) {return null;}
 
     public void triggerEffect(Enemy enemy) {}
+
+    public abstract void attack();
 
     public abstract int getDamageMod();
 

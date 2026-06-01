@@ -32,7 +32,6 @@ public class LevelUp implements Phase{
     boolean selected = false;
 
     LevelUps[] stats = new LevelUps[4];
-    LevelUps[] statsDisplay = LevelUps.values();
     int[] rarities = new int[4];
     Brewtato.Utilities.Button[] buttons = new Button[5];
 

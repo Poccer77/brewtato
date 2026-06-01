@@ -25,6 +25,7 @@ public class Projectile {
     public List<Enemy> hitEnemies;
     public float speed;
     public int damage;
+    public float damageMod;
     public float angle;
     public float range;
     public boolean canTrigger;
@@ -43,10 +44,11 @@ public class Projectile {
         this.drawFunc = drawFunc;
         this.pierces = pierces;
         this.canTrigger = canTrigger;
+        damageMod = originWeapon.getDamageMod();
     }
 
     public float getDamage() {
-        return (float) Math.max(1, (1 + ((double) Stats.damage / 100)) * (damage + originWeapon.getDamageMod() * (Math.pow(originWeapon.pierceDamageModifier, Math.max(hitEnemies.size() - (originWeapon.bounce + Stats.bounce), 0)))));
+        return (float) Math.max(1, (1 + ((double) Stats.damage / 100)) * (damage + damageMod * (Math.pow(originWeapon.pierceDamageModifier, Math.max(hitEnemies.size() - (originWeapon.bounce + Stats.bounce), 0)))));
     }
 
     public void triggerEffects(Enemy enemy) {

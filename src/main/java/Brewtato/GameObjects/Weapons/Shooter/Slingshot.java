@@ -21,7 +21,7 @@ public class Slingshot extends Shooter{
         pierceDamageModifier = 0.75f;
     }
 
-    public void shoot() {
+    public void attack() {
         if (delay <= 0 && inRange) {
             Projectile pro = new Projectile(70, angle, damage, pos, range, this, drawFunc, pierce, true);
             pro.length = pro.width = 30;

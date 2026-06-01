@@ -11,6 +11,13 @@ public class Hitbox {
         x4 = new Position(0, 0);
     }
 
+    public Hitbox(Position pos1, Position pos2, Position pos3, Position pos4) {
+        x1 = pos1;
+        x2 = pos2;
+        x3 = pos3;
+        x4 = pos4;
+    }
+
     public boolean isWithin(Position pos) {
 
         return pos.getX() > x2.getX() && pos.getX() < x3.getX() && pos.getX() > x1.getX() && pos.getX() < x4.getX()

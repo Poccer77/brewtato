@@ -1,5 +1,6 @@
 package Brewtato.Phases;
 
+import Brewtato.GameObjects.Collectibles.Chest;
 import Brewtato.GameObjects.Enemies.Tree;
 import Brewtato.GameObjects.Object;
 import Brewtato.GameObjects.Player;
@@ -10,6 +11,7 @@ import Brewtato.GameObjects.Collectibles.Material;
 import Brewtato.GameObjects.Enemies.Enemy;
 import Brewtato.GameObjects.Enemies.Grunt;
 import Brewtato.GameObjects.Weapons.Shooter.*;
+import Brewtato.GameObjects.Weapons.Weapon;
 import Brewtato.Stats;
 import Brewtato.Effects.*;
 import Brewtato.Utilities.GlobalUI;
@@ -33,9 +35,9 @@ public class Game implements Phase{
     private Position windowPosition;
     private int windowHeight;
     private int windowWidth;
-    private Player player;
-    private List<Enemy> enemies;
-    private List<Enemy> spawningEnemies;
+    public static Player player;
+    public static List<Enemy> enemies;
+    public static List<Enemy> spawningEnemies;
     private List<Enemy> dyingEnemies;
     private int spawnDelay = 100;
     private List<Collectible> collectibles;
@@ -62,8 +64,8 @@ public class Game implements Phase{
         collectibles = new ArrayList<>();
         wave = 0;
         effects = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            Stats.ownedWeapons.add(new Shredder());
+        for (int i = 0; i < 2; i++) {
+            Stats.ownedWeapons.add(new SMG());
         }
 
         initRocks();
@@ -155,16 +157,15 @@ public class Game implements Phase{
             collectible.follow(player);
         }
 
-        for (Shooter weapon : shooties) {
-            weapon.aim(enemies, movement);
-            if (!enemies.isEmpty()) weapon.shoot();
+        ownedWeapons.forEach(weapon -> {weapon.aim(enemies, movement); weapon.attack();});
 
-        }
-
-        projectiles.removeIf((projectile -> projectile.range + range <= 0));
-        for (Projectile projectile : projectiles) {
+        projectiles.removeIf((projectile) -> {
             projectile.move();
-        }
+            if(projectile.range + range <= 0) {
+                projectile.triggerEffects(null);
+                return true;
+            } else return false;
+        });
 
         damageNumbers.removeIf(DamageNumber::disappear);
 
@@ -179,6 +180,7 @@ public class Game implements Phase{
         }
 
         collectibles.forEach(collectible -> {collectible.inRange = true; collectible.follow(player);});
+        checkCollisions();
         dyingEnemies.removeIf(Enemy::die);
         projectiles.forEach(Projectile::move);
         projectiles.removeIf(projectile -> projectile.range + range <= 0);
@@ -281,7 +283,9 @@ public class Game implements Phase{
                 for (int i = 0; i < enemy.lootAmount; i++) {
                     collectibles.add(new Material(new Position(rand.nextFloat(enemy.pos.getX() - 10, enemy.pos.getX() + 11), rand.nextFloat(enemy.pos.getY() - 10, enemy.pos.getY() + 11))));
                 }
-                if (rand.nextDouble(1) < enemy.lootChance) collectibles.add(new Fruit(enemy.pos));
+                if (rand.nextDouble(1) < enemy.lootChance) collectibles.add(
+                        (rand.nextDouble(1) < enemy.lootChance - 1) ? new Chest(new Position(rand.nextFloat(enemy.pos.getX() - 10, enemy.pos.getX() + 11), rand.nextFloat(enemy.pos.getY() - 10, enemy.pos.getY() + 11)))
+                                : new Fruit(new Position(rand.nextFloat(enemy.pos.getX() - 10, enemy.pos.getX() + 11), rand.nextFloat(enemy.pos.getY() - 10, enemy.pos.getY() + 11))));
                 dyingEnemies.add(enemy);
                 enIt.remove();
             }

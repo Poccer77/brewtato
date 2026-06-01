@@ -31,7 +31,7 @@ public class Shredder extends Shooter{
     }
 
     @Override
-    public void shoot() {
+    public void attack() {
         if (delay <= 0 && inRange) {
             Position pos1 = new Position(0, width / 6);
             Position pos2 = new Position(0, -width / 6);

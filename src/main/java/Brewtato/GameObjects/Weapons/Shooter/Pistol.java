@@ -69,7 +69,8 @@ public class Pistol extends Shooter {
 
     }
 
-    public void shoot() {
+    public void attack() {
+
         if (delay <= 0 && inRange) {
             Game.projectiles.add(new Projectile(90, angle, damage, pos, range, this, drawFunc, pierce, true));
             delay = attackSpeed;

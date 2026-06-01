@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import static Brewtato.Main.vidmode;
 import static org.lwjgl.glfw.GLFW.*;
@@ -36,6 +37,36 @@ public class Tools {
     public static Position rotate(float angle, Position pos) {
         pos.rotate(angle);
         return pos;
+    }
+
+    public static Hitbox drawSquare(Position pos, double width, double length, double[] color) {
+
+        double[] localColor = Arrays.copyOf(color, 4);
+
+        if (color.length < localColor.length) localColor[3] = 1;
+
+        glBegin(GL_QUADS);
+        glColor4dv(new double[]{0, 0, 0, localColor[3]});
+        glVertex2d(pos.getX() - width / 2 - (width / 10) , pos.getY() - length / 2 - (length / 10));
+        glVertex2d(pos.getX() - width / 2 - (width / 10) , pos.getY() + length / 2 + (length / 10));
+        glVertex2d(pos.getX() + width / 2 + (width / 10) , pos.getY() + length / 2 + (length / 10));
+        glVertex2d(pos.getX() + width / 2 + (width / 10) , pos.getY() - length / 2 - (length / 10));
+        glEnd();
+
+        glBegin(GL_QUADS);
+        glColor4dv(localColor);
+        glVertex2d(pos.getX() - width / 2, pos.getY() - length / 2);
+        glVertex2d(pos.getX() - width / 2, pos.getY() + length / 2);
+        glVertex2d(pos.getX() + width / 2, pos.getY() + length / 2);
+        glVertex2d(pos.getX() + width / 2, pos.getY() - length / 2);
+        glEnd();
+
+        return new Hitbox(
+                new Position((float) (pos.getX() - width / 2), (float) (pos.getY() - length / 2)),
+                new Position((float) (pos.getX() - width / 2), (float) (pos.getY() + length / 2)),
+                new Position((float) (pos.getX() + width / 2), (float) (pos.getY() + length / 2)),
+                new Position((float) (pos.getX() + width / 2), (float) (pos.getY() - length / 2))
+        );
     }
 
     public static void dim() {

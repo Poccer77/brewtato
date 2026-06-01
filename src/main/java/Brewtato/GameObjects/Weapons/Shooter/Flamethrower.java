@@ -29,7 +29,7 @@ public class Flamethrower extends Shooter{
     }
 
     @Override
-    public void shoot() {
+    public void attack() {
         if (delay <= 0 && inRange) {
             Projectile pro = new Projectile(40, angle  + (float) Math.toRadians(new Random().nextInt(60) - 30), damage, pos, range, this, drawFunc, 99, true);
             pro.length = pro.width = 70;
@@ -76,7 +76,7 @@ public class Flamethrower extends Shooter{
     @Override
     public void triggerEffects(Enemy enemy, Projectile projectile) {
 
-        Debuff debuff = new Debuff(2000, 10, 200, (tempEnemy) -> {
+        Debuff debuff = new Debuff(2000, 10, Stats::getBurnFrequency, (tempEnemy) -> {
             tempEnemy.health -= Math.max(1, (int) (burnDamage * Stats.elementalDamage));
             Game.damageNumbers.add(new DamageNumber(Math.max(1, (int) (burnDamage * Stats.elementalDamage)), new double[]{1, 1, 1}, new Position(enemy.pos)));
         });

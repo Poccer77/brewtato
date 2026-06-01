@@ -35,7 +35,7 @@ public class RocketLauncher extends Shooter{
     }
 
     @Override
-    public void shoot() {
+    public void attack() {
         if (delay <= 0 && inRange) {
             Game.projectiles.add(new Projectile(70, angle, damage, pos, range, this, getDrawFunc(), pierce, true));
             delay = attackSpeed;

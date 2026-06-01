@@ -159,7 +159,17 @@ public interface CreateItems {
                         },
                         -1,
                         4,
-                        90)
+                        90),
+                new ItemCard("Eye Surgery",
+                        new LinkedHashMap<>(Map.of("Burn Frequency", 20, "Elemental Damage", 1, "Range", -10)),
+                        () -> {
+                            Stats.burnFrequency =(int) ((float) Stats.burnFrequency * 0.8);
+                            Stats.elementalDamage += 1;
+                            Stats.rangedDamage -= 10;
+                        },
+                        4,
+                        1,
+                        30)
         ));
     }
 }

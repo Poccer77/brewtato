@@ -130,7 +130,7 @@ public class Main {
         glClearColor(0.33F, 0.33F, 0.33F, 1);
 
         phases.add(new Game());
-        //phases.add(new Chests());
+        phases.add(new Chests());
         phases.add(new LevelUp());
         phases.add(new Shop());
 
