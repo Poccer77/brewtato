@@ -8,6 +8,7 @@ import Brewtato.Utilities.Button;
 import Brewtato.Utilities.Position;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,8 +21,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class Chests implements Phase{
 
     private static List<Chest> chests = new ArrayList<>();
-    float width = ((float) Main.vidmode.width() / 6);
-    float height = ((float) Main.vidmode.height()) * (4/6F);
+    float width = ((float) Main.vidmode.width() / 4);
+    float height = ((float) Main.vidmode.height()) * (3/6F);
     int rarity = 1;
     Button[] buttons = new Button[2];
     ItemCard currentItem;
@@ -43,11 +44,21 @@ public class Chests implements Phase{
             default -> throw new IllegalStateException("Invalid rarity");
         };
 
-        drawSquare(pos, width, height, color);
+        drawSquare(pos, width, height, color, false);
 
         currentItem.draw(pos.getX());
 
-        for (Button button : buttons) button.draw();
+        double[] buttonColor = new double[]{0, 0, 0, 1};
+
+        for (int i = 0; i < color.length - 1; i++) {
+            buttonColor[i] = color[i];
+            buttonColor[i] -= 0.05;
+        }
+
+        for (Button button : buttons) {
+            button.color = buttonColor;
+            button.draw();
+        }
     }
 
     @Override
@@ -77,8 +88,8 @@ public class Chests implements Phase{
 
         if (chests.isEmpty()) return;
 
-        buttons[0] = new Button(new Position(pos.getX(), pos.getY() - (height / 2) + 2 * (height / 6)), "Get", width - (width / 10), height / 6, new double[]{0.15, 0.15, 0.15, 1});
-        buttons[1] = new Button(new Position(pos.getX(), pos.getY() - (height / 2) + height / 6), "", width - (width / 10), height / 6, new double[]{0.15, 0.15, 0.15, 1});
+        buttons[0] = new Button(new Position(pos.getX() - (width - (width / 10)) / 2, pos.getY() - (height / 1.6f) + 2 * (height / 6)), "Get", height / 7,  width - (width / 10), new double[]{0.15, 0.15, 0.15, 1});
+        buttons[1] = new Button(new Position(pos.getX() - (width - (width / 10)) / 2, pos.getY() - (height / 1.6f) + height / 6), "", height / 7, width - (width / 10), new double[]{0.15, 0.15, 0.15, 1});
 
         select();
         draw();
@@ -89,6 +100,7 @@ public class Chests implements Phase{
         if (chests.isEmpty()) return;
 
         rarity = chests.getLast().rarity;
+        System.out.println(rarity);
 
         List<ItemCard> currentSelection = new ArrayList<>(items);
         currentSelection.stream().filter(item -> item.rarity == rarity).toList();

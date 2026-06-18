@@ -39,19 +39,21 @@ public class Tools {
         return pos;
     }
 
-    public static Hitbox drawSquare(Position pos, double width, double length, double[] color) {
+    public static Hitbox drawSquare(Position pos, double width, double length, double[] color, boolean outline) {
 
         double[] localColor = Arrays.copyOf(color, 4);
 
         if (color.length < localColor.length) localColor[3] = 1;
 
-        glBegin(GL_QUADS);
-        glColor4dv(new double[]{0, 0, 0, localColor[3]});
-        glVertex2d(pos.getX() - width / 2 - (width / 10) , pos.getY() - length / 2 - (length / 10));
-        glVertex2d(pos.getX() - width / 2 - (width / 10) , pos.getY() + length / 2 + (length / 10));
-        glVertex2d(pos.getX() + width / 2 + (width / 10) , pos.getY() + length / 2 + (length / 10));
-        glVertex2d(pos.getX() + width / 2 + (width / 10) , pos.getY() - length / 2 - (length / 10));
-        glEnd();
+        if (outline) {
+            glBegin(GL_QUADS);
+            glColor4dv(new double[]{0, 0, 0, localColor[3]});
+            glVertex2d(pos.getX() - width / 2 - (width / 10), pos.getY() - length / 2 - (length / 10));
+            glVertex2d(pos.getX() - width / 2 - (width / 10), pos.getY() + length / 2 + (length / 10));
+            glVertex2d(pos.getX() + width / 2 + (width / 10), pos.getY() + length / 2 + (length / 10));
+            glVertex2d(pos.getX() + width / 2 + (width / 10), pos.getY() - length / 2 - (length / 10));
+            glEnd();
+        }
 
         glBegin(GL_QUADS);
         glColor4dv(localColor);

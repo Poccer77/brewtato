@@ -1,5 +1,6 @@
 package Brewtato;
 
+import Brewtato.Effects.Effect;
 import Brewtato.GameObjects.Weapons.Weapon;
 import Brewtato.Items.CreateItems;
 import Brewtato.Items.CreateWeapons;
@@ -170,11 +171,11 @@ public class Stats {
     public static int bounce;
     public static int invulnerability = 250;
     public static int pierce;
-    public static int collectibleHealAmount;
+    public static int collectibleHealAmount = 3;
     public static float pierceDamage;
     public static int chests;
     public static float waveRarityScaling;
-    public static int explosionSize = 500;
+    public static int explosionSize;
     public static int explosionDamage;
     public static int critChance;
     public static int meleeDamage;
@@ -186,5 +187,6 @@ public class Stats {
     public static List<Weapon> ownedWeapons = new ArrayList<>();
     public static List<WeaponCard> weapons = CreateWeapons.fill();
     public static List<ItemCard> items = CreateItems.fill();
+    public static List<Effect> effects = new ArrayList<>();
 
 }

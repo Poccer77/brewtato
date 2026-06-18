@@ -33,7 +33,7 @@ public abstract class Shooter extends Weapon {
                 }
             }
             if (Tools.distance(pos, closestEnemy.pos) < range) {
-                angle = Tools.angle(new Position(pos.getX(), pos.getY()), closestEnemy.pos);
+                angle = Tools.angle(pos, closestEnemy.pos);
                 inRange = true;
                 return closestEnemy;
             }

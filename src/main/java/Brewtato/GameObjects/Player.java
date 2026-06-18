@@ -29,21 +29,8 @@ public class Player implements Object {
     }
 
     public void draw(){
-        glBegin(GL_QUADS);
-        glColor3d(0.878, 0.667, 0);
-        glVertex2d(pos.getX() - 60, pos.getY() - 60);
-        glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() - 60, pos.getY() + 60);
-        glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() + 60, pos.getY() + 60);
-        glColor3f(0.878F, 0.667F, 0);
-        glVertex2d(pos.getX() + 60, pos.getY() - 60);
-        glEnd();
 
-        hit.x1.setPosition(pos.getX() - 80, pos.getY() - 80);
-        hit.x2.setPosition(pos.getX() - 80, pos.getY() + 80);
-        hit.x3.setPosition(pos.getX() + 80, pos.getY() + 80);
-        hit.x4.setPosition(pos.getX() + 80, pos.getY() - 80);
+        hit = Tools.drawSquare(pos,120, 120, new double[]{0.878, 0.667, 0}, true);
 
         int weaponCount = ownedWeapons.size();
         if (weaponCount == 0) return;
@@ -59,7 +46,7 @@ public class Player implements Object {
     }
 
     public void heal(int amount) {
-        playerCurrentHealth += amount;
+        playerCurrentHealth = Math.min(playerMaxHealth, playerCurrentHealth + amount);
     }
 
     public void getHit(int damage, boolean triggerInvul) {

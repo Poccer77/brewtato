@@ -1,21 +1,21 @@
 package Brewtato.Phases;
 
 import Brewtato.GameObjects.Collectibles.Chest;
-import Brewtato.GameObjects.Enemies.Tree;
+import Brewtato.GameObjects.Enemies.*;
 import Brewtato.GameObjects.Object;
 import Brewtato.GameObjects.Player;
 import Brewtato.GameObjects.Rock;
 import Brewtato.GameObjects.Collectibles.Collectible;
 import Brewtato.GameObjects.Collectibles.Fruit;
 import Brewtato.GameObjects.Collectibles.Material;
-import Brewtato.GameObjects.Enemies.Enemy;
-import Brewtato.GameObjects.Enemies.Grunt;
 import Brewtato.GameObjects.Weapons.Shooter.*;
 import Brewtato.GameObjects.Weapons.Weapon;
 import Brewtato.Stats;
 import Brewtato.Effects.*;
 import Brewtato.Utilities.GlobalUI;
 import Brewtato.Utilities.Position;
+import Brewtato.Utilities.WaveHandler;
+
 import static Brewtato.Stats.*;
 import static Brewtato.Utilities.Tools.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -45,13 +45,16 @@ public class Game implements Phase{
     private List<BiConsumer<Object, Object>> effects;
     public static List<Projectile> projectiles = new ArrayList<>();
     public static List<Projectile> subProjectiles = new ArrayList<>();
+    public static List<Projectile> enemyProjectiles = new ArrayList<>();
     public static List<DamageNumber> damageNumbers = new ArrayList<>();
     private boolean waveOver = false;
     private double waveTimer;
     private List<Shooter> shooties = new ArrayList<>();
+    private WaveHandler waveHandler;
     Random rand = new Random();
 
     public Game(){
+        waveHandler = new WaveHandler();
         this.gameSize = vidmode.width() * 3;
         this.fieldSize = gameSize * 0.8;
         windowHeight = vidmode.height();
@@ -64,7 +67,7 @@ public class Game implements Phase{
         collectibles = new ArrayList<>();
         wave = 0;
         effects = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 0; i++) {
             Stats.ownedWeapons.add(new SMG());
         }
 
@@ -74,7 +77,8 @@ public class Game implements Phase{
     public void init(){
         waveOver = false;
         wave++;
-        waveTimer = Math.min((15 + 5 * wave), 60);
+        waveHandler.wave = this.wave;
+        waveTimer = Math.min((20 + 5 * wave), 60);
         spawnEnemies();
         playerCurrentHealth = playerMaxHealth;
         player.draw();
@@ -152,6 +156,8 @@ public class Game implements Phase{
 
         for (Enemy enemy : enemies) {
             enemy.hunt(player.pos, enemies);
+            enemy.pos.setX(Math.clamp(enemy.pos.getX(), x((float) (gameSize * 0.1f + enemy.width / 2)), x((float) (gameSize * 0.9 - (enemy.width / 2)))));
+            enemy.pos.setY(Math.clamp(enemy.pos.getY(), y((float) (gameSize * 0.1f + enemy.height / 2f - 120)), y((float) (gameSize * 0.9 - (enemy.height / 2) + 120))));
         }
         for (Collectible collectible : collectibles) {
             collectible.follow(player);
@@ -164,7 +170,20 @@ public class Game implements Phase{
             if(projectile.range + range <= 0) {
                 projectile.triggerEffects(null);
                 return true;
-            } else return false;
+            } else return outsideField(projectile.pos);
+        });
+
+        subProjectiles.removeIf((projectile) -> {
+            projectile.move();
+            if(projectile.range + range <= 0) {
+                projectile.triggerEffects(null);
+                return true;
+            } else return outsideField(projectile.pos);
+        });
+
+        enemyProjectiles.removeIf((projectile) -> {
+            projectile.move();
+            return outsideField(projectile.pos);
         });
 
         damageNumbers.removeIf(DamageNumber::disappear);
@@ -192,11 +211,15 @@ public class Game implements Phase{
         }
     }
 
-    private float x(float x) {
+    public float x(float x) {
         return x - windowPosition.getX();
     }
-    private float y(float y) {
+    public float y(float y) {
         return y - windowPosition.getY();
+    }
+    public boolean outsideField(Position pos) {
+        return pos.getX() + windowPosition.getX() < 0 || pos.getX() + windowPosition.getX() > gameSize ||
+               pos.getY() + windowPosition.getY() < 0 || pos.getY() + windowPosition.getY() > gameSize;
     }
 
     private void moveCamera(float x, float y) {
@@ -213,7 +236,10 @@ public class Game implements Phase{
         for(Enemy enemy : dyingEnemies) {
             enemy.move(-x, -y);
         }
-        for (Projectile projectile : projectiles) {
+        for(Projectile projectile : projectiles) {
+            projectile.move(-x, -y);
+        }
+        for(Projectile projectile : subProjectiles) {
             projectile.move(-x, -y);
         }
         for(Collectible collectible : collectibles) {
@@ -221,6 +247,9 @@ public class Game implements Phase{
         }
         for(DamageNumber damageNumber : damageNumbers) {
             damageNumber.move(-x, -y);
+        }
+        for(Projectile projectile : enemyProjectiles) {
+            projectile.move(-x, -y);
         }
     }
 
@@ -234,6 +263,8 @@ public class Game implements Phase{
         player.draw();
         shooties.forEach(Shooter::draw);
         projectiles.forEach(Projectile::draw);
+        subProjectiles.forEach(Projectile::draw);
+        enemyProjectiles.forEach(Projectile::draw);
         damageNumbers.forEach(DamageNumber::draw);
         if ((int) (waveTimer + 1) <= 0) dim();
         drawUI();
@@ -291,6 +322,13 @@ public class Game implements Phase{
             }
         }
 
+        enemyProjectiles.removeIf((projectile) -> {
+            if (overlap(projectile.hit, player.hit)) {
+                player.getHit(projectile.damage, true);
+                return true;
+            } else return false;
+        });
+
         projectiles.removeIf((projectile) -> projectile.hitEnemies.size() > projectile.pierces + pierce + projectile.originWeapon.bounce + bounce);
 
         Iterator<Collectible> colIt= collectibles.iterator();
@@ -322,7 +360,7 @@ public class Game implements Phase{
                 spawningEnemies.add(new Grunt(new Position(x(rand.nextFloat((float) (spawnPos.getX() - 150), (float) (spawnPos.getX() + 150))), y(rand.nextFloat((float) (spawnPos.getY() - 150), (float) (spawnPos.getY() + 150)))), wave));
             }
         } else if (rand.nextInt(0, 1001) > 990 - wave * 10) {
-            if (rand.nextInt(210) < 190) spawningEnemies.add(new Grunt(new Position(x(spawnPos.getX()),y(spawnPos.getY())), wave));
+            if (rand.nextInt(210) < 190) spawningEnemies.add(new Sniper(new Position(x(spawnPos.getX()),y(spawnPos.getY())), wave));
             else spawningEnemies.add(new Tree(new Position(x(spawnPos.getX()), y(spawnPos.getY()))));
         }
 

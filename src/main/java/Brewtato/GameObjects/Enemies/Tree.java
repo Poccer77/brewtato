@@ -31,51 +31,16 @@ public class Tree extends Enemy{
         pos.changePosition(x, y);
     }
 
-    public void spawn(){
-        if (spawnAnimation % 10 == 0) {
-            blink = !blink;
-        }
-        if (blink) {
-            spawnAnimation--;
-            color = new double[]{0.502, 0.38, 0, 1};
-        } else {
-            spawnAnimation--;
-            color = new double[]{1, 0, 0, 0};
-        }
-    }
-
-    @Override
-    public boolean die() {
-        if (deathAnimation > 0) {
-            width *= ((float) deathAnimation / 50);
-            height *= ((float) deathAnimation / 50);
-            deathAnimation -= 10;
-            return false;
-        } else return true;
-    }
-
     public void draw(){
-
-        double[] bgcolor = new double[]{0, 0, 0, color[3]};
-
-        Tools.drawSquare(pos, width * 1.1, height * 1.1, bgcolor);
 
         if (spawnAnimation <= 0) color = new double[]{0.267, 0.6, 0, 1};
 
-        hit = Tools.drawSquare(pos, width, height, color);
+        hit = Tools.drawSquare(pos, width, height, color, true);
     }
 
-    @Override
-    public boolean getHit(Hitbox hitbox) {
-        return Tools.overlap(hit, hitbox);
-    }
+
+    public void spawn(){super.spawnBlink(new double[]{0.502, 0.38, 0, 1});}
 
     @Override
-    public int attack() {
-        return 0;
-    }
-
-    @Override
-    public void hunt(Position pos, List<Enemy> enemies) {
-    }
+    public void hunt(Position pos, List<Enemy> enemies) {}
 }
